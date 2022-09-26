@@ -1,8 +1,8 @@
 const typography = {
   fonts: {
-    heading: 'Pretendard, sans-serif',
-    body: 'Pretendard, sans-serif',
-    mono: 'Pretendard, sans-serif',
+    heading: 'Noto Sans KR, sans-serif',
+    body: 'Noto Sans KR, sans-serif',
+    mono: 'Noto Sans KR, sans-serif',
   },
   fontWeights: {
     thin: 100,

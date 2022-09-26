@@ -15,7 +15,8 @@ interface HomeLayoutProps {
 
 const HomeLayout = ({
   //
-  header = <HomeHeader />,
+  // header = <HomeHeader />,
+  header,
   footer,
   containerProps,
   content,
@@ -23,7 +24,12 @@ const HomeLayout = ({
   return (
     <>
       {header}
-      <Container pt={LAYOUT.HEADER.HEIGHT} {...containerProps}>
+      <Container
+        pt={LAYOUT.HEADER.HEIGHT}
+        w={{ base: '375px', md: '600px' }}
+        {...containerProps}
+        backgroundColor="red"
+      >
         {content}
       </Container>
       {footer}

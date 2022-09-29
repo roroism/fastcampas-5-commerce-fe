@@ -71,7 +71,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
               borderY="1px solid #F2F3F4"
               w="full"
             >
-              <NextLink href="/cart">
+              <NextLink href="/products">
                 <Link
                   p="16px"
                   _hover={{ cursor: 'pointer' }}

@@ -19,7 +19,6 @@ const Header = () => {
           position="fixed"
           px="16px"
           zIndex="999"
-          backgroundColor="yellow"
           w="inherit"
         >
           <BasicIcon

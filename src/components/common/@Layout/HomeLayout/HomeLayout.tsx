@@ -27,7 +27,7 @@ const HomeLayout = ({
         pt={LAYOUT.HEADER.HEIGHT}
         w={{ base: '375px' }}
         {...containerProps}
-        backgroundColor="red"
+        p={0}
       >
         {content}
       </Container>

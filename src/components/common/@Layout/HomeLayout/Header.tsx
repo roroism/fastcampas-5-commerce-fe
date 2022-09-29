@@ -1,4 +1,13 @@
-import { Container, Flex, useDisclosure } from '@chakra-ui/react';
+import NextLink from 'next/link';
+
+import {
+  Box,
+  Container,
+  Flex,
+  Link,
+  VisuallyHidden,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 import MobileNav from '@components/ModalsPage/MobileNav';
 
@@ -27,6 +36,20 @@ const Header = () => {
             _hover={{ cursor: 'pointer' }}
             onClick={onOpen}
           />
+          <Box as="h1" w="120px">
+            <NextLink href="/">
+              <Link
+                display="block"
+                width="100%"
+                h="16px"
+                backgroundImage="url('./icons/svg/main_logo.svg')"
+                backgroundRepeat="no-repeat"
+                backgroundPosition="center"
+              >
+                <VisuallyHidden>incourse run commerce logo</VisuallyHidden>
+              </Link>
+            </NextLink>
+          </Box>
           <CartIcon w="24px" h="24px" _hover={{ cursor: 'pointer' }} />
         </Flex>
       </Container>

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import {
   Box,
@@ -15,6 +15,7 @@ import {
   ListItem,
   UnorderedList,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 interface ProductItemProps extends ChakraProps {
@@ -22,6 +23,19 @@ interface ProductItemProps extends ChakraProps {
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [quantity, setQuantity] = useState<number>(1);
+
+  const decQuantity = useCallback(() => {
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
+    }
+  }, [quantity]);
+
+  const incQuantity = useCallback(() => {
+    setQuantity((prev) => prev + 1);
+  }, []);
+
   return (
     <>
       <Box
@@ -109,6 +123,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             borderRadius="25px"
             size="sd"
             py="12px"
+            onClick={onOpen}
           >
             바로구매
           </Button>
@@ -120,13 +135,14 @@ const ProductItem = ({ product }: ProductItemProps) => {
             borderRadius="25px"
             size="sd"
             py="12px"
+            onClick={onOpen}
           >
             장바구니
           </Button>
         </Flex>
       </Box>
 
-      {/* <Drawer
+      <Drawer
         placement="bottom"
         onClose={onClose}
         isOpen={isOpen}
@@ -143,7 +159,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                 bg="gray.200"
                 borderRadius="5px"
               >
-                <Box {...SubText}>{product?.name}</Box>
+                <Box>{product?.productname}</Box>
                 <Flex justify="space-between" w="full" mt="4px">
                   <Flex h="25px" alignSelf="center">
                     <Box
@@ -218,21 +234,23 @@ const ProductItem = ({ product }: ProductItemProps) => {
                       _hover={{ cursor: 'pointer' }}
                     ></Box>
                   </Flex>
-                  <Flex {...TitleText} color="gray.600" alignItems="center">
-                    {priceToString(product?.price)}원
+                  <Flex fontWeight="700" color="gray.600" alignItems="center">
+                    {/* {priceToString(product?.price)}원
+                     */}
+                    10,000원
                   </Flex>
                 </Flex>
               </VStack>
               <Flex justify="space-between" w="full" pt="15px">
-                <Box {...SubText}>
+                <Box>
                   총 수량
                   <span style={{ color: '#FF710B' }}> {quantity}</span> 개
                 </Box>
-                <Box {...SubText}>
+                <Box>
                   합계
                   <span style={{ fontWeight: '700' }}>
-                    {' '}
-                    {priceToString(quantity * product.price)}
+                    {/* {priceToString(quantity * product.price)} */}
+                    20000
                   </span>
                   원
                 </Box>
@@ -245,7 +263,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                   borderRadius="25px"
                   size="sd"
                   py="12px"
-                  onClick={SendQuery}
+                  // onClick={SendQuery}
                 >
                   바로구매
                 </Button>
@@ -257,7 +275,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                   borderRadius="25px"
                   size="sd"
                   py="12px"
-                  onClick={postCart}
+                  // onClick={postCart}
                 >
                   장바구니
                 </Button>
@@ -265,7 +283,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             </Box>
           </DrawerBody>
         </DrawerContent>
-      </Drawer> */}
+      </Drawer>
     </>
   );
 };

@@ -50,7 +50,11 @@ const Header = () => {
               </Link>
             </NextLink>
           </Box>
-          <CartIcon w="24px" h="24px" _hover={{ cursor: 'pointer' }} />
+          <NextLink href="/cart">
+            <Link>
+              <CartIcon w="24px" h="24px" _hover={{ cursor: 'pointer' }} />
+            </Link>
+          </NextLink>
         </Flex>
       </Container>
       <MobileNav isOpen={isOpen} onClose={onClose} size="sm" />

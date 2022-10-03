@@ -1,15 +1,20 @@
 import React from 'react';
 
-import { Box, ChakraProps, Text } from '@chakra-ui/react';
+import { ChakraProps } from '@chakra-ui/react';
+
+import customUseFormforOrder from './CustomUseFormForOrder';
+import OrderPageView from './OrderPage.view';
 
 interface OrderPageProps extends ChakraProps {}
 
 function OrderPage({ ...basisProps }: OrderPageProps) {
-  return (
-    <Box {...basisProps}>
-      <Text>OrderPage</Text>
-    </Box>
-  );
+  const formData = customUseFormforOrder();
+  const { handleSubmit } = formData;
+  const onSubmit = handleSubmit(() => {
+    console.log('submit success');
+  });
+
+  return <OrderPageView formData={formData} onSubmit={onSubmit} />;
 }
 
 export default OrderPage;

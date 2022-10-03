@@ -7,7 +7,7 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react';
 
-import ProductItem from './ProductItem';
+import ProductItem from './_fragments/ProductItem';
 
 interface ProductsPageProps extends ChakraProps {}
 

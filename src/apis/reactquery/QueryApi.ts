@@ -4,37 +4,38 @@ import instance from '@apis/_axios/instance';
 
 import {
   ExampleDTOType,
-  ExampleParamGetType,
   ExampleParamPatchType,
   ExampleParamPutType,
+  ProductDTOType,
+  ProductParamGetType,
 } from './QueryApi.type';
 
-export class ExampleApi {
+export class ProductApi {
   axios: AxiosInstance = instance;
   constructor(axios?: AxiosInstance) {
     if (axios) this.axios = axios;
   }
 
-  getExampleList = async (
-    params?: ExampleParamGetType,
-  ): Promise<ExampleDTOType[]> => {
+  getProductList = async (
+    params?: ProductParamGetType,
+  ): Promise<ProductDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
-      url: `/v1/example`,
+      url: `/v1/product`,
       params,
     });
     return data;
   };
 
-  getExampleById = async (id: string): Promise<ExampleDTOType> => {
+  getProductById = async (id: string): Promise<ProductDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
-      url: `/v1/example/${id}`,
+      url: `/v1/product/${id}`,
     });
     return data;
   };
 
-  postExample = async (body: ExampleDTOType): Promise<ExampleDTOType> => {
+  postExample = async (body: ProductDTOType): Promise<ExampleDTOType> => {
     const { data } = await this.axios({
       method: 'POST',
       url: `/v1/example`,
@@ -71,6 +72,6 @@ export class ExampleApi {
   };
 }
 
-const exampleApi = new ExampleApi();
+const productApi = new ProductApi();
 
-export default exampleApi;
+export default productApi;

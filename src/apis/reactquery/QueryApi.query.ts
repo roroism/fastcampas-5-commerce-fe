@@ -2,33 +2,33 @@ import { QueryHookParams } from '@apis/type';
 
 import { useQuery } from '@tanstack/react-query';
 
-import exampleApi from './QueryApi';
-import { ExampleParamGetType } from './QueryApi.type';
+import productApi from './QueryApi';
+import { ProductParamGetType } from './QueryApi.type';
 
-export const EXAMPLE_API_QUERY_KEY = {
-  GET: (param?: ExampleParamGetType) => ['example-list', param],
-  GET_BY_ID: (id?: string) => ['example-by-id', id],
+export const PRODUCT_API_QUERY_KEY = {
+  GET: (param?: ProductParamGetType) => ['product-list', param],
+  GET_BY_ID: (id?: string) => ['product-by-id', id],
 };
 
-export function useGetExampleListQuery(
-  params?: QueryHookParams<typeof exampleApi.getExampleList>,
+export function useGetProductListQuery(
+  params?: QueryHookParams<typeof productApi.getProductList>,
 ) {
-  const queryKey = EXAMPLE_API_QUERY_KEY.GET(params?.variables);
+  const queryKey = PRODUCT_API_QUERY_KEY.GET(params?.variables);
   const query = useQuery(
     queryKey,
-    () => exampleApi.getExampleList(params?.variables),
+    () => productApi.getProductList(params?.variables),
     params?.options,
   );
   return { ...query, queryKey };
 }
 
-export function useGetExampleByIdQuery(
-  params: QueryHookParams<typeof exampleApi.getExampleById>,
+export function useGetProductByIdQuery(
+  params: QueryHookParams<typeof productApi.getProductById>,
 ) {
-  const queryKey = EXAMPLE_API_QUERY_KEY.GET_BY_ID(params?.variables);
+  const queryKey = PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables);
   const query = useQuery(
     queryKey,
-    () => exampleApi.getExampleById(params?.variables),
+    () => productApi.getProductById(params?.variables),
     params?.options,
   );
 

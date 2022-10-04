@@ -7,11 +7,15 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react';
 
+import { useGetProductListQuery } from '@apis/reactquery/QueryApi.query';
+
 import ProductItem from './_fragments/ProductItem';
 
 interface ProductsPageProps extends ChakraProps {}
 
 function ProductsPage({ ...basisProps }: ProductsPageProps) {
+  const { data } = useGetProductListQuery();
+
   return (
     <Box {...basisProps} px="16px" pt="120px" pb="80px">
       <VisuallyHidden as="h2">Product list</VisuallyHidden>
@@ -23,8 +27,11 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
         flexDirection="column"
         gap="30px"
       >
-        <ProductItem product={{ productname: '바스 & 샴푸' }} />
-        <ProductItem product={{ productname: '바스 & 샴푸' }} />
+        {data?.results?.map((product) => {
+          <ProductItem product={product} />;
+        })}
+        {/* <ProductItem product={} /> */}
+        {/* <ProductItem product={} /> */}
       </UnorderedList>
     </Box>
   );

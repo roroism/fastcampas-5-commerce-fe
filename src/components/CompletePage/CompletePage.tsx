@@ -9,6 +9,7 @@ import {
   Text,
   UnorderedList,
   VStack,
+  VisuallyHidden,
 } from '@chakra-ui/react';
 
 import OrderItem from '@components/OrderPage/_fragments/OrderItem';
@@ -20,6 +21,7 @@ interface CompletePageProps extends ChakraProps {}
 function CompletePage({ ...basisProps }: CompletePageProps) {
   return (
     <Box mt={LAYOUT.HEADER.HEIGHT} {...basisProps} bgColor="gray.100">
+      <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Box bgColor="white" px="16px">
         <Text as="h3" fontWeight="700" fontSize="1.25rem">
           결제내역

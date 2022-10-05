@@ -23,7 +23,8 @@ function LoginPage({ ...basisProps }: LoginPageProps) {
       <SocialButton
         data={{
           social: 'kakao',
-          link: `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/login/kakao`,
+          // link: `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/social_login/kakao`,
+          link: `/v1/user/social_login`,
         }}
         size="md"
       />

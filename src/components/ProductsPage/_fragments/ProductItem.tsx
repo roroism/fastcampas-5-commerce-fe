@@ -19,7 +19,17 @@ import {
 } from '@chakra-ui/react';
 
 interface ProductItemProps extends ChakraProps {
-  product: any;
+  product: {
+    id: number;
+    name: 'string';
+    description: 'string';
+    price: number;
+    capacity: number;
+    thumbnail: 'string';
+    tags: 'string';
+    avgRate: 'string';
+    reviewCount: 'string';
+  };
 }
 
 const ProductItem = ({ product }: ProductItemProps) => {
@@ -57,7 +67,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
         <Flex flexDirection="column" ml="30px" pt="30px" pb="20px">
           <Flex>
             <Box as="strong" fontSize="1rem">
-              {product.productname}
+              {product.name}
             </Box>
             <Box
               as="span"
@@ -159,7 +169,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                 bg="gray.200"
                 borderRadius="5px"
               >
-                <Box>{product?.productname}</Box>
+                <Box>{product?.name}</Box>
                 <Flex justify="space-between" w="full" mt="4px">
                   <Flex h="25px" alignSelf="center">
                     <Box

@@ -1,5 +1,5 @@
 export const SOCIAL = {
-  KAKAO_CLIENT_ID: '',
+  KAKAO_CLIENT_ID: 'b14dc9b7ccb5eca8ab1a381f7f0927f4',
   NAVER_CLIENT_ID: '',
   FACEBOOK_CLIENT_ID: '',
   GOOGLE_CLIENT_ID: '',

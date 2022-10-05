@@ -42,7 +42,7 @@ const Header = () => {
                 display="block"
                 width="100%"
                 h="16px"
-                backgroundImage="url('./icons/svg/main_logo.svg')"
+                backgroundImage="url('/icons/svg/main_logo.svg')"
                 backgroundRepeat="no-repeat"
                 backgroundPosition="center"
               >

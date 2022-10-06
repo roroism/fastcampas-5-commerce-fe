@@ -10,10 +10,6 @@ interface KakaoPageProps extends ChakraProps {}
 function KakaoPage({ ...basisProps }: KakaoPageProps) {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
-    // const code =
-    //   'hThnDVDU_tErJis5eIcNxiWRIJKyG0TmKnETDiqkmpkBBXaliJe3r7lCBdcDQdm23NUqPgopcFAAAAGDq2XA4Q';
-    // const code =
-    //   'W5eYyHm4JN3dKaS_M9pw1reXE5PlpSa30GmfEEYGeExYhvPlzJiaSOILb3YU8VFAAFrQaQo9dZsAAAGDq22grg';
     const state = new URL(window.location.href).searchParams.get('state');
 
     console.log('code : ', code);

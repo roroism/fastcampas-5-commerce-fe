@@ -29,11 +29,9 @@ function LoginPage({ ...basisProps }: LoginPageProps) {
       <SocialButton
         data={{
           social: 'kakao',
-          // link: `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/social_login/kakao`,
-          // link: `/v1/user/social_login`,
           // link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/login/redirect/kakao&state=kakao`,
-          // link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/login/redirect/kakao&state=kakao`,
-          link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=${SOCIAL_REDIRECT_URL}/login/redirect/kakao&state=kakao`,
+          link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=${SOCIAL_REDIRECT_URL}/social_login/callback&state=kakao`,
+          // link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=${SOCIAL_REDIRECT_URL}/social_login/callback&state=kakao`,
         }}
         size="md"
       />

@@ -33,7 +33,7 @@ function LoginPage({ ...basisProps }: LoginPageProps) {
           // link: `/v1/user/social_login`,
           // link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/login/redirect/kakao&state=kakao`,
           // link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000/login/redirect/kakao&state=kakao`,
-          link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=https://fastcampas-5-commerce-fe-alpha.vercel.app/login/redirect/kakao&state=kakao`,
+          link: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${SOCIAL.KAKAO_CLIENT_ID}&redirect_uri=${SOCIAL_REDIRECT_URL}/login/redirect/kakao&state=kakao`,
         }}
         size="md"
       />

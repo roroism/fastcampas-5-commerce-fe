@@ -21,7 +21,7 @@ export class ProductApi {
   ): Promise<ProductDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
-      url: `/v1/product`,
+      url: `/v1/product/`,
       params,
     });
     return data;

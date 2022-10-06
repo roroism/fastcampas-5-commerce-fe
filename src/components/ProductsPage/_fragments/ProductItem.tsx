@@ -21,14 +21,14 @@ import {
 interface ProductItemProps extends ChakraProps {
   product: {
     id: number;
-    name: 'string';
-    description: 'string';
+    name: string;
+    description: string;
     price: number;
     capacity: number;
-    thumbnail: 'string';
-    tags: 'string';
-    avgRate: 'string';
-    reviewCount: 'string';
+    thumbnail: string;
+    tags: Array<{ id: number; name: string }>;
+    avgRate: string | null;
+    reviewCount: number;
   };
 }
 
@@ -56,10 +56,11 @@ const ProductItem = ({ product }: ProductItemProps) => {
         pb="30px"
       >
         <Box borderTopRadius="20px" w="100%" overflow="hidden">
-          <Link href={`products/${product.id}`}>
+          <Link href={`products/${product?.id}`}>
             <Image
               w="100%"
-              src="./images/product/sampleImg.png"
+              // src="./images/product/sampleImg.png"
+              src={product?.thumbnail}
               // backgroundColor="yellow"
             />
           </Link>
@@ -67,7 +68,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
         <Flex flexDirection="column" ml="30px" pt="30px" pb="20px">
           <Flex>
             <Box as="strong" fontSize="1rem">
-              {product.name}
+              {product?.name}
             </Box>
             <Box
               as="span"
@@ -77,7 +78,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                 color: 'gray.700',
               }}
             >
-              300ml
+              {product?.capacity}ml
             </Box>
           </Flex>
 
@@ -88,7 +89,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
               color="primary.500"
               fontWeight="700"
             >
-              27,000
+              {product?.price}
             </Box>
             원
           </Box>
@@ -106,7 +107,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
               4.3
             </Box>
             <Box as="span" color="gray.700">
-              &nbsp;(리뷰 123개)
+              &nbsp;&#40;리뷰&nbsp;{product?.reviewCount}개&#41;
             </Box>
           </Flex>
 
@@ -119,10 +120,9 @@ const ProductItem = ({ product }: ProductItemProps) => {
             color="gray.700"
             gap="5px"
           >
-            <ListItem># 올인원</ListItem>
-            <ListItem># 클렌저</ListItem>
-            <ListItem># 마일드</ListItem>
-            <ListItem># 바스앤샴푸</ListItem>
+            {product?.tags.map((tag, idx) => (
+              <ListItem key={idx}># {tag.name}</ListItem>
+            ))}
           </UnorderedList>
         </Flex>
         <Flex gap="10px" justifyContent="space-between" mx="17px">
@@ -247,7 +247,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                   <Flex fontWeight="700" color="gray.600" alignItems="center">
                     {/* {priceToString(product?.price)}원
                      */}
-                    10,000원
+                    {product?.price}원
                   </Flex>
                 </Flex>
               </VStack>

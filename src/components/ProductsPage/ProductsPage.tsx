@@ -27,9 +27,9 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
         flexDirection="column"
         gap="30px"
       >
-        {data?.results?.map((product) => {
-          <ProductItem product={product} />;
-        })}
+        {data?.results?.map((product) => (
+          <ProductItem key={product.id} product={product} />
+        ))}
         {/* <ProductItem product={} /> */}
         {/* <ProductItem product={} /> */}
       </UnorderedList>

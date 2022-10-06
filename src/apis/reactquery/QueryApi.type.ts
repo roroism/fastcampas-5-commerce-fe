@@ -1,17 +1,18 @@
 export type ProductDTOType = {
-  next: 'string';
-  previous: 'string';
+  // next: 'string';
+  // previous: 'string';
+  cursor: string;
   results: [
     {
       id: number;
-      name: 'string';
-      description: 'string';
+      name: string;
+      description: string;
       price: number;
       capacity: number;
-      thumbnail: 'string';
-      tags: 'string';
-      avgRate: 'string';
-      reviewCount: 'string';
+      thumbnail: string;
+      tags: Array<{ id: number; name: string }>;
+      avgRate: string | null;
+      reviewCount: number;
     },
   ];
 };

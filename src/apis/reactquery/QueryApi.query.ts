@@ -1,9 +1,13 @@
 import { QueryHookParams } from '@apis/type';
 
-import { useQuery } from '@tanstack/react-query';
+import {
+  UseInfiniteQueryResult,
+  useInfiniteQuery,
+  useQuery,
+} from '@tanstack/react-query';
 
 import productApi from './QueryApi';
-import { ProductParamGetType } from './QueryApi.type';
+import { ProductDTOType, ProductParamGetType } from './QueryApi.type';
 
 export const PRODUCT_API_QUERY_KEY = {
   GET: (param?: ProductParamGetType) => ['product-list', param],
@@ -14,11 +18,25 @@ export function useGetProductListQuery(
   params?: QueryHookParams<typeof productApi.getProductList>,
 ) {
   const queryKey = PRODUCT_API_QUERY_KEY.GET(params?.variables);
-  const query = useQuery(
+
+  const query = useInfiniteQuery<ProductDTOType>(
     queryKey,
-    () => productApi.getProductList(params?.variables),
-    params?.options,
+    ({ pageParam = '' }) =>
+      productApi.getProductList(pageParam, params?.variables),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        console.log('lastPage.cursor : ', lastPage.cursor);
+        return lastPage.cursor;
+      },
+    },
   );
+
+  // const query = useQuery(
+  //   queryKey,
+  //   () => productApi.getProductList(params?.variables),
+  //   params?.options,
+  // );
+
   return { ...query, queryKey };
 }
 

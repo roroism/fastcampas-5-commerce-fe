@@ -12,18 +12,23 @@ import {
 
 export class ProductApi {
   axios: AxiosInstance = instance;
+  page_size = 2;
+
   constructor(axios?: AxiosInstance) {
     if (axios) this.axios = axios;
   }
 
   getProductList = async (
+    cursor: string,
     params?: ProductParamGetType,
   ): Promise<ProductDTOType> => {
+    console.log('getProductList - cursor : ', cursor);
     const { data } = await this.axios({
       method: 'GET',
-      url: `/v1/product/`,
+      url: `/v1/product/?cursor=${cursor}&page_size=${this.page_size}`,
       params,
     });
+    console.log('getProductList - data : ', data);
     return data;
   };
 

@@ -7,6 +7,8 @@ const styles = {
       fontFamily: 'body',
       color: mode('#1A1A1A', '#FFFFFF')(props),
       bg: mode('#FFFFFF', '#363636')(props),
+      transitionProperty: 'background-color',
+      transitionDuration: 'normal',
     },
     input: {
       fontSize: ['16px', '14px', '15px'],

@@ -14,6 +14,9 @@ const overrides = {
   components,
   styles,
   textStyles,
+  config: {
+    disableTransitionOnChange: false,
+  },
 };
 
 export default extendTheme(overrides);

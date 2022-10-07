@@ -48,7 +48,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
         <Box bgColor="white" mt="10px">
           <Flex color="gray.800">
             <Box w="33.33%">
-              <NextLink href="/">
+              <NextLink href="/" passHref>
                 <Link
                   display="flex"
                   flexDirection="column"
@@ -65,7 +65,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
               </NextLink>
             </Box>
             <Box w="33.33%">
-              <NextLink href="/">
+              <NextLink href="/" passHref>
                 <Link
                   display="flex"
                   flexDirection="column"
@@ -82,7 +82,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
               </NextLink>
             </Box>
             <Box w="33.33%">
-              <NextLink href="/review">
+              <NextLink href="/review" passHref>
                 <Link
                   display="flex"
                   flexDirection="column"
@@ -103,7 +103,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
 
         <Box bgColor="white" mt="10px">
           <Box borderBottom="1px solid" borderColor="gray.200">
-            <NextLink href="/withdrawal">
+            <NextLink href="/withdrawal" passHref>
               <Link
                 display="flex"
                 justifyContent="space-between"

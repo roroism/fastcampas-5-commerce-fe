@@ -3,7 +3,16 @@ import React, { useEffect, useState } from 'react';
 
 import { Box, ChakraProps, Flex, Spinner, Text } from '@chakra-ui/react';
 
-import instance from '@apis/_axios/instance';
+import instance, { setAuthHeader } from '@apis/_axios/instance';
+
+import { setToken } from '@utils/localStorage/token';
+
+interface ISocialLogin {
+  isRegister: boolean;
+  socialToken: string;
+  access?: string;
+  refresh?: string;
+}
 
 interface KakaoPageProps extends ChakraProps {}
 
@@ -25,7 +34,22 @@ function KakaoPage({ ...basisProps }: KakaoPageProps) {
       })
       .then((res) => {
         console.log('res : ', res);
-        // router.replace('/');
+        const socialLoginInfo: ISocialLogin = res.data;
+
+        if (socialLoginInfo.isRegister) {
+          setToken({
+            isRegister: socialLoginInfo.isRegister,
+            access: socialLoginInfo.access as string,
+            refresh: socialLoginInfo.refresh as string,
+          });
+          setAuthHeader(socialLoginInfo.access as string);
+          router.push('/');
+        } else {
+          router.replace({
+            pathname: '/join',
+            query: { socialToken: socialLoginInfo.socialToken },
+          });
+        }
       })
       .catch((err) => {
         console.log('err : ', err);

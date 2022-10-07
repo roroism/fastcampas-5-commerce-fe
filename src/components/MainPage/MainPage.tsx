@@ -1,5 +1,5 @@
-import router from 'next/router';
-import React from 'react';
+import router, { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 
 import {
   Box,
@@ -9,16 +9,27 @@ import {
   HStack,
   Image,
   Link,
-  Text,
   VStack,
   VisuallyHidden,
 } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
+
 import StarRating from '@components/common/StarRating/StarRating';
+
+import { getToken } from '@utils/localStorage/token';
 
 interface MainPageProps extends ChakraProps {}
 
 function MainPage({ ...basisProps }: MainPageProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token?.access) router.replace('/login');
+    else setAuthHeader(token?.access);
+  }, []);
+
   return (
     <Box {...basisProps} overflow="hidden">
       <VisuallyHidden as="h2">main contents</VisuallyHidden>

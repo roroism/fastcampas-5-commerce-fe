@@ -19,7 +19,7 @@ function Home() {
     <>
       <Head>
         {/* ex) Your App Name | Page Name */}
-        <title>똑똑한 개발자 | 메인</title>
+        <title>fastcampas-5-commerce-fe | main</title>
       </Head>
       <HomeLayout content={<MainPage />} />
     </>

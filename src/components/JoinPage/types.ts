@@ -1,13 +1,13 @@
 export type FormDataType = {
+  profile?: string;
   name: string;
   nickname: string;
   phone: string;
   email: string;
-  gender?: string;
-  age?: string;
+  gender?: 'male' | 'female';
+  age?: number;
   agreeAll: boolean;
-  agreePrivateInfo: boolean;
   agreeRequired: boolean;
+  agreePrivateInfo: boolean;
   agreeMarketing: boolean;
-  ageRange: string;
 };

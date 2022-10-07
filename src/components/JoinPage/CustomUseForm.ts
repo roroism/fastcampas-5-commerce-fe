@@ -9,6 +9,7 @@ import { FormDataType } from './types';
 import useValidateWithByte from 'hooks/useValidateWithByte';
 
 export const FormSchema = yup.object().shape({
+  profile: yup.string(),
   name: yup
     .string()
     .required('이름은 필수입니다.')
@@ -40,7 +41,7 @@ export const FormSchema = yup.object().shape({
   //   value: yup.string(),
   // }),
   gender: yup.string(),
-  age: yup.string(),
+  age: yup.number(),
 });
 
 const customUseForm = (options?: UseFormProps<FormDataType>) => {
@@ -48,6 +49,7 @@ const customUseForm = (options?: UseFormProps<FormDataType>) => {
   return useForm<FormDataType>({
     resolver: yupResolver(FormSchema),
     mode: 'onChange',
+    defaultValues: { profile: '' },
     ...options,
   });
 };

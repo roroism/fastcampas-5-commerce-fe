@@ -18,7 +18,10 @@ import {
   Select,
   Text,
   VStack,
+  VisuallyHiddenInput,
 } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import JoinInput from './_fragments/JoinInput';
 import { FormDataType } from './types';
@@ -43,8 +46,10 @@ const JoinPageView = ({
   const [preview, setPreview] = useState<string>();
   const avatarRef = useRef<HTMLInputElement>(null);
   const [img, setImg] = useState(avatarRef.current?.files);
-  const [toggle, setToggle] = useState(false);
-  const [isJoinButtonActive, setIsJoinButtonActive] = useState(false);
+  const [toggle, setToggle] = useState<boolean>(false);
+  const [isJoinButtonActive, setIsJoinButtonActive] = useState<boolean>(false);
+  // const [presignedUrl, setPresignedUrl] = useState<string>('');
+
   console.log(watch());
   const handleAvatar = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -55,10 +60,38 @@ const JoinPageView = ({
 
   const handleAvatarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
     if (avatarRef.current?.files) {
       setImg(avatarRef.current?.files);
       const file = avatarRef.current?.files[0];
       setPreview(URL.createObjectURL(file));
+
+      console.log('avatarRef.current?.files', avatarRef.current?.files);
+      console.log('avatarRef.current?.files[0]', avatarRef.current?.files[0]);
+      console.log('URL.createObjectURL(file)', URL.createObjectURL(file));
+
+      instance
+        .post(`/v1/presigned_url/`, {
+          name: 'string',
+        })
+        .then((res) => {
+          console.log('presignedUrl : ', res.data.url);
+          setValue('profile', res.data.url);
+          instance
+            .put(
+              `${res.data.url}`,
+              { file },
+              {
+                baseURL: '',
+                headers: {
+                  'Content-Type': 'file.type',
+                },
+              },
+            )
+            .then((res) => {
+              console.log('success : s3 file upload : ');
+            });
+        });
     }
   };
 
@@ -147,6 +180,13 @@ const JoinPageView = ({
             ref={avatarRef}
             onChange={handleAvatarOnChange}
           ></Input>
+          <input
+            type="hidden"
+            // ref={register}
+            // name="profile"
+            // value={presignedUrl}
+            {...register('profile')}
+          />
         </Flex>
 
         <Flex flexDirection="column" gap="50px">
@@ -189,9 +229,9 @@ const JoinPageView = ({
             {...register('gender')}
           >
             {/* <option value="남성" selected={getValues('gender') === '남성'}> */}
-            <option value="남성">남</option>
+            <option value="male">남</option>
             {/* <option value="여성" selected={getValues('gender') === '여성'}> */}
-            <option value="여성">여</option>
+            <option value="female">여</option>
           </Select>
         </FormControl>
 
@@ -206,21 +246,22 @@ const JoinPageView = ({
             fontSize="16px"
             placeholder="연령대를 선택하세요"
             _selected={{ color: '#1A1A1A' }}
-            {...register('ageRange')}
+            {...register('age')}
           >
             {/* <option value="10대" selected={getValues('ageRange') === '10대'}> */}
-            <option value="10대">10대</option>
+            <option value="10">10대</option>
             {/* <option value="20대" selected={getValues('ageRange') === '20대'}> */}
-            <option value="20대">20대</option>
+            <option value="20">20대</option>
             {/* <option value="30대" selected={getValues('ageRange') === '30대'}> */}
-            <option value="30대">30대</option>
+            <option value="30">30대</option>
             {/* <option value="40대" selected={getValues('ageRange') === '40대'}> */}
-            <option value="40대">40대</option>
+            <option value="40">40대</option>
             {/* <option
               value="50대 이상"
               selected={getValues('ageRange') === '50대 이상'}
             > */}
-            <option value="50대 이상">50대 이상</option>
+            <option value="50">50대</option>
+            <option value="60">60대</option>
           </Select>
         </FormControl>
 

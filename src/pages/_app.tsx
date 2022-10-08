@@ -1,4 +1,9 @@
-import { ThemeProvider, useColorMode, useTheme } from '@chakra-ui/react';
+import {
+  ThemeProvider,
+  VisuallyHidden,
+  useColorMode,
+  useTheme,
+} from '@chakra-ui/react';
 
 import ToggleColorModeButton from '@components/common/ToggleColorModeButton';
 
@@ -18,6 +23,7 @@ function MyApp({ Component, pageProps }: any) {
       theme={{ ...theme, colors: { ...theme.colors, ...mode[colorMode] } }}
     >
       <ToggleColorModeButton />
+      <VisuallyHidden as="h1">incourse run commerce</VisuallyHidden>
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
     </ThemeProvider>

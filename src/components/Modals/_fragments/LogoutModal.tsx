@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import {
   Box,
   Button,
@@ -13,10 +15,19 @@ import {
   ModalProps,
 } from '@chakra-ui/react';
 
+import { deleteToken } from '@utils/localStorage/token';
+
 interface LogoutModalProps extends Omit<ModalProps, 'children'> {
   title: string;
 }
 function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
+  const router = useRouter();
+
+  const handleLogoutClick = () => {
+    deleteToken();
+    router.push('/login');
+  };
+
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered {...props}>
       <ModalOverlay />
@@ -59,6 +70,7 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
               취소
             </Button>
             <Button
+              onClick={handleLogoutClick}
               fontWeight="700"
               py="17.8px"
               w="155px"

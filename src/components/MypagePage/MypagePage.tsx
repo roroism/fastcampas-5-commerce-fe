@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 
 import {
   Box,
@@ -12,14 +13,44 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import instance, { setAuthHeader } from '@apis/_axios/instance';
+import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
+
 import { LogoutModal } from '@components/Modals';
 
 import { LAYOUT } from '@constants/layout';
+import { useQuery } from '@tanstack/react-query';
+import { getToken } from '@utils/localStorage/token';
+
+interface IUserInfo {
+  id: number;
+  name: string;
+  nickname: string;
+  phone: string;
+  address: string;
+  email: string;
+  profile: string;
+  gender: 'male' | 'female';
+  age: number;
+}
 
 interface MypagePageProps extends ChakraProps {}
 
 function MypagePage({ ...basisProps }: MypagePageProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const query = useGetMyInfoQuery();
+  const router = useRouter();
+
+  console.log('query : ', query);
+
+  // const [user, setUser] = useState<UserType>();
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token?.access) router.replace('/login');
+    else setAuthHeader(token?.access);
+    console.log('login validation');
+  }, []);
 
   return (
     <>
@@ -36,11 +67,11 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
           <Flex flexDirection="column">
             {/* <Text fontSize="1.25rem" fontWeight="700">{data.name}</Text> */}
             <Text fontSize="1.25rem" fontWeight="700">
-              김인코스런
+              {query.data?.name}
             </Text>
             {/* <Text fontSize="1rem" fontWeight="400" color="gray.400">{data.email}</Text> */}
             <Text fontSize="1rem" fontWeight="400" color="gray.400">
-              incourse.run@gmail.com
+              {query.data?.email}
             </Text>
           </Flex>
         </Box>

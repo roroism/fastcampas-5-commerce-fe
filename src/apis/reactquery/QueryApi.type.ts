@@ -1,3 +1,5 @@
+export type gender = 'male' | 'female';
+
 export type ProductDTOType = {
   // next: 'string';
   // previous: 'string';
@@ -14,8 +16,20 @@ export type ProductDTOType = {
     reviewCount: number;
   }>;
 };
+export type MyInfoDTOType = {
+  id: number;
+  name: string;
+  nickname: string;
+  phone: string;
+  address: string;
+  email: string;
+  profile: string;
+  gender: gender;
+  age: number;
+};
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};
+export type MyInfoParamGetType = {};
 export type ExampleParamPutType = {
   id: string;
   data: ProductDTOType;

@@ -6,6 +6,8 @@ import {
   ExampleDTOType,
   ExampleParamPatchType,
   ExampleParamPutType,
+  MyInfoDTOType,
+  MyInfoParamGetType,
   ProductDTOType,
   ProductParamGetType,
 } from './QueryApi.type';
@@ -29,6 +31,16 @@ export class ProductApi {
       params,
     });
     console.log('getProductList - data : ', data);
+    return data;
+  };
+
+  getMyInfo = async (params?: MyInfoParamGetType): Promise<MyInfoDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/user/me/`,
+      params,
+    });
+    console.log('getMyInfo - data : ', data);
     return data;
   };
 

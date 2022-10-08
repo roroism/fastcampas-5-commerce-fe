@@ -7,7 +7,11 @@ import {
 } from '@tanstack/react-query';
 
 import productApi from './QueryApi';
-import { ProductDTOType, ProductParamGetType } from './QueryApi.type';
+import {
+  MyInfoParamGetType,
+  ProductDTOType,
+  ProductParamGetType,
+} from './QueryApi.type';
 
 export const PRODUCT_API_QUERY_KEY = {
   GET: (param?: ProductParamGetType) => ['product-list', param],
@@ -47,6 +51,24 @@ export function useGetProductByIdQuery(
   const query = useQuery(
     queryKey,
     () => productApi.getProductById(params?.variables),
+    params?.options,
+  );
+
+  return { ...query, queryKey };
+}
+
+export const MYINFO_API_QUERY_KEY = {
+  GET: (param?: MyInfoParamGetType) => ['my-info', param],
+  // GET_BY_ID: (id?: string) => ['product-by-id', id],
+};
+
+export function useGetMyInfoQuery(
+  params?: QueryHookParams<typeof productApi.getMyInfo>,
+) {
+  const queryKey = MYINFO_API_QUERY_KEY.GET(params?.variables);
+  const query = useQuery(
+    queryKey,
+    () => productApi.getMyInfo(),
     params?.options,
   );
 

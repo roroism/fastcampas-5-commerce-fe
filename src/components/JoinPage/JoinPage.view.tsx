@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
 
+import axios from 'axios';
+
 // import { Select } from 'chakra-react-select';
 import {
   Avatar,
@@ -74,23 +76,31 @@ const JoinPageView = ({
         .post(`/v1/presigned_url/`, {
           name: 'string',
         })
-        .then((res) => {
+        .then(async (res) => {
           console.log('presignedUrl : ', res.data.url);
           setValue('profile', res.data.url);
-          instance
+          const upload = await axios
             .put(
               `${res.data.url}`,
-              { file },
+              // { file: file },
+              file,
               {
                 baseURL: '',
                 headers: {
-                  'Content-Type': 'file.type',
+                  'Content-Type': file.type,
                 },
               },
             )
             .then((res) => {
-              console.log('success : s3 file upload : ');
+              console.log('success : s3 file upload res : ', res);
+              console.log('success : s3 file upload upload : ', upload);
+            })
+            .catch((err) => {
+              console.log('presignedUrl put error : ', err);
             });
+        })
+        .catch((err) => {
+          console.log('/v1/presigned_url/ error : ', err);
         });
     }
   };

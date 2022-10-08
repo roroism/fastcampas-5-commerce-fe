@@ -8,7 +8,9 @@ import {
   ExampleParamPutType,
   MyInfoDTOType,
   MyInfoParamGetType,
+  MyInfoParamPatchType,
   ProductDTOType,
+  ProductDetailDTOType,
   ProductParamGetType,
 } from './QueryApi.type';
 
@@ -44,7 +46,7 @@ export class ProductApi {
     return data;
   };
 
-  getProductById = async (id: string): Promise<ProductDTOType> => {
+  getProductById = async (id: string): Promise<ProductDetailDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
       url: `/v1/product/${id}`,
@@ -52,41 +54,77 @@ export class ProductApi {
     return data;
   };
 
-  postExample = async (body: ProductDTOType): Promise<ExampleDTOType> => {
-    const { data } = await this.axios({
-      method: 'POST',
-      url: `/v1/example`,
-      data: body,
-    });
-    return data;
-  };
+  // patchMyInfo = async (req: MyInfoParamPatchType): Promise<MyInfoDTOType> => {
+  patchMyInfo = async (req: MyInfoParamPatchType): Promise<any> => {
+    console.log('...req.data, : ', { ...req.data });
 
-  putExample = async (req: ExampleParamPutType): Promise<ExampleDTOType> => {
-    const { data } = await this.axios({
-      method: 'PUT',
-      url: `/v1/example/${req.id}`,
-      data: req.data,
-    });
-    return data;
-  };
-  patchExample = async (
-    req: ExampleParamPatchType,
-  ): Promise<ExampleDTOType> => {
-    const { data } = await this.axios({
+    const data = instance({
       method: 'PATCH',
-      url: `/v1/example/${req.id}`,
-      data: req.data,
+      url: `/v1/user/me/`,
+      data: { ...req.data },
     });
+
+    // const data = instance
+    //   .patch(
+    //     `/v1/user/me/`,
+    //     {
+    //       ...req.data,
+    //     },
+    //     {
+    //       // headers: {
+    //       //   'Access-Control-Allow-Methods':
+    //       //     'GET, POST, PUT, DELETE, OPTIONS, PATCH',
+    //       // },
+    //     },
+    //   )
+    //   .then((res) => {
+    //     console.log('patchMyInfo res : ', res);
+    //   });
+
+    // const { data } = await this.axios({
+    //   method: 'PATCH',
+    //   url: `/v1/user/me/`,
+    //   data: req.data,
+    // });
+    // return data;
     return data;
   };
 
-  deleteExample = async (id: string): Promise<boolean> => {
-    const { data } = await this.axios({
-      method: 'DELETE',
-      url: `/v1/example/${id}`,
-    });
-    return data;
-  };
+  // postExample = async (body: ProductDTOType): Promise<ExampleDTOType> => {
+  //   const { data } = await this.axios({
+  //     method: 'POST',
+  //     url: `/v1/example`,
+  //     data: body,
+  //   });
+  //   return data;
+  // };
+
+  // putExample = async (req: ExampleParamPutType): Promise<ExampleDTOType> => {
+  //   const { data } = await this.axios({
+  //     method: 'PUT',
+  //     url: `/v1/example/${req.id}`,
+  //     data: req.data,
+  //   });
+  //   return data;
+  // };
+  // patchExample = async (
+  //   req: ExampleParamPatchType,
+  // ): Promise<ExampleDTOType> => {
+  //   const { data } = await this.axios({
+  //     method: 'PATCH',
+  //     url: `/v1/example/${req.id}`,
+  //     data: req.data,
+  //   });
+  //   return data;
+  // };
+
+  // deleteExample = async (id: string): Promise<boolean> => {
+  //   const { data } = await this.axios({
+  //     method: 'DELETE',
+  //     url: `/v1/example/${id}`,
+  //   });
+  //   return data;
+  // };
 }
 
 const productApi = new ProductApi();

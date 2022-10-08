@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { FormDataType } from './types';
+import { FormEditDataType } from './types';
 
 import useValidateWithByte from 'hooks/useValidateWithByte';
 
@@ -45,9 +45,9 @@ export const FormSchema = yup.object().shape({
   address: yup.string(),
 });
 
-const customUseForm = (options?: UseFormProps<FormDataType>) => {
+const customEditUseForm = (options?: UseFormProps<FormEditDataType>) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useForm<FormDataType>({
+  return useForm<FormEditDataType>({
     resolver: yupResolver(FormSchema),
     mode: 'onChange',
     defaultValues: { profile: '' },
@@ -55,4 +55,4 @@ const customUseForm = (options?: UseFormProps<FormDataType>) => {
   });
 };
 
-export default customUseForm;
+export default customEditUseForm;

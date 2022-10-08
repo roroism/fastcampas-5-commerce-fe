@@ -79,7 +79,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
         <Box bgColor="white" mt="10px">
           <Flex color="gray.800">
             <Box w="33.33%">
-              <NextLink href="/" passHref>
+              <NextLink href="/mypage/edit" passHref>
                 <Link
                   display="flex"
                   flexDirection="column"

@@ -16,17 +16,36 @@ export type ProductDTOType = {
     reviewCount: number;
   }>;
 };
-export type MyInfoDTOType = {
+
+export type ProductDetailDTOType = {
   id: number;
+  name: string;
+  description: string;
+  price: number;
+  capacity: number;
+  detail: string;
+  photo: string;
+  reviewList: string;
+  avgRate: string;
+  reviewCount: string;
+};
+
+export type MyInfoDTOType = {
+  id?: number;
   name: string;
   nickname: string;
   phone: string;
   address: string;
   email: string;
-  profile: string;
-  gender: gender;
-  age: number;
+  profile?: string;
+  gender?: gender;
+  age?: number;
 };
+export type MyInfoParamPatchType = {
+  id?: string;
+  data: Partial<MyInfoDTOType>;
+};
+
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};

@@ -19,6 +19,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import priceFormat from 'hooks/priceFormat';
+
 interface ProductItemProps extends ChakraProps {
   product: {
     id: number;
@@ -251,7 +253,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                   <Flex fontWeight="700" color="gray.600" alignItems="center">
                     {/* {priceToString(product?.price)}원
                      */}
-                    {product?.price}원
+                    {priceFormat(product?.price)}원
                   </Flex>
                 </Flex>
               </VStack>

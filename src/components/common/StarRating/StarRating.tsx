@@ -1,11 +1,11 @@
 import { HStack, Image } from '@chakra-ui/react';
 
 interface StarRatingProps {
-  starRating: number;
+  starRating: number | undefined;
   width?: string;
 }
 
-function StarRating({ starRating, width = '10px' }: StarRatingProps) {
+function StarRating({ starRating = 1, width = '10px' }: StarRatingProps) {
   const rendering = () => {
     const result = [];
     for (let i = 0; i < starRating; i++) {

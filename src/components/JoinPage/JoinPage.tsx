@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import axios from 'axios';
+
 import { ChakraProps } from '@chakra-ui/react';
 
 import instance, { setAuthHeader } from '@apis/_axios/instance';
@@ -31,23 +33,27 @@ function JoinPage({ ...basisProps }: JoinPageProps) {
   const router = useRouter();
 
   console.log('socialToken : ', router.query.socialToken);
-  const onSubmit = handleSubmit((data) => {
-    console.log(
-      data.email,
-      data.phone.replace(/-/g, ''),
-      data.name,
-      data.nickname,
-      data.gender,
-      data.age,
-      data.agreeMarketing,
-      data.profile,
-    );
+  const onSubmit = handleSubmit(async (data) => {
+    console.log('onSubmit : ', {
+      socialToken: router.query.socialToken,
+      email: data.email,
+      phone: data.phone.replace(/-/g, ''),
+      name: data.name,
+      nickname: data.nickname,
+      profile: data.profile,
+      gender: data.gender,
+      age: Number(data.age),
+      marketingAdAgree: data.agreeMarketing,
+    });
 
     // const form = new FormData();
     // form.append();
 
-    instance
-      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/register/`, {
+    // const joinResult = await axios({
+    const joinResult = instance({
+      method: 'POST',
+      url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/register/`,
+      data: {
         socialToken: router.query.socialToken,
         email: data.email,
         phone: data.phone.replace(/-/g, ''),
@@ -55,11 +61,50 @@ function JoinPage({ ...basisProps }: JoinPageProps) {
         nickname: data.nickname,
         profile: data.profile,
         gender: data.gender,
-        age: data.age,
+        age: Number(data.age),
         marketingAdAgree: data.agreeMarketing,
-      })
+      },
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
+    })
+      // const joinResult = await axios
+      //   .post(
+      //     `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/register/`,
+      //     {
+      //       socialToken: router.query.socialToken,
+      //       email: data.email,
+      //       phone: data.phone.replace(/-/g, ''),
+      //       name: data.name,
+      //       nickname: data.nickname,
+      //       profile: data.profile,
+      //       gender: data.gender,
+      //       age: Number(data.age),
+      //       marketingAdAgree: data.agreeMarketing,
+      //     },
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //     },
+      //   )
+
+      // instance
+      //   .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/register/`, {
+      //     socialToken: router.query.socialToken,
+      //     email: data.email,
+      //     phone: data.phone.replace(/-/g, ''),
+      //     name: data.name,
+      //     nickname: data.nickname,
+      //     profile: data.profile,
+      //     gender: data.gender,
+      //     age: Number(data.age),
+      //     marketingAdAgree: data.agreeMarketing,
+      //   })
+
       .then((res) => {
         console.log('회원가입 성공! res : ', res.data);
+        console.log('회원가입 성공! upload : ', joinResult);
         setToken({
           isRegister: true,
           access: res.data.access as string,

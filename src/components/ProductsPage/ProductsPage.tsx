@@ -4,6 +4,8 @@ import {
   Box,
   Button,
   ChakraProps,
+  Flex,
+  Spinner,
   UnorderedList,
   VisuallyHidden,
 } from '@chakra-ui/react';
@@ -22,7 +24,7 @@ interface IProduct {
   capacity: number;
   thumbnail: string;
   tags: Array<{ id: number; name: string }>;
-  avgRate: string | null;
+  avgRate: number | null;
   reviewCount: number;
 }
 
@@ -43,7 +45,7 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
   React.useEffect(() => {
     if (isShow) {
       console.log('isShow');
-      fetchNextPage();
+      hasNextPage && fetchNextPage();
     }
   }, [isShow]);
 
@@ -68,7 +70,21 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
           });
         })}
       </UnorderedList>
-      {isFetching ? <Box>Loading...</Box> : null}
+      {isFetching ? (
+        <Box>
+          <Box {...basisProps} h="100%">
+            <Flex w="full" h="full" justify="center" alignItems="center">
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="primary.500"
+                size="xl"
+              />
+            </Flex>
+          </Box>
+        </Box>
+      ) : null}
       {/* <Button onClick={() => fetchNextPage()}>fetch</Button> */}
       <div ref={ref} style={{ backgroundColor: 'red' }}></div>
     </Box>

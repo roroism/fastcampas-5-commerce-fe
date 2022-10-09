@@ -36,6 +36,14 @@ export class ProductApi {
     return data;
   };
 
+  getProductById = async (id: string): Promise<ProductDetailDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/product/${id}/`,
+    });
+    return data;
+  };
+
   getMyInfo = async (params?: MyInfoParamGetType): Promise<MyInfoDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
@@ -46,19 +54,11 @@ export class ProductApi {
     return data;
   };
 
-  getProductById = async (id: string): Promise<ProductDetailDTOType> => {
-    const { data } = await this.axios({
-      method: 'GET',
-      url: `/v1/product/${id}`,
-    });
-    return data;
-  };
-
   // patchMyInfo = async (req: MyInfoParamPatchType): Promise<MyInfoDTOType> => {
   patchMyInfo = async (req: MyInfoParamPatchType): Promise<any> => {
     console.log('...req.data, : ', { ...req.data });
 
-    const data = instance({
+    const data = await this.axios({
       method: 'PATCH',
       url: `/v1/user/me/`,
       data: { ...req.data },

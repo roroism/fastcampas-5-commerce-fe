@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Accordion,
@@ -18,17 +19,60 @@ import {
   useColorMode,
 } from '@chakra-ui/react';
 
+import { useGetProductByIdQuery } from '@apis/reactquery/QueryApi.query';
+
 import StarRating from '@components/common/StarRating/StarRating';
 
 import { LAYOUT } from '@constants/layout';
 
+import ReviewChartBar from './_fragments/ReviewChartBar';
+import ReviewItem from './_fragments/ReviewItem';
+
 interface DetailProductPageProps extends ChakraProps {}
 
 function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
+  const { query } = useRouter();
   const { colorMode } = useColorMode();
   const detailInfoRef = useRef<HTMLDivElement>(null);
   const orderInfoRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
+  const { data } = useGetProductByIdQuery({ variables: query.id as string });
+  const [countRate, setCountRate] = useState<Array<number>>();
+
+  console.log('router.query : ', query.id);
+  console.log('data : ', data);
+  console.log('countRate : ', countRate);
+
+  useEffect(() => {
+    const countingRate: Array<number> = Array(5).fill(0);
+    data?.reviewList.map((review) => {
+      switch (review.rate) {
+        case 1:
+          countingRate[0] += 1;
+          return;
+        case 2:
+          countingRate[1] += 1;
+          return;
+        case 3:
+          countingRate[2] += 1;
+          return;
+        case 4:
+          countingRate[3] += 1;
+          return;
+        case 5:
+          countingRate[4] += 1;
+          return;
+      }
+    });
+    console.log('countingRate : ', countingRate);
+    setCountRate([
+      countingRate[0],
+      countingRate[1],
+      countingRate[2],
+      countingRate[3],
+      countingRate[4],
+    ]);
+  }, [data]);
 
   const handleDetailInfoClick = () => {
     detailInfoRef.current?.scrollIntoView({
@@ -58,7 +102,8 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
           <Box>
             <Image
               w="100%"
-              src="/images/product/sampleImg.png"
+              src={data?.photo}
+              // src="/images/product/sampleImg.png"
               // backgroundColor="yellow"
             />
           </Box>
@@ -70,7 +115,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
         >
           <Flex flexDirection="column" ml="16px" pt="30px">
             <Flex fontSize="1.25rem">
-              <Box as="strong">인코스런 로션</Box>
+              <Box as="strong">{data?.name}</Box>
               <Box
                 as="span"
                 style={{
@@ -78,7 +123,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                   color: 'gray.600',
                 }}
               >
-                300ml
+                {data?.capacity}ml
               </Box>
             </Flex>
 
@@ -89,7 +134,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                 color="primary.500"
                 fontWeight="700"
               >
-                27,000
+                {data?.price}
               </Box>
               원
             </Box>
@@ -100,10 +145,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
               </Box>
             </Box>
 
-            <Text my="10px">
-              순하고 마일드한 안심 처방으로 피부가 민감하고 연약한 우리 아이를
-              위한 고보습 로션
-            </Text>
+            <Text my="10px">{data?.description}</Text>
             <Flex>
               <Flex alignItems="center">
                 <Image
@@ -115,10 +157,10 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                 />
               </Flex>
               <Box as="span" fontWeight="700">
-                4.3
+                {data?.avgRate?.toFixed(1) || '0'}
               </Box>
               <Box as="span" color="gray.700">
-                &nbsp;(리뷰 123개)
+                &nbsp;&#40;리뷰 {data?.reviewCount}개&#41;
               </Box>
             </Flex>
           </Flex>
@@ -181,13 +223,18 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
               onClick={handleReviewClick}
             >
               {/* 리뷰 ({reviews?.length}) */}
-              리뷰 &#40;78&#41;
+              리뷰 &#40;{data?.reviewCount}&#41;
             </Box>
           </Flex>
         </Box>
 
-        <Box h="2000px" backgroundColor="yellow" ref={detailInfoRef}>
-          {/* detail */}
+        <Box
+          maxH="477px"
+          // backgroundColor="yellow"
+          ref={detailInfoRef}
+          overflow="hidden"
+        >
+          <Box dangerouslySetInnerHTML={{ __html: data?.detail || '' }}></Box>
         </Box>
 
         <Accordion defaultIndex={[1]} allowMultiple>
@@ -195,14 +242,12 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
             {({ isExpanded }) => (
               <>
                 <AccordionPanel px={0} pb="20px" pt={0} overflow="hidden">
-                  <Box w="100%" h="200px" backgroundColor="blue"></Box>
-                  <Image
-                    // src={detail.detailImg}
-                    alt="detail"
-                    // marginTop="-477px"
-                  />
+                  <Box
+                    dangerouslySetInnerHTML={{ __html: data?.detail || '' }}
+                    mt="-477px"
+                  ></Box>
                 </AccordionPanel>
-                <Box px="16px">
+                <Box px="16px" py="1px">
                   <AccordionButton
                     {...ButtonStyle}
                     _expanded={{ border: '1px solid black' }}
@@ -265,8 +310,8 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
       <Box px="16px">
         <HStack pt="51px" pb="30px" justify="space-between">
           <Box ref={reviewRef} fontWeight="700">
-            리뷰{' '}
-            <span style={{ color: '#FF710B' }}>{/* {reviews?.length} */}</span>
+            리뷰&nbsp;
+            <span style={{ color: '#FF710B' }}>{data?.reviewList.length}</span>
             건
           </Box>
           <HStack spacing="10px">
@@ -281,8 +326,8 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
               defaultValue="created_at"
             >
               <option value="-created_at">최신순</option>
-              <option value="-rating">평점 높은 순</option>
-              <option value="rating">평점 낮은 순</option>
+              <option value="highRating">평점 높은 순</option>
+              <option value="lowRating">평점 낮은 순</option>
             </Select>
             <Select
               fontWeight="700"
@@ -310,26 +355,26 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
               borderRadius="15px"
               color="white"
             >
-              {/* {detail.avgRating?.toFixed(1)} */}
+              {data?.avgRate?.toFixed(1) || '0'}
             </Box>
-            {/* <StarRating
-              starRating={Number(detail.avgRating?.toFixed())}
-            ></StarRating> */}
+            <StarRating
+              starRating={Number(data?.avgRate?.toFixed())}
+            ></StarRating>
           </HStack>
           <Box w="1px" h="70px" bg="gray.200"></Box>
           <VStack spacing={0} alignItems="center">
             <HStack spacing="23px">
-              {/* {reviews &&
-                ratingCounts &&
-                ratingCounts.map((count, index) => {
+              {data?.reviewList &&
+                countRate &&
+                countRate.map((count, idx) => {
                   return (
                     <ReviewChartBar
-                      key={index}
+                      key={idx}
                       count={count}
-                      countAll={reviews?.length}
+                      countAll={data?.reviewList.length}
                     />
                   );
-                })} */}
+                })}
             </HStack>
             <Box w="150px" h="1px" bg="gray.200"></Box>
             <HStack
@@ -347,10 +392,10 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
           </VStack>
         </Flex>
 
-        {/* {reviews &&
-          reviews.map((review) => (
-            <SingleReview key={review.id} review={review} />
-          ))} */}
+        {data?.reviewList &&
+          data?.reviewList.map((review) => (
+            <ReviewItem key={review?.id} review={review} />
+          ))}
       </Box>
     </Box>
   );

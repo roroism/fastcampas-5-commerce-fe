@@ -1,3 +1,5 @@
+import { Ireview } from '@components/ProductsPage/_fragments/ReviewItem';
+
 export type gender = 'male' | 'female';
 
 export type ProductDTOType = {
@@ -12,7 +14,7 @@ export type ProductDTOType = {
     capacity: number;
     thumbnail: string;
     tags: Array<{ id: number; name: string }>;
-    avgRate: string | null;
+    avgRate: number | null;
     reviewCount: number;
   }>;
 };
@@ -25,9 +27,9 @@ export type ProductDetailDTOType = {
   capacity: number;
   detail: string;
   photo: string;
-  reviewList: string;
-  avgRate: string;
-  reviewCount: string;
+  reviewList: Array<Ireview>;
+  avgRate: number;
+  reviewCount: number;
 };
 
 export type MyInfoDTOType = {

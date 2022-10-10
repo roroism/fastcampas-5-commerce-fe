@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, UseFormReturn } from 'react-hook-form';
@@ -92,8 +93,11 @@ const EditPageView = ({
 
   const handleAvatarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-
-    if (avatarRef.current?.files) {
+    if (!avatarRef?.current?.files?.length) {
+      setPreview('');
+      return;
+    } else {
+      // if (avatarRef.current?.files) {
       setImg(avatarRef.current?.files);
       const file = avatarRef.current?.files[0];
       setPreview(URL.createObjectURL(file));
@@ -104,7 +108,7 @@ const EditPageView = ({
 
       instance
         .post(`/v1/presigned_url/`, {
-          name: 'string',
+          name: file.name,
         })
         .then(async (res) => {
           console.log('presignedUrl : ', res.data.url);
@@ -137,7 +141,7 @@ const EditPageView = ({
 
   return (
     <>
-      <Box>
+      <Box {...basisProps} mt="130px">
         <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
           회원정보수정
         </Text>
@@ -280,18 +284,24 @@ const EditPageView = ({
           </Box>
 
           <Flex gap="13px" pt="50px" pb="30px" px="16px" bgColor="white">
-            <Button
-              variant="outline"
-              fontWeight="700"
-              colorScheme="primary"
-              w="50%"
-              h="50px"
-              borderRadius="25px"
-              fontSize="1rem"
-              // onClick={onOpen}
-            >
-              취소
-            </Button>
+            <Box w="calc(50% - 6.5px)">
+              <NextLink href="/mypage" passHref replace>
+                <Link>
+                  <Button
+                    variant="outline"
+                    fontWeight="700"
+                    colorScheme="primary"
+                    w="full"
+                    h="50px"
+                    borderRadius="25px"
+                    fontSize="1rem"
+                    // onClick={onOpen}
+                  >
+                    취소
+                  </Button>
+                </Link>
+              </NextLink>
+            </Box>
 
             <Button
               variant="solid"

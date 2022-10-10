@@ -62,8 +62,11 @@ const JoinPageView = ({
 
   const handleAvatarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-
-    if (avatarRef.current?.files) {
+    if (!avatarRef?.current?.files?.length) {
+      setPreview('');
+      return;
+    } else {
+      // if (avatarRef.current?.files) {
       setImg(avatarRef.current?.files);
       const file = avatarRef.current?.files[0];
       setPreview(URL.createObjectURL(file));
@@ -74,7 +77,7 @@ const JoinPageView = ({
 
       instance
         .post(`/v1/presigned_url/`, {
-          name: 'string',
+          name: file.name,
         })
         .then(async (res) => {
           console.log('presignedUrl : ', res.data.url);

@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 
 import {
@@ -5,6 +6,7 @@ import {
   Button,
   Flex,
   Input,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,15 +19,11 @@ import {
 
 import { deleteToken } from '@utils/localStorage/token';
 
-interface LogoutModalProps extends Omit<ModalProps, 'children'> {
-  title: string;
-}
-function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
-  const router = useRouter();
-
+interface WithdrawalModalProps extends Omit<ModalProps, 'children'> {}
+function WithdrawalModal({ isOpen, onClose, ...props }: WithdrawalModalProps) {
   const handleLogoutClick = () => {
     deleteToken();
-    router.push('/login');
+    console.log('deleteToken');
   };
 
   return (
@@ -46,17 +44,18 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
             justifyContent="center"
           >
             <Box
+              as="p"
               fontWeight="700"
               textAlign="center"
               alignItems="center"
               mt="31px"
             >
-              로그아웃 하시겠습니까?
+              탈퇴가 완료되었습니다.
             </Box>
           </ModalBody>
 
           <ModalFooter p={0} display="flex" gap="10px" justifyContent="center">
-            <Button
+            {/* <Button
               onClick={onClose}
               fontWeight="700"
               py="17.8px"
@@ -68,19 +67,23 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
               border="1px solid"
             >
               취소
-            </Button>
-            <Button
-              onClick={handleLogoutClick}
-              fontWeight="700"
-              py="17.8px"
-              w="155px"
-              h="auto"
-              borderRadius="25px"
-              backgroundColor="primary.500"
-              color="white"
-            >
-              확인
-            </Button>
+            </Button> */}
+            <NextLink href="/login" passHref>
+              <Link>
+                <Button
+                  onClick={handleLogoutClick}
+                  fontWeight="700"
+                  py="17.8px"
+                  w="155px"
+                  h="auto"
+                  borderRadius="25px"
+                  backgroundColor="primary.500"
+                  color="white"
+                >
+                  확인
+                </Button>
+              </Link>
+            </NextLink>
           </ModalFooter>
         </Flex>
       </ModalContent>
@@ -88,4 +91,4 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
   );
 }
 
-export default LogoutModal;
+export default WithdrawalModal;

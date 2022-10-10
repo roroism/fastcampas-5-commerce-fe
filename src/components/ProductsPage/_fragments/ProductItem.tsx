@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import NextLink from 'next/link';
 import React, { useCallback, useState } from 'react';
 
 import {
@@ -12,11 +12,14 @@ import {
   Flex,
   Image,
   Input,
+  Link,
   ListItem,
   UnorderedList,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
+
+import priceFormat from 'hooks/priceFormat';
 
 interface ProductItemProps extends ChakraProps {
   product: {
@@ -27,7 +30,7 @@ interface ProductItemProps extends ChakraProps {
     capacity: number;
     thumbnail: string;
     tags: Array<{ id: number; name: string }>;
-    avgRate: string | null;
+    avgRate: number | null;
     reviewCount: number;
   };
 }
@@ -56,14 +59,16 @@ const ProductItem = ({ product }: ProductItemProps) => {
         pb="30px"
       >
         <Box borderTopRadius="20px" w="100%" overflow="hidden">
-          <Link href={`products/${product?.id}`}>
-            <Image
-              w="100%"
-              // src="./images/product/sampleImg.png"
-              src={product?.thumbnail}
-              // backgroundColor="yellow"
-            />
-          </Link>
+          <NextLink href={`products/${product?.id}`} passHref>
+            <Link>
+              <Image
+                w="100%"
+                // src="./images/product/sampleImg.png"
+                src={product?.thumbnail}
+                // backgroundColor="yellow"
+              />
+            </Link>
+          </NextLink>
         </Box>
         <Flex flexDirection="column" ml="30px" pt="30px" pb="20px">
           <Flex>
@@ -104,7 +109,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
               />
             </Flex>
             <Box as="span" fontWeight="700">
-              4.3
+              {product?.avgRate?.toFixed(1) || '0'}
             </Box>
             <Box as="span" color="gray.700">
               &nbsp;&#40;리뷰&nbsp;{product?.reviewCount}개&#41;
@@ -125,6 +130,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             ))}
           </UnorderedList>
         </Flex>
+
         <Flex gap="10px" justifyContent="space-between" mx="17px">
           <Button
             colorScheme="primary"
@@ -247,7 +253,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                   <Flex fontWeight="700" color="gray.600" alignItems="center">
                     {/* {priceToString(product?.price)}원
                      */}
-                    {product?.price}원
+                    {priceFormat(product?.price)}원
                   </Flex>
                 </Flex>
               </VStack>

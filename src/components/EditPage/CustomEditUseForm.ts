@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { FormDataType } from './types';
+import { FormEditDataType } from './types';
 
 import useValidateWithByte from 'hooks/useValidateWithByte';
 
@@ -33,23 +33,26 @@ export const FormSchema = yup.object().shape({
     .string()
     .required('이메일은 필수입니다.')
     .email('이메일 주소를 정확하게 입력해주세요.'),
-  gender: yup.string().notRequired(),
-  age: yup.string().notRequired(),
-  address: yup.string().notRequired(),
+
+  // gender: yup.object().shape({
+  //   value: yup.string(),
+  // }),
+  // age: yup.object().shape({
+  //   value: yup.string(),
+  // }),
+  gender: yup.string(),
+  age: yup.number(),
+  address: yup.string(),
 });
 
-const customUseForm = (options?: UseFormProps<FormDataType>) => {
+const customEditUseForm = (options?: UseFormProps<FormEditDataType>) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useForm<FormDataType>({
+  return useForm<FormEditDataType>({
     resolver: yupResolver(FormSchema),
     mode: 'onChange',
-    defaultValues: {
-      profile: '',
-      gender: undefined,
-      age: undefined,
-    },
+    defaultValues: { profile: '' },
     ...options,
   });
 };
 
-export default customUseForm;
+export default customEditUseForm;

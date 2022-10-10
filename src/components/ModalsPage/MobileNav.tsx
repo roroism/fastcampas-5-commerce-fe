@@ -1,5 +1,4 @@
 import NextLink from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 
 import {
@@ -16,6 +15,7 @@ import {
   Flex,
   Image,
   Link,
+  Text,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -37,7 +37,6 @@ const MenuText = {
 interface MobileNavProps extends DrawerProps {}
 
 function MobileNav(props: Omit<MobileNavProps, 'children'>) {
-  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -48,8 +47,8 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
           <DrawerCloseButton />
           {/* <DrawerHeader></DrawerHeader> */}
           <DrawerBody>
-            <Box as="h2" {...TitleText} px="1rem" mt="80px">
-              카테고리
+            <Box {...TitleText} px="1rem" mt="80px">
+              <Text as="h2">카테고리</Text>
             </Box>
             <VStack as="ul" spacing={0} pt="30px" alignItems="flex-start">
               <Flex
@@ -66,7 +65,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                     w="full"
                   >
                     <Button variant="unstyled" minWidth={0} {...MenuText}>
-                      홈
+                      <Text as="h3">홈</Text>
                     </Button>
                   </Link>
                 </NextLink>
@@ -85,7 +84,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                     w="full"
                   >
                     <Button variant="unstyled" {...MenuText}>
-                      상품보기
+                      <Text as="h3">상품보기</Text>
                     </Button>
                   </Link>
                 </NextLink>
@@ -104,7 +103,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                     w="full"
                   >
                     <Button variant="unstyled" {...MenuText}>
-                      마이페이지
+                      <Text as="h3">마이페이지</Text>
                     </Button>
                   </Link>
                 </NextLink>
@@ -115,7 +114,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
             <Flex mb="25px" ml="16px">
               <Image src="/icons/svg/logout.svg" alt="logout" mr="4px" />
               <Button variant="unstyled" {...TitleText} onClick={onOpen}>
-                로그아웃
+                <Text as="h3">로그아웃</Text>
               </Button>
             </Flex>
           </DrawerFooter>

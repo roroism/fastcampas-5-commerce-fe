@@ -1,0 +1,94 @@
+import {
+  Box,
+  ChakraProps,
+  Flex,
+  HStack,
+  Image,
+  VStack,
+} from '@chakra-ui/react';
+
+import StarRating from '@components/common/StarRating/StarRating';
+
+export interface Ireview {
+  content: string;
+  created: string;
+  id: number;
+  nickname: string;
+  rate: number;
+  reviewimageSet: Array<{ reviewId: number; url: string }>;
+  userId: number;
+}
+
+interface ReviewItemProps extends ChakraProps {
+  review?: Ireview;
+}
+
+function ReviewItem({ review }: ReviewItemProps) {
+  const year = review?.created.slice(0, 4);
+  const month = review?.created.slice(5, 7);
+  const date = review?.created.slice(8, 10);
+
+  // const yearReply = review.reply?.createdAt.slice(0, 4);
+  // const monthReply = review.reply?.createdAt.slice(5, 7);
+  // const dateReply = review.reply?.createdAt.slice(8, 10);
+  return (
+    <>
+      <VStack spacing={0} pt="23px" pb="25px" w="full">
+        <Flex w="full" justify="space-between">
+          <Box fontWeight="700" fontSize="0.75rem">
+            {review?.nickname}
+          </Box>
+          <StarRating starRating={review?.rate} width="10px" />
+        </Flex>
+        <Box w="full" color="gray.600" fontWeight="400" fontSize="0.75rem">
+          {year}.{month}.{date}
+        </Box>
+        <Box
+          w="full"
+          pt="17px"
+          fontSize="1rem"
+          fontWeight="400"
+          lineHeight="1.5em"
+        >
+          {review?.content}
+        </Box>
+        <HStack spacing="10px" w="full" justify="flex-start" pt="9px">
+          {review?.reviewimageSet.map((photo, idx) => (
+            <Image
+              key={idx}
+              borderRadius="5px"
+              w="80px"
+              h="80px"
+              src={photo.url}
+            ></Image>
+          ))}
+        </HStack>
+      </VStack>
+      {/* {review.reply && (
+        <Flex w="full" pt="6px" pb="30px">
+          <Box pr="9px">
+            <Image src="/icons/svg/review/reply.svg" />
+          </Box>
+          <VStack spacing={0}>
+            <Flex w="full" justify="space-between">
+              <Box fontWeight="700" fontSize="0.75rem">인코스런 관리자</Box>
+            </Flex>
+            <Box color="gray.600"
+          fontWeight="400"
+          fontSize="0.75rem" w="full">
+              {yearReply}.{monthReply}.{dateReply}
+            </Box>
+            <Box fontSize="1rem"
+          fontWeight="400"
+          lineHeight="1.5em"w="full" pt="20px">
+              {review.reply.content}
+            </Box>
+          </VStack>
+        </Flex>
+      )} */}
+      <Box w="full" borderBottom="1px solid #F2F3F4"></Box>
+    </>
+  );
+}
+
+export default ReviewItem;

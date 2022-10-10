@@ -2,6 +2,7 @@ import NextLink from 'next/link';
 
 import {
   Box,
+  Button,
   Container,
   Flex,
   Link,
@@ -21,6 +22,7 @@ const Header = () => {
   return (
     <>
       <Container px={0} as="header" w={{ base: '375px' }}>
+        <VisuallyHidden as="h2">navigation area</VisuallyHidden>
         <Flex
           h={LAYOUT.HEADER.HEIGHT}
           alignItems="center"
@@ -30,14 +32,15 @@ const Header = () => {
           zIndex="999"
           w="inherit"
         >
-          <BasicIcon
-            w="24px"
-            h="24px"
-            _hover={{ cursor: 'pointer' }}
-            onClick={onOpen}
-          />
-          <Box as="h1" w="120px">
-            <NextLink href="/">
+          <Box>
+            <VisuallyHidden as="h3">카테고리</VisuallyHidden>
+            <Button variant="unstyled" onClick={onOpen}>
+              <BasicIcon w="24px" h="24px" />
+            </Button>
+          </Box>
+
+          <Box as="h3" w="120px">
+            <NextLink href="/" passHref>
               <Link
                 display="block"
                 width="100%"
@@ -50,11 +53,14 @@ const Header = () => {
               </Link>
             </NextLink>
           </Box>
-          <NextLink href="/cart">
-            <Link>
-              <CartIcon w="24px" h="24px" _hover={{ cursor: 'pointer' }} />
-            </Link>
-          </NextLink>
+          <Box>
+            <VisuallyHidden as="h3">장바구니</VisuallyHidden>
+            <NextLink href="/cart" passHref>
+              <Link>
+                <CartIcon w="24px" h="24px" _hover={{ cursor: 'pointer' }} />
+              </Link>
+            </NextLink>
+          </Box>
         </Flex>
       </Container>
       <MobileNav isOpen={isOpen} onClose={onClose} size="sm" />

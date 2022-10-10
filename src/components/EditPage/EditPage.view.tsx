@@ -95,6 +95,7 @@ const EditPageView = ({
     e.preventDefault();
     if (!avatarRef?.current?.files?.length) {
       setPreview('');
+      setValue('profile', '');
       return;
     } else {
       // if (avatarRef.current?.files) {

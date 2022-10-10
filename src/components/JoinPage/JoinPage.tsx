@@ -12,18 +12,6 @@ import { setToken } from '@utils/localStorage/token';
 import customUseForm from './CustomUseForm';
 import JoinPageView from './JoinPage.view';
 
-interface IRegister {
-  socialToken: string;
-  email: string;
-  phone: string;
-  name: string;
-  nickname: string;
-  profile: string;
-  gender: 'male' | 'female';
-  age: number;
-  marketingAdAgree: boolean;
-}
-
 interface JoinPageProps extends ChakraProps {}
 
 function JoinPage({ ...basisProps }: JoinPageProps) {

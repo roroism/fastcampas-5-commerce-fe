@@ -45,7 +45,8 @@ export type MyInfoDTOType = {
 };
 export type MyInfoParamPatchType = {
   id?: string;
-  data: Partial<MyInfoDTOType>;
+  // data: Partial<MyInfoDTOType>;
+  data: FormData;
 };
 
 export type ExampleDTOType = {};

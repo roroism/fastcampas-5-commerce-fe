@@ -5,7 +5,7 @@ export type FormDataType = {
   phone: string;
   email: string;
   gender?: 'male' | 'female';
-  age?: number;
+  age?: string;
   agreeAll: boolean;
   agreeRequired: boolean;
   agreePrivateInfo: boolean;

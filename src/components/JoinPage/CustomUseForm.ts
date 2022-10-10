@@ -33,16 +33,9 @@ export const FormSchema = yup.object().shape({
     .string()
     .required('이메일은 필수입니다.')
     .email('이메일 주소를 정확하게 입력해주세요.'),
-
-  // gender: yup.object().shape({
-  //   value: yup.string(),
-  // }),
-  // age: yup.object().shape({
-  //   value: yup.string(),
-  // }),
-  gender: yup.string(),
-  age: yup.number(),
-  address: yup.string(),
+  gender: yup.string().notRequired(),
+  age: yup.string().notRequired(),
+  address: yup.string().notRequired(),
 });
 
 const customUseForm = (options?: UseFormProps<FormDataType>) => {
@@ -50,7 +43,11 @@ const customUseForm = (options?: UseFormProps<FormDataType>) => {
   return useForm<FormDataType>({
     resolver: yupResolver(FormSchema),
     mode: 'onChange',
-    defaultValues: { profile: '' },
+    defaultValues: {
+      profile: '',
+      gender: undefined,
+      age: undefined,
+    },
     ...options,
   });
 };

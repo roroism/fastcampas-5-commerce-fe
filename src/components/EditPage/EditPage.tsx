@@ -42,18 +42,32 @@ function EditPage({ ...basisProps }: EditPageProps) {
       data.gender,
       data.age,
     );
+
+    const form = new FormData();
+    form.append('name', data.name);
+    form.append('nickname', data.nickname);
+    form.append('phone', data.phone.replace(/-/g, ''));
+    form.append('email', data.email);
+    form.append('address', '서울시 강남구');
+    if (data.profile && data.profile !== '') {
+      form.append('profile', data.profile);
+    }
+    form.append('gender', data.gender as string);
+    form.append('age', String(data.age));
+
     mutate({
-      data: {
-        name: data.name,
-        nickname: data.nickname,
-        phone: data.phone.replace(/-/g, ''),
-        // phone: data.phone,
-        address: '서울특별시 송파구 올림픽로 240',
-        email: data.email,
-        profile: data.profile,
-        gender: data.gender,
-        age: data.age,
-      },
+      // data: {
+      //   name: data.name,
+      //   nickname: data.nickname,
+      //   phone: data.phone.replace(/-/g, ''),
+      //   // phone: data.phone,
+      //   address: '서울특별시 송파구 올림픽로 240',
+      //   email: data.email,
+      //   profile: data.profile,
+      //   gender: data.gender,
+      //   age: data.age,
+      // },
+      data: form,
     });
 
     // instance

@@ -56,13 +56,19 @@ export class ProductApi {
 
   // patchMyInfo = async (req: MyInfoParamPatchType): Promise<MyInfoDTOType> => {
   patchMyInfo = async (req: MyInfoParamPatchType): Promise<any> => {
-    console.log('...req.data, : ', { ...req.data });
+    // console.log('...req.data, : ', { ...req.data });
 
-    const data = await this.axios({
-      method: 'PATCH',
-      url: `/v1/user/me/`,
-      data: { ...req.data },
+    await this.axios.patch(`/v1/user/me/`, req.data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     });
+
+    // const data = await this.axios({
+    //   method: 'PATCH',
+    //   url: `/v1/user/me/`,
+    //   data: { ...req.data },
+    // });
 
     // const data = instance
     //   .patch(
@@ -87,7 +93,7 @@ export class ProductApi {
     //   data: req.data,
     // });
     // return data;
-    return data;
+    // return data;
   };
 
   // postExample = async (body: ProductDTOType): Promise<ExampleDTOType> => {

@@ -45,7 +45,7 @@ function KakaoPage({ ...basisProps }: KakaoPageProps) {
           setAuthHeader(socialLoginInfo.access as string);
           router.push('/');
         } else {
-          router.replace({
+          router.push({
             pathname: '/join',
             query: { socialToken: socialLoginInfo.socialToken },
           });

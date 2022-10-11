@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import productApi from '@apis/reactquery/QueryApi';
 import {
   useGetCartQuery,
   useGetMyInfoQuery,
@@ -29,7 +30,16 @@ function CartPage({ ...basisProps }: CartPageProps) {
   });
   const { data: cartData } = useGetCartQuery({
     variables: userData?.id,
-    options: { enabled: !!userData },
+    options: {
+      enabled: !!userData,
+      onSuccess: (data) => {
+        if (data.length === 0) {
+          const form = new FormData();
+          form.append('userId', String(userData?.id));
+          productApi.postCart(form);
+        }
+      },
+    },
   });
   // const [checkItems, setCheckItems] = useState([]);
 

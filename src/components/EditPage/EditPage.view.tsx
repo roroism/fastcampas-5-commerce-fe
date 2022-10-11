@@ -79,7 +79,7 @@ const EditPageView = ({
       );
     if (myInfo?.gender) setValue('gender', myInfo?.gender);
     if (myInfo?.age) setValue('age', myInfo?.age);
-    // if (myInfo?.profile) setPreview(myInfo?.profile);
+    if (myInfo?.profile) setPreview(myInfo?.profile);
   }, [myInfo]);
 
   const handleAvatar = (e: React.MouseEvent) => {
@@ -106,7 +106,8 @@ const EditPageView = ({
       console.log('avatarRef.current?.files', avatarRef.current?.files);
       console.log('avatarRef.current?.files[0]', avatarRef.current?.files[0]);
       console.log('URL.createObjectURL(file)', URL.createObjectURL(file));
-
+      // const form = new FormData();
+      // form.append('file', file);
       instance
         .post(`/v1/presigned_url/`, {
           name: file.name,
@@ -114,11 +115,13 @@ const EditPageView = ({
         .then(async (res) => {
           console.log('presignedUrl : ', res.data.url);
           setValue('profile', res.data.url);
+          console.log('file.type : ', file.type);
           const upload = await axios
             .put(
               `${res.data.url}`,
               // { file: file },
               file,
+              // form,
               {
                 baseURL: '',
                 headers: {

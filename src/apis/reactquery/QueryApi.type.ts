@@ -49,6 +49,45 @@ export type MyInfoParamPatchType = {
   data: FormData;
 };
 
+interface Icartitem {
+  id: number;
+  productId: number;
+  cartId: number;
+  count: number;
+}
+
+export type CartDTOType = Array<{
+  cartitem: Array<Icartitem>;
+  id: number;
+  userId: number;
+}>;
+
+export type CartItemDTOType = {
+  id: number;
+  productId: number;
+  cartId: number;
+  count: number;
+};
+
+export interface IPostCartItemRequestBody {
+  productId: number;
+  cartId: number;
+  count: number;
+}
+
+// export type CartDTOType = [
+//   {
+//     cartitem: Array<Icartitem>;
+//     id: number;
+//     userId: number;
+//   },
+// ];
+export type CartParamGetType = {};
+
+export type CartParamPostType = {};
+
+export type CartItemParamPostType = {};
+
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};

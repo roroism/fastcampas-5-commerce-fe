@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Box,
@@ -9,6 +9,12 @@ import {
   TagLabel,
 } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+import {
+  useGetCartQuery,
+  useGetMyInfoQuery,
+} from '@apis/reactquery/QueryApi.query';
+
 import { LAYOUT } from '@constants/layout';
 
 import CartItem from './_fragments/CartItem';
@@ -18,6 +24,13 @@ import CartItem from './_fragments/CartItem';
 interface CartPageProps extends ChakraProps {}
 
 function CartPage({ ...basisProps }: CartPageProps) {
+  const { data: userData } = useGetMyInfoQuery({
+    options: { staleTime: 1800, cacheTime: Infinity },
+  });
+  const { data: cartData } = useGetCartQuery({
+    variables: userData?.id,
+    options: { enabled: !!userData },
+  });
   // const [checkItems, setCheckItems] = useState([]);
 
   // 체크박스 단일 선택
@@ -44,6 +57,32 @@ function CartPage({ ...basisProps }: CartPageProps) {
   //     setCheckItems([]);
   //   }
   // }
+  console.log('userData : ', userData);
+  console.log('cartData : ', cartData);
+  useEffect(() => {
+    // const fetchFn = async () => {
+    //   await instance
+    //     .get(`/v1/cart/?user_id=${userData?.id}`)
+    //     .then(async (res) => {
+    //       console.log('cart data 가져옴', res);
+    //       if (res.data.length == 0) {
+    //         const form = new FormData();
+    //         form.append('userId', String(userData?.id));
+    //         await instance
+    //           .post(`/v1/cart/`, form, {
+    //             headers: { 'content-type': 'multipart/form-data' },
+    //           })
+    //           .then((res) => {
+    //             console.log('cart생성 성공 : ', res);
+    //           })
+    //           .catch((err) => {
+    //             console.log('에러 : err', err);
+    //           });
+    //       }
+    //     });
+    // };
+    // fetchFn();
+  }, [userData]);
 
   return (
     <Box {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>

@@ -8,13 +8,14 @@ import {
 
 import productApi from './QueryApi';
 import {
+  CartParamGetType,
   MyInfoParamGetType,
   ProductDTOType,
   ProductParamGetType,
 } from './QueryApi.type';
 
 export const PRODUCT_API_QUERY_KEY = {
-  GET: (param?: ProductParamGetType) => ['product-list', param],
+  GET: (param: ProductParamGetType = '') => ['product-list', param],
   GET_BY_ID: (id?: string) => ['product-by-id', id],
 };
 
@@ -58,7 +59,7 @@ export function useGetProductByIdQuery(
 }
 
 export const MYINFO_API_QUERY_KEY = {
-  GET: (param?: MyInfoParamGetType) => ['my-info', param],
+  GET: (param: MyInfoParamGetType = '') => ['my-info', param],
   // GET_BY_ID: (id?: string) => ['product-by-id', id],
 };
 
@@ -71,6 +72,29 @@ export function useGetMyInfoQuery(
     () => productApi.getMyInfo(),
     params?.options,
   );
+
+  return { ...query, queryKey };
+}
+
+export const CART_API_QUERY_KEY = {
+  GET: (param: CartParamGetType = '') => ['cart', param],
+  // GET_BY_ID: (id?: string) => ['product-by-id', id],
+};
+
+export function useGetCartQuery(
+  params?: QueryHookParams<typeof productApi.getCart>,
+) {
+  const queryKey = CART_API_QUERY_KEY.GET(params?.variables);
+  const query = useQuery(
+    queryKey,
+    () => productApi.getCart(params?.variables),
+    params?.options,
+  );
+  // if (query?.length == 0) {
+  //   const form = new FormData();
+  //   form.append('userId', String(params?.variables));
+
+  // }
 
   return { ...query, queryKey };
 }

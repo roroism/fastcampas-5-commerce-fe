@@ -46,7 +46,8 @@ export const usePostCartMutation = (
 export const CART_ITEM_API_MUTATION_KEY = {
   POST: (param?: CartItemParamPostType) => ['cart-item-post', param],
   // PUT: (req?: ExampleParamPutType) => ['example-put', req],
-  // PATCH: (req?: MyInfoParamPatchType) => ['myinfo-patch', req],
+  PUT: (req?: MyInfoParamPatchType) => ['cart-item-put', req],
+  PATCH: (req?: MyInfoParamPatchType) => ['cart-item-patch', req],
   // DELETE: (id?: string) => ['example-delete', id],
 };
 
@@ -62,6 +63,22 @@ export const usePostCartItemMutation = (
     },
   );
 };
+
+export const usePutProductInCartItemMutation = (
+  params?: MutationHookParams<typeof productApi.putProductInCartItem>,
+) => {
+  return useMutation(productApi.putProductInCartItem, {
+    ...params?.options,
+  });
+};
+
+// export const usePatchProductInCartItemMutation = (
+//   params?: MutationHookParams<typeof productApi.putProductInCartItem>,
+// ) => {
+//   return useMutation(productApi.putProductInCartItem, {
+//     ...params?.options,
+//   });
+// };
 
 // export const EXAMPLE_API_MUTATION_KEY = {
 //   POST: (param?: ExampleDTOType) => ['example-post', param],

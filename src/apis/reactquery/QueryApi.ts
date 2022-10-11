@@ -14,6 +14,8 @@ import {
   MyInfoParamPatchType,
   ProductDTOType,
   ProductDetailDTOType,
+  ProductInCartItemDTOType,
+  ProductInCartItemParamPutType,
   ProductParamGetType,
 } from './QueryApi.type';
 
@@ -128,6 +130,32 @@ export class ProductApi {
     });
     return data;
   };
+
+  putProductInCartItem = async (
+    req: ProductInCartItemParamPutType,
+  ): Promise<ProductInCartItemDTOType> => {
+    console.log('putProductInCartItem req : ', req);
+    const { data } = await this.axios({
+      method: 'PUT',
+      url: `/v1/cart/item/${req.id}/`,
+      data: req.data,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  // patchProductInCartItem = async (
+  //   req: ProductInCartItemParamPatchType,
+  // ): Promise<ProductInCartItemDTOType> => {
+  //   console.log('patchProductInCartItem req : ', req);
+  //   const { data } = await this.axios({
+  //     method: 'PUT',
+  //     url: `/v1/cart/item/${req.id}/`,
+  //     data: req.data,
+  //     headers: { 'Content-Type': 'multipart/form-data' },
+  //   });
+  //   return data;
+  // };
 
   // postExample = async (body: ProductDTOType): Promise<ExampleDTOType> => {
   //   const { data } = await this.axios({

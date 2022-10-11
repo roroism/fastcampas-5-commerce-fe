@@ -17,8 +17,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { usePostCartItemMutation } from '@apis/reactquery/QueryApi.mutation';
 import {
+  usePostCartItemMutation,
+  usePutProductInCartItemMutation,
+} from '@apis/reactquery/QueryApi.mutation';
+import {
+  CART_API_QUERY_KEY,
   MYINFO_API_QUERY_KEY,
   useGetCartQuery,
   useGetMyInfoQuery,
@@ -54,7 +58,20 @@ function OrderDrawer({
   console.log('cartData : ', cartData);
   const [quantity, setQuantity] = useState<number>(1);
   const [totalQuantity, setTotalQuantity] = useState<number>(1);
-  const { mutate } = usePostCartItemMutation(data?.id || 0);
+  const { mutate: mutatingCart } = usePostCartItemMutation(data?.id || 0, {
+    options: {
+      onSuccess(data, variables, context) {
+        queryClient.invalidateQueries(CART_API_QUERY_KEY.GET(userData?.id));
+      },
+    },
+  });
+  const { mutate: mutatingCount } = usePutProductInCartItemMutation({
+    options: {
+      onSuccess(data, variables, context) {
+        queryClient.invalidateQueries(CART_API_QUERY_KEY.GET(userData?.id));
+      },
+    },
+  });
   const {
     isOpen: modalIsOpen,
     onOpen: modalOnOpen,
@@ -85,20 +102,20 @@ function OrderDrawer({
       (item) => item.productId === data?.id,
     );
 
-    if (hasProductInCartitem === undefined) {
+    if (!hasProductInCartitem) {
       // undefined 이면 post로 /v1/cart/item/ item생성
       const form = new FormData();
       form.append('productId', String(data?.id));
       form.append('cartId', String(cartData[0].id));
       form.append('count', String(totalQuantity));
 
-      mutate(form);
+      mutatingCart(form);
     } else {
       // undefined 가 아니면 totalQuantity 를 count로 patch /v1/cart/item/{id}
       const form = new FormData();
-      form.append('productId', String(data?.id));
-      form.append('cartId', String(cartData[0].id));
       form.append('count', String(totalQuantity));
+
+      mutatingCount({ id: hasProductInCartitem.id, data: form });
     }
 
     modalOnOpen();

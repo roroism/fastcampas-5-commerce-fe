@@ -75,6 +75,10 @@ export interface IPostCartItemRequestBody {
   count: number;
 }
 
+export type ProductInCartItemDTOType = {
+  count: number;
+};
+
 // export type CartDTOType = [
 //   {
 //     cartitem: Array<Icartitem>;
@@ -87,6 +91,16 @@ export type CartParamGetType = {};
 export type CartParamPostType = {};
 
 export type CartItemParamPostType = {};
+
+export type ProductInCartItemParamPutType = {
+  id: number;
+  data: FormData;
+};
+
+// export type ProductInCartItemParamPatchType = {
+//   id: number;
+//   data: FormData;
+// };
 
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};

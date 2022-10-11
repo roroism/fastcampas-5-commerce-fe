@@ -7,6 +7,7 @@ import {
   Checkbox,
   Flex,
   TagLabel,
+  VisuallyHidden,
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
@@ -95,12 +96,14 @@ function CartPage({ ...basisProps }: CartPageProps) {
   }, [userData]);
 
   return (
-    <Box {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
+    <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
+      <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Flex
         justifyContent="space-between"
         color="gray.600"
         alignItems="center"
         py="13px"
+        px="16px"
       >
         <Box>
           <Checkbox
@@ -119,12 +122,19 @@ function CartPage({ ...basisProps }: CartPageProps) {
         <Box>선택삭제</Box>
       </Flex>
 
-      <Box as="ul">
-        <CartItem></CartItem>
-        <CartItem></CartItem>
+      <Box>
+        <VisuallyHidden as="h3">장바구니 상품목록</VisuallyHidden>
+        <Box as="ul">
+          {/* {cartData[0].cartitem.map((item) => {
+            <CartItem key={item.id} data={item} />
+          })} */}
+          {/* <CartItem></CartItem>
+          <CartItem></CartItem> */}
+        </Box>
       </Box>
 
       <Box px="16px" pt="20px" pb="30px" mt="10px">
+        <VisuallyHidden as="h3">금액 정보</VisuallyHidden>
         <Flex
           flexDirection="column"
           pb="20px"

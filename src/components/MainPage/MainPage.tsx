@@ -36,7 +36,7 @@ function MainPage({ ...basisProps }: MainPageProps) {
   }, []);
 
   return (
-    <Box {...basisProps} overflow="hidden">
+    <Box as="main" {...basisProps} overflow="hidden">
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Box
         bgImage="./images/main/bg_main.png"

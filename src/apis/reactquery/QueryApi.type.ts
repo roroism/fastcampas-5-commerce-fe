@@ -49,7 +49,7 @@ export type MyInfoParamPatchType = {
   data: FormData;
 };
 
-interface Icartitem {
+export interface Icartitem {
   id: number;
   productId: number;
   cartId: number;

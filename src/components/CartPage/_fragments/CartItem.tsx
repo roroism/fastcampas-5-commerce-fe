@@ -1,6 +1,19 @@
-import { Box, Checkbox, Flex, Image, Input } from '@chakra-ui/react';
+import {
+  Box,
+  ChakraProps,
+  Checkbox,
+  Flex,
+  Image,
+  Input,
+} from '@chakra-ui/react';
 
-const CartItem = () => {
+import { Icartitem } from '@apis/reactquery/QueryApi.type';
+
+interface CartItemProps extends ChakraProps {
+  data: Icartitem;
+}
+
+const CartItem = ({ data, ...basisProps }: CartItemProps) => {
   return (
     <Box
       w="100%"

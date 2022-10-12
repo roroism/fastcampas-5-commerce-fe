@@ -64,6 +64,7 @@ const CartItem = ({
 
   const handleDeleteCartitem = () => {
     mutatingDelete(String(cartData?.id));
+    dispatch(orderSliceAction.deleteProductInCart(cartData?.id));
   };
 
   // 체크박스 단일 선택
@@ -71,19 +72,10 @@ const CartItem = ({
     if (checked) {
       // 단일 선택 시 체크된 아이템을 배열에 추가
       // setCheckItems((prev: Array<CartItemDTOType>) => [...prev, cartData]);
-      dispatch(
-        orderSliceAction.productInCart([
-          ...checkItems,
-          cartData,
-        ] as CartItemDTOType[]),
-      );
+      dispatch(orderSliceAction.addProductInCart(cartData));
     } else {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
-      dispatch(
-        orderSliceAction.productInCart(
-          checkItems.filter((el: CartItemDTOType) => el.id !== cartData?.id),
-        ),
-      );
+      dispatch(orderSliceAction.deleteProductInCart(cartData?.id));
     }
   };
 

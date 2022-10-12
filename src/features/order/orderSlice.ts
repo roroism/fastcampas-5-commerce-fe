@@ -22,6 +22,17 @@ export const orderSlice = createSlice({
     ) => {
       state.value = action?.payload || [];
     },
+    addProductInCart: (state, action) => {
+      state.value = [...state.value, action.payload];
+    },
+    deleteProductInCart: (state, action) => {
+      state.value = state.value.filter(
+        (el: CartItemDTOType) => el.id !== action.payload,
+      );
+    },
+    deleteAllProductInCart: (state) => {
+      state.value = [];
+    },
   },
 });
 

@@ -138,35 +138,44 @@ function CartPage({ ...basisProps }: CartPageProps) {
     } else {
       // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
       // setCheckItems([]);
-      dispatch(orderSliceAction.productInCart([]));
+      dispatch(orderSliceAction.deleteAllProductInCart());
     }
   };
+
+  const handleDeleteSelected = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    checkItems.forEach((element) => {
+      mutatingDelete(String(element?.id));
+    });
+    dispatch(orderSliceAction.deleteAllProductInCart());
+  };
+
   console.log('userData : ', userData);
   console.log('cartData : ', cartData);
-  useEffect(() => {
-    // const fetchFn = async () => {
-    //   await instance
-    //     .get(`/v1/cart/?user_id=${userData?.id}`)
-    //     .then(async (res) => {
-    //       console.log('cart data 가져옴', res);
-    //       if (res.data.length == 0) {
-    //         const form = new FormData();
-    //         form.append('userId', String(userData?.id));
-    //         await instance
-    //           .post(`/v1/cart/`, form, {
-    //             headers: { 'content-type': 'multipart/form-data' },
-    //           })
-    //           .then((res) => {
-    //             console.log('cart생성 성공 : ', res);
-    //           })
-    //           .catch((err) => {
-    //             console.log('에러 : err', err);
-    //           });
-    //       }
-    //     });
-    // };
-    // fetchFn();
-  }, [userData]);
+  // useEffect(() => {
+  // const fetchFn = async () => {
+  //   await instance
+  //     .get(`/v1/cart/?user_id=${userData?.id}`)
+  //     .then(async (res) => {
+  //       console.log('cart data 가져옴', res);
+  //       if (res.data.length == 0) {
+  //         const form = new FormData();
+  //         form.append('userId', String(userData?.id));
+  //         await instance
+  //           .post(`/v1/cart/`, form, {
+  //             headers: { 'content-type': 'multipart/form-data' },
+  //           })
+  //           .then((res) => {
+  //             console.log('cart생성 성공 : ', res);
+  //           })
+  //           .catch((err) => {
+  //             console.log('에러 : err', err);
+  //           });
+  //       }
+  //     });
+  // };
+  // fetchFn();
+  // }, [userData]);
 
   return isCartitem ? (
     <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
@@ -194,7 +203,11 @@ function CartPage({ ...basisProps }: CartPageProps) {
               모두선택
             </Checkbox>
           </Box>
-          <Box>선택삭제</Box>
+          <Box>
+            <Box as="button" onClick={handleDeleteSelected}>
+              선택삭제
+            </Box>
+          </Box>
         </Flex>
 
         <Box>

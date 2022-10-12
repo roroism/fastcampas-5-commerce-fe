@@ -2,7 +2,9 @@ import { QueryHookParams } from '@apis/type';
 
 import {
   UseInfiniteQueryResult,
+  UseQueryResult,
   useInfiniteQuery,
+  useQueries,
   useQuery,
 } from '@tanstack/react-query';
 
@@ -11,6 +13,7 @@ import {
   CartParamGetType,
   MyInfoParamGetType,
   ProductDTOType,
+  ProductDetailDTOType,
   ProductParamGetType,
 } from './QueryApi.type';
 
@@ -56,6 +59,53 @@ export function useGetProductByIdQuery(
   );
 
   return { ...query, queryKey };
+}
+
+export function useGetProductByIdQueries(
+  params: QueryHookParams<typeof productApi.getProductById>,
+  productIdList?: Array<string> | undefined,
+) {
+  // const queryKey = PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables);
+
+  const queryKeyList: any[] = [];
+
+  const queryList =
+    productIdList?.map((item) => {
+      queryKeyList.push(PRODUCT_API_QUERY_KEY.GET_BY_ID(item));
+
+      return {
+        queryKey: PRODUCT_API_QUERY_KEY.GET_BY_ID(item),
+        queryFn: () => productApi.getProductById(item),
+        staleTime: Infinity,
+      };
+    }) || [];
+
+  const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
+    queries: [...queryList],
+  });
+
+  // const query: UseQueryResult[] = useQueries({
+  //   queries: [
+  //     {
+  //       queryKey: PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables),
+  //       queryFn: () => productApi.getProductById(params?.variables),
+  //       staleTime: Infinity,
+  //     },
+  //   ],
+  // });
+
+  //   persons.map((person) => {
+  //     return {
+  //         queryKey: ['person', person.id],
+  //         queryFn: () => axios.get('http://localhost:8080/person', {
+  //             params: {
+  //                 id: person.id
+  //             }
+  //         })
+  //     }
+  // })
+
+  return { query, queryKeyList };
 }
 
 export const MYINFO_API_QUERY_KEY = {

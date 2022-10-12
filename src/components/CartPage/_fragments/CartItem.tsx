@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useState } from 'react';
+
 import {
   Box,
   ChakraProps,
@@ -5,15 +7,55 @@ import {
   Flex,
   Image,
   Input,
+  VisuallyHidden,
 } from '@chakra-ui/react';
 
-import { Icartitem } from '@apis/reactquery/QueryApi.type';
+import { usePutProductInCartItemMutation } from '@apis/reactquery/QueryApi.mutation';
+import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
+import {
+  CartItemDTOType,
+  ProductDetailDTOType,
+  ProductInCartItemDTOType,
+  ProductInCartItemParamPutType,
+} from '@apis/reactquery/QueryApi.type';
+
+import { UseMutateFunction, useQueryClient } from '@tanstack/react-query';
+
+import priceFormat from 'hooks/priceFormat';
 
 interface CartItemProps extends ChakraProps {
-  data: Icartitem;
+  productData: ProductDetailDTOType | undefined;
+  cartData: CartItemDTOType | undefined;
+  mutatingCount: UseMutateFunction<
+    ProductInCartItemDTOType,
+    any,
+    ProductInCartItemParamPutType,
+    unknown
+  >;
 }
 
-const CartItem = ({ data, ...basisProps }: CartItemProps) => {
+const CartItem = ({
+  productData,
+  cartData,
+  mutatingCount,
+  ...basisProps
+}: CartItemProps) => {
+  const handleDecQuantity = () => {
+    if ((cartData?.count || 1) > 1) {
+      const form = new FormData();
+      form.append('count', String((cartData?.count || 2) - 1));
+
+      mutatingCount({ id: cartData?.id as number, data: form });
+    }
+  };
+
+  const handleIncQuantity = () => {
+    const form = new FormData();
+    form.append('count', String((cartData?.count || 1) + 1));
+
+    mutatingCount({ id: cartData?.id as number, data: form });
+  };
+
   return (
     <Box
       w="100%"
@@ -27,6 +69,7 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
       py="20px"
       my="10px"
     >
+      <VisuallyHidden as="h4">{productData?.name}</VisuallyHidden>
       <Flex w="100%" gap="10px">
         <Box>
           <Checkbox
@@ -53,7 +96,7 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
               justifyContent="space-between"
             >
               <Box as="strong" fontWeight="700">
-                바스 & 삼푸
+                {productData?.name}
               </Box>
               <Box
                 as="p"
@@ -62,17 +105,25 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
                 overflow="hidden"
                 color="gray.600"
               >
-                바스 & 삼푸 | 120ml
+                {productData?.name} | {productData?.capacity}ml
               </Box>
               <Box as="span" fontWeight="700" color="primary.500">
-                27,000원
+                {priceFormat(productData?.price)}원
               </Box>
             </Flex>
-            <Box>
+            <Box
+              as="button"
+              position="absolute"
+              top="20px"
+              right="16px"
+              w="20px"
+              h="20px"
+              //onClick={deleteCart}
+            >
               <Box
-                position="absolute"
-                top="25px"
-                right="40px"
+                position="relative"
+                top="-8px"
+                right="6px"
                 _before={{
                   position: 'absolute',
                   left: '15px',
@@ -93,8 +144,6 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
                   transform: 'rotate(-45deg)',
                   borderRadius: '5px',
                 }}
-                // onClick={deleteCart}
-                _hover={{ cursor: 'pointer' }}
               ></Box>
             </Box>
           </Flex>
@@ -109,11 +158,12 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
             gap="4px"
           >
             <Box>
-              <Box color="gray.600">바스 & 삼푸</Box>
+              <Box color="gray.600">{productData?.name}</Box>
             </Box>
             <Flex justifyContent="space-between">
               <Flex h="25px" alignSelf="center">
                 <Box
+                  as="button"
                   position="relative"
                   bg="white"
                   border="1px solid #EAECF0"
@@ -132,7 +182,7 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
                     left: '7px',
                   }}
                   _hover={{ cursor: 'pointer' }}
-                  // onClick={decQuantity}
+                  onClick={handleDecQuantity}
                 ></Box>
                 <Flex
                   w="23px"
@@ -150,10 +200,12 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
                     p={0}
                     bg="white"
                     // value={quantity}
+                    value={cartData?.count}
                     readOnly
                   ></Input>
                 </Flex>
                 <Box
+                  as="button"
                   position="relative"
                   bg="white"
                   border="1px solid #EAECF0"
@@ -181,19 +233,19 @@ const CartItem = ({ data, ...basisProps }: CartItemProps) => {
                     top: '11px',
                     left: '7px',
                   }}
-                  // onClick={incQuantity}
+                  onClick={handleIncQuantity}
                   _hover={{ cursor: 'pointer' }}
                 ></Box>
               </Flex>
               <Flex alignSelf="center" as="strong" color="gray.600">
-                542,000원
+                {productData?.price}원
               </Flex>
             </Flex>
           </Flex>
           <Flex mt="15px" justifyContent="space-between">
             <Flex alignItems="center">배송비 무료</Flex>
             <Box as="strong" fontSize="1.25rem">
-              54,000원
+              {(productData?.price || 100000) * (cartData?.count || 1)}원
             </Box>
           </Flex>
         </Flex>

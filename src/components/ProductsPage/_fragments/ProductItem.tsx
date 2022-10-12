@@ -71,14 +71,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             <Box as="strong" fontSize="1rem">
               {product?.name}
             </Box>
-            <Box
-              as="span"
-              style={{
-                paddingLeft: '5px',
-                fontSize: '1rem',
-                color: 'gray.700',
-              }}
-            >
+            <Box as="span" paddingLeft="5px" fontSize="1rem" color="gray.700">
               {product?.capacity}ml
             </Box>
           </Flex>

@@ -32,12 +32,14 @@ interface CartItemProps extends ChakraProps {
     ProductInCartItemParamPutType,
     unknown
   >;
+  mutatingDelete: UseMutateFunction<boolean, any, string, unknown>;
 }
 
 const CartItem = ({
   productData,
   cartData,
   mutatingCount,
+  mutatingDelete,
   ...basisProps
 }: CartItemProps) => {
   const handleDecQuantity = () => {
@@ -54,6 +56,10 @@ const CartItem = ({
     form.append('count', String((cartData?.count || 1) + 1));
 
     mutatingCount({ id: cartData?.id as number, data: form });
+  };
+
+  const handleDeleteCartitem = () => {
+    mutatingDelete(String(cartData?.id));
   };
 
   return (
@@ -118,7 +124,7 @@ const CartItem = ({
               right="16px"
               w="20px"
               h="20px"
-              //onClick={deleteCart}
+              onClick={handleDeleteCartitem}
             >
               <Box
                 position="relative"

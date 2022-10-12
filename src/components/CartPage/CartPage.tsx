@@ -1,3 +1,4 @@
+import NextLink from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
 
 import {
@@ -6,13 +7,17 @@ import {
   ChakraProps,
   Checkbox,
   Flex,
+  Link,
   TagLabel,
   VisuallyHidden,
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 import productApi from '@apis/reactquery/QueryApi';
-import { usePutProductInCartItemMutation } from '@apis/reactquery/QueryApi.mutation';
+import {
+  useDeleteExampleMutation,
+  usePutProductInCartItemMutation,
+} from '@apis/reactquery/QueryApi.mutation';
 import {
   CART_API_QUERY_KEY,
   useGetCartQuery,
@@ -34,6 +39,7 @@ interface CartPageProps extends ChakraProps {}
 function CartPage({ ...basisProps }: CartPageProps) {
   const [productIdList, setProductIdList] = useState<Array<string>>();
   const [totalPrice, setTotalPrice] = useState<string>('');
+  const [isCartitem, setIsCartitem] = useState<boolean>(true);
   const { data: userData } = useGetMyInfoQuery({
     options: { staleTime: 1800, cacheTime: Infinity },
   });
@@ -43,11 +49,18 @@ function CartPage({ ...basisProps }: CartPageProps) {
       enabled: !!userData,
       onSuccess: (data) => {
         if (data.length === 0) {
+          // 장바구니 x 상품 x
           const form = new FormData();
           form.append('userId', String(userData?.id));
           productApi.postCart(form);
           // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+          setIsCartitem(false);
+        } else if (data[0].cartitem.length === 0) {
+          // 장바구니 o 상품 x
+          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+          setIsCartitem(false);
         } else {
+          // 장바구니 o 상품 o
           // product 마다 이름 가져오기.
           setProductIdList(
             data[0].cartitem.map((item) => item.productId.toString()),
@@ -67,6 +80,14 @@ function CartPage({ ...basisProps }: CartPageProps) {
 
   const queryClient = useQueryClient();
   const { mutate: mutatingCount } = usePutProductInCartItemMutation({
+    options: {
+      onSuccess(data, variables, context) {
+        queryClient.invalidateQueries(CART_API_QUERY_KEY.GET(userData?.id));
+      },
+    },
+  });
+
+  const { mutate: mutatingDelete } = useDeleteExampleMutation({
     options: {
       onSuccess(data, variables, context) {
         queryClient.invalidateQueries(CART_API_QUERY_KEY.GET(userData?.id));
@@ -151,10 +172,10 @@ function CartPage({ ...basisProps }: CartPageProps) {
     // fetchFn();
   }, [userData]);
 
-  return (
-    <>
-      <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
-        <VisuallyHidden as="h2">main contents</VisuallyHidden>
+  return isCartitem ? (
+    <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
+      <VisuallyHidden as="h2">main contents</VisuallyHidden>
+      <Box minH="100vh">
         <Flex
           justifyContent="space-between"
           color="gray.600"
@@ -194,55 +215,101 @@ function CartPage({ ...basisProps }: CartPageProps) {
                     productData={findedProduct?.data}
                     cartData={item}
                     mutatingCount={mutatingCount}
+                    mutatingDelete={mutatingDelete}
                   />
                 );
               })}
           </Box>
         </Box>
+      </Box>
 
-        <Box px="16px" pt="20px" pb="30px" mt="10px">
-          <VisuallyHidden as="h3">금액 정보</VisuallyHidden>
-          <Flex
-            flexDirection="column"
-            pb="20px"
-            borderBottom="1px solid"
-            borderColor="gray.200"
-            gap="10px"
-          >
-            <Flex justifyContent="space-between" color="gray.600">
-              <Box>총 상품금액</Box>
-              <Box textAlign="right">{totalPrice}&nbsp;원</Box>
-            </Flex>
-            <Flex justifyContent="space-between" color="gray.600">
-              <Box>총 배송비</Box>
-              <Box textAlign="right">0&nbsp;원</Box>
-            </Flex>
+      <Box px="16px" pt="20px" pb="30px" mt="10px">
+        <VisuallyHidden as="h3">금액 정보</VisuallyHidden>
+        <Flex
+          flexDirection="column"
+          pb="20px"
+          borderBottom="1px solid"
+          borderColor="gray.200"
+          gap="10px"
+        >
+          <Flex justifyContent="space-between" color="gray.600">
+            <Box>총 상품금액</Box>
+            <Box textAlign="right">{totalPrice}&nbsp;원</Box>
           </Flex>
-          <Box>
-            <Flex justifyContent="space-between" pt="20px">
-              <Box>결제금액</Box>
-              <Box as="strong" textAlign="right" color="primary.500">
-                {totalPrice}&nbsp;원
-              </Box>
-            </Flex>
-          </Box>
-          <Box>
-            <Button
-              mt="20px"
-              fontWeight="700"
-              w="100%"
-              h="50px"
-              borderRadius="25px"
-              backgroundColor="primary.500"
-              color="white"
-              fontSize="1rem"
-            >
-              결제하기
-            </Button>
-          </Box>
+          <Flex justifyContent="space-between" color="gray.600">
+            <Box>총 배송비</Box>
+            <Box textAlign="right">0&nbsp;원</Box>
+          </Flex>
+        </Flex>
+        <Box>
+          <Flex justifyContent="space-between" pt="20px">
+            <Box>결제금액</Box>
+            <Box as="strong" textAlign="right" color="primary.500">
+              {totalPrice}&nbsp;원
+            </Box>
+          </Flex>
+        </Box>
+        <Box>
+          <Button
+            mt="20px"
+            fontWeight="700"
+            w="100%"
+            h="50px"
+            borderRadius="25px"
+            backgroundColor="primary.500"
+            color="white"
+            fontSize="1rem"
+          >
+            결제하기
+          </Button>
         </Box>
       </Box>
-    </>
+    </Box>
+  ) : (
+    <Box>
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        mt={LAYOUT.HEADER.HEIGHT}
+        w="100%"
+        minH={`calc(100vh - ${LAYOUT.HEADER.HEIGHT} - ${LAYOUT.FOOTER.HEIGHT})`}
+      >
+        <Flex
+          gap="30px"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box fontWeight="700" fontSize="1rem">
+            <Box as="p" w="100%" textAlign="center">
+              장바구니가 비어있습니다.
+            </Box>
+            <Box as="p" w="100%" textAlign="center">
+              상품을 추가해보세요!
+            </Box>
+          </Box>
+          <Box>
+            <NextLink href="/products" passHref>
+              <Link>
+                <Button
+                  mt="20px"
+                  fontWeight="700"
+                  w="100%"
+                  h="50px"
+                  borderRadius="25px"
+                  variant="solid"
+                  colorScheme="primary"
+                  fontSize="1rem"
+                  px="45.5px"
+                >
+                  상품보러가기
+                </Button>
+              </Link>
+            </NextLink>
+          </Box>
+        </Flex>
+      </Flex>
+    </Box>
   );
 }
 

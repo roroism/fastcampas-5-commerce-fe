@@ -144,6 +144,14 @@ export class ProductApi {
     return data;
   };
 
+  deleteCartItem = async (id: string): Promise<boolean> => {
+    const { data } = await this.axios({
+      method: 'DELETE',
+      url: `/v1/cart/item/${id}/`,
+    });
+    return data;
+  };
+
   // patchProductInCartItem = async (
   //   req: ProductInCartItemParamPatchType,
   // ): Promise<ProductInCartItemDTOType> => {

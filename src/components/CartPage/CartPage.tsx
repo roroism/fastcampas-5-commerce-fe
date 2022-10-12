@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Box,
@@ -7,17 +7,97 @@ import {
   Checkbox,
   Flex,
   TagLabel,
+  VisuallyHidden,
 } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+import productApi from '@apis/reactquery/QueryApi';
+import { usePutProductInCartItemMutation } from '@apis/reactquery/QueryApi.mutation';
+import {
+  CART_API_QUERY_KEY,
+  useGetCartQuery,
+  useGetMyInfoQuery,
+  useGetProductByIdQueries,
+} from '@apis/reactquery/QueryApi.query';
+
 import { LAYOUT } from '@constants/layout';
+import { useQueryClient } from '@tanstack/react-query';
 
 import CartItem from './_fragments/CartItem';
+
+import priceFormat from 'hooks/priceFormat';
 
 // import LAYOUT.HEADER.HEADER from '';
 
 interface CartPageProps extends ChakraProps {}
 
 function CartPage({ ...basisProps }: CartPageProps) {
+  const [productIdList, setProductIdList] = useState<Array<string>>();
+  const [totalPrice, setTotalPrice] = useState<string>('');
+  const { data: userData } = useGetMyInfoQuery({
+    options: { staleTime: 1800, cacheTime: Infinity },
+  });
+  const { data: cartData } = useGetCartQuery({
+    variables: userData?.id,
+    options: {
+      enabled: !!userData,
+      onSuccess: (data) => {
+        if (data.length === 0) {
+          const form = new FormData();
+          form.append('userId', String(userData?.id));
+          productApi.postCart(form);
+          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+        } else {
+          // product 마다 이름 가져오기.
+          setProductIdList(
+            data[0].cartitem.map((item) => item.productId.toString()),
+          );
+        }
+      },
+    },
+  });
+  const { query: productData } = useGetProductByIdQueries(
+    {
+      options: { enabled: !!productIdList },
+      variables: '',
+    },
+    productIdList,
+  );
+  console.log('result queries: ', productData);
+
+  const queryClient = useQueryClient();
+  const { mutate: mutatingCount } = usePutProductInCartItemMutation({
+    options: {
+      onSuccess(data, variables, context) {
+        queryClient.invalidateQueries(CART_API_QUERY_KEY.GET(userData?.id));
+      },
+    },
+  });
+
+  useEffect(() => {
+    setTotalPrice(
+      (cartData &&
+        priceFormat(
+          cartData[0]?.cartitem
+            .map((item) => {
+              const findedProduct = productData.find(
+                (product: any) => product?.data?.id === item.productId,
+              );
+              console.log(
+                'Number(findedProduct?.data?.price) * item.count : ',
+                Number(findedProduct?.data?.price) * item.count,
+              );
+              return Number(findedProduct?.data?.price) * item.count;
+            })
+            .reduce(
+              (previousValue, currentValue) => previousValue + currentValue,
+              0,
+            ),
+        )) ||
+        '',
+    );
+  }, [cartData, productData]);
+
   // const [checkItems, setCheckItems] = useState([]);
 
   // 체크박스 단일 선택
@@ -44,78 +124,125 @@ function CartPage({ ...basisProps }: CartPageProps) {
   //     setCheckItems([]);
   //   }
   // }
+  console.log('userData : ', userData);
+  console.log('cartData : ', cartData);
+  useEffect(() => {
+    // const fetchFn = async () => {
+    //   await instance
+    //     .get(`/v1/cart/?user_id=${userData?.id}`)
+    //     .then(async (res) => {
+    //       console.log('cart data 가져옴', res);
+    //       if (res.data.length == 0) {
+    //         const form = new FormData();
+    //         form.append('userId', String(userData?.id));
+    //         await instance
+    //           .post(`/v1/cart/`, form, {
+    //             headers: { 'content-type': 'multipart/form-data' },
+    //           })
+    //           .then((res) => {
+    //             console.log('cart생성 성공 : ', res);
+    //           })
+    //           .catch((err) => {
+    //             console.log('에러 : err', err);
+    //           });
+    //       }
+    //     });
+    // };
+    // fetchFn();
+  }, [userData]);
 
   return (
-    <Box {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
-      <Flex
-        justifyContent="space-between"
-        color="gray.600"
-        alignItems="center"
-        py="13px"
-      >
-        <Box>
-          <Checkbox
-            colorScheme="primary"
-            w="auto"
-            // onChange={onChange}
-            // isChecked={item?.checked}
-
-            // onChange={(e) => handleAllCheck(e.target.checked)}
-            // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
-            // checked={checkItems.length === data.length ? true : false}
-          >
-            모두선택
-          </Checkbox>
-        </Box>
-        <Box>선택삭제</Box>
-      </Flex>
-
-      <Box as="ul">
-        <CartItem></CartItem>
-        <CartItem></CartItem>
-      </Box>
-
-      <Box px="16px" pt="20px" pb="30px" mt="10px">
+    <>
+      <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
+        <VisuallyHidden as="h2">main contents</VisuallyHidden>
         <Flex
-          flexDirection="column"
-          pb="20px"
-          borderBottom="1px solid"
-          borderColor="gray.200"
-          gap="10px"
+          justifyContent="space-between"
+          color="gray.600"
+          alignItems="center"
+          py="13px"
+          px="16px"
         >
-          <Flex justifyContent="space-between" color="gray.600">
-            <Box>총 상품금액</Box>
-            <Box textAlign="right">108,000&nbsp;원</Box>
-          </Flex>
-          <Flex justifyContent="space-between" color="gray.600">
-            <Box>총 배송비</Box>
-            <Box textAlign="right">0&nbsp;원</Box>
-          </Flex>
+          <Box>
+            <Checkbox
+              colorScheme="primary"
+              w="auto"
+              // onChange={onChange}
+              // isChecked={item?.checked}
+
+              // onChange={(e) => handleAllCheck(e.target.checked)}
+              // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
+              // checked={checkItems.length === data.length ? true : false}
+            >
+              모두선택
+            </Checkbox>
+          </Box>
+          <Box>선택삭제</Box>
         </Flex>
+
         <Box>
-          <Flex justifyContent="space-between" pt="20px">
-            <Box>결제금액</Box>
-            <Box as="strong" textAlign="right" color="primary.500">
-              108,000&nbsp;원
-            </Box>
-          </Flex>
+          <VisuallyHidden as="h3">장바구니 상품목록</VisuallyHidden>
+          <Box as="ul">
+            {cartData &&
+              cartData[0]?.cartitem.map((item) => {
+                const findedProduct = productData.find(
+                  (product: any) => product?.data?.id === item.productId,
+                );
+                console.log('findedProduct : ', findedProduct);
+                return (
+                  <CartItem
+                    key={item.id}
+                    productData={findedProduct?.data}
+                    cartData={item}
+                    mutatingCount={mutatingCount}
+                  />
+                );
+              })}
+          </Box>
         </Box>
-        <Box>
-          <Button
-            mt="20px"
-            fontWeight="700"
-            w="100%"
-            h="50px"
-            borderRadius="25px"
-            backgroundColor="primary.500"
-            color="white"
-            fontSize="1rem"
+
+        <Box px="16px" pt="20px" pb="30px" mt="10px">
+          <VisuallyHidden as="h3">금액 정보</VisuallyHidden>
+          <Flex
+            flexDirection="column"
+            pb="20px"
+            borderBottom="1px solid"
+            borderColor="gray.200"
+            gap="10px"
           >
-            결제하기
-          </Button>
+            <Flex justifyContent="space-between" color="gray.600">
+              <Box>총 상품금액</Box>
+              <Box textAlign="right">{totalPrice}&nbsp;원</Box>
+            </Flex>
+            <Flex justifyContent="space-between" color="gray.600">
+              <Box>총 배송비</Box>
+              <Box textAlign="right">0&nbsp;원</Box>
+            </Flex>
+          </Flex>
+          <Box>
+            <Flex justifyContent="space-between" pt="20px">
+              <Box>결제금액</Box>
+              <Box as="strong" textAlign="right" color="primary.500">
+                {totalPrice}&nbsp;원
+              </Box>
+            </Flex>
+          </Box>
+          <Box>
+            <Button
+              mt="20px"
+              fontWeight="700"
+              w="100%"
+              h="50px"
+              borderRadius="25px"
+              backgroundColor="primary.500"
+              color="white"
+              fontSize="1rem"
+            >
+              결제하기
+            </Button>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }
 

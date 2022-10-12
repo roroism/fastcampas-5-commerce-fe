@@ -15,18 +15,6 @@ import { deleteToken, setToken } from '@utils/localStorage/token';
 import customUseForm from './CustomWithdrawalUseForm';
 import WithdrawalPageView from './WithdrawalPage.view';
 
-interface IRegister {
-  socialToken: string;
-  email: string;
-  phone: string;
-  name: string;
-  nickname: string;
-  profile: string;
-  gender: 'male' | 'female';
-  age: number;
-  marketingAdAgree: boolean;
-}
-
 interface WithdrawalPageProps extends ChakraProps {}
 
 function WithdrawalPage({ ...basisProps }: WithdrawalPageProps) {

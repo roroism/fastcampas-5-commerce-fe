@@ -11,7 +11,13 @@ import Fonts from 'generated/fonts/fonts';
 import theme from 'styles/theme';
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      cacheTime: 3600,
+    },
+  },
+});
 
 function withAppProvider(AppComponent: React.FC<AppProps>) {
   return function WrappedAppComponent(props: AppProps) {

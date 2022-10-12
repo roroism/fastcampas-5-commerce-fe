@@ -1,12 +1,15 @@
 import { MutationHookParams } from '@apis/type';
 
-import { useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query';
 
-import exampleApi from './QueryApi';
+import productApi from './QueryApi';
 import {
+  CartItemParamPostType,
+  CartParamPostType,
   ExampleDTOType,
   ExampleParamPatchType,
   ExampleParamPutType,
+  IPostCartItemRequestBody,
   MyInfoParamPatchType,
 } from './QueryApi.type';
 
@@ -18,12 +21,64 @@ export const MYINFO_API_MUTATION_KEY = {
 };
 
 export const usePatchMyInfoMutation = (
-  params?: MutationHookParams<typeof exampleApi.patchMyInfo>,
+  params?: MutationHookParams<typeof productApi.patchMyInfo>,
 ) => {
-  return useMutation(exampleApi.patchMyInfo, {
+  return useMutation(productApi.patchMyInfo, {
     ...params?.options,
   });
 };
+
+export const CART_API_MUTATION_KEY = {
+  POST: (param?: CartParamPostType) => ['cart-post', param],
+  // PUT: (req?: ExampleParamPutType) => ['example-put', req],
+  // PATCH: (req?: MyInfoParamPatchType) => ['myinfo-patch', req],
+  // DELETE: (id?: string) => ['example-delete', id],
+};
+
+export const usePostCartMutation = (
+  params?: MutationHookParams<typeof productApi.postCart>,
+) => {
+  return useMutation(productApi.postCart, {
+    ...params?.options,
+  });
+};
+
+export const CART_ITEM_API_MUTATION_KEY = {
+  POST: (param?: CartItemParamPostType) => ['cart-item-post', param],
+  // PUT: (req?: ExampleParamPutType) => ['example-put', req],
+  PUT: (req?: MyInfoParamPatchType) => ['cart-item-put', req],
+  PATCH: (req?: MyInfoParamPatchType) => ['cart-item-patch', req],
+  // DELETE: (id?: string) => ['example-delete', id],
+};
+
+export const usePostCartItemMutation = (
+  productId: number,
+  params?: MutationHookParams<typeof productApi.postCartItem>,
+) => {
+  return useMutation(
+    CART_ITEM_API_MUTATION_KEY.POST(productId),
+    productApi.postCartItem,
+    {
+      ...params?.options,
+    },
+  );
+};
+
+export const usePutProductInCartItemMutation = (
+  params?: MutationHookParams<typeof productApi.putProductInCartItem>,
+) => {
+  return useMutation(productApi.putProductInCartItem, {
+    ...params?.options,
+  });
+};
+
+// export const usePatchProductInCartItemMutation = (
+//   params?: MutationHookParams<typeof productApi.putProductInCartItem>,
+// ) => {
+//   return useMutation(productApi.putProductInCartItem, {
+//     ...params?.options,
+//   });
+// };
 
 // export const EXAMPLE_API_MUTATION_KEY = {
 //   POST: (param?: ExampleDTOType) => ['example-post', param],

@@ -3,6 +3,9 @@ import { AxiosInstance } from 'axios';
 import instance from '@apis/_axios/instance';
 
 import {
+  CartDTOType,
+  CartItemDTOType,
+  CartParamGetType,
   ExampleDTOType,
   ExampleParamPatchType,
   ExampleParamPutType,
@@ -11,6 +14,8 @@ import {
   MyInfoParamPatchType,
   ProductDTOType,
   ProductDetailDTOType,
+  ProductInCartItemDTOType,
+  ProductInCartItemParamPutType,
   ProductParamGetType,
 } from './QueryApi.type';
 
@@ -58,7 +63,7 @@ export class ProductApi {
   patchMyInfo = async (req: MyInfoParamPatchType): Promise<any> => {
     // console.log('...req.data, : ', { ...req.data });
 
-    await this.axios.patch(`/v1/user/me/`, req.data, {
+    await this.axios.put(`/v1/user/me/`, req.data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -95,6 +100,62 @@ export class ProductApi {
     // return data;
     // return data;
   };
+
+  getCart = async (params?: CartParamGetType): Promise<CartDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/cart/?user_id=${params}`,
+      params,
+    });
+    console.log('getCart - data : ', data);
+    return data;
+  };
+
+  postCart = async (body: FormData): Promise<CartDTOType> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/v1/cart/`,
+      data: body,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  postCartItem = async (body: FormData): Promise<CartItemDTOType> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/v1/cart/item/`,
+      data: body,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  putProductInCartItem = async (
+    req: ProductInCartItemParamPutType,
+  ): Promise<ProductInCartItemDTOType> => {
+    console.log('putProductInCartItem req : ', req);
+    const { data } = await this.axios({
+      method: 'PUT',
+      url: `/v1/cart/item/${req.id}/`,
+      data: req.data,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  // patchProductInCartItem = async (
+  //   req: ProductInCartItemParamPatchType,
+  // ): Promise<ProductInCartItemDTOType> => {
+  //   console.log('patchProductInCartItem req : ', req);
+  //   const { data } = await this.axios({
+  //     method: 'PUT',
+  //     url: `/v1/cart/item/${req.id}/`,
+  //     data: req.data,
+  //     headers: { 'Content-Type': 'multipart/form-data' },
+  //   });
+  //   return data;
+  // };
 
   // postExample = async (body: ProductDTOType): Promise<ExampleDTOType> => {
   //   const { data } = await this.axios({

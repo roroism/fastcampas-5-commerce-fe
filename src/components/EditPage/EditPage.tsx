@@ -49,6 +49,10 @@ function EditPage({ ...basisProps }: EditPageProps) {
     form.append('phone', data.phone.replace(/-/g, ''));
     form.append('email', data.email);
     form.append('address', '서울시 강남구');
+    // form.append(
+    //   'profile',
+    //   'https://img.freepik.com/free-photo/beautiful-shot-of-a-crystal-clear-lake-next-to-a-snowy-mountain-base-during-a-sunny-day_181624-5459.jpg?w=1060&t=st=1665463203~exp=1665463803~hmac=16fe5687a5172be894e7d708ca09e623cd50466c6cf9c2cc03a2ae66536dceb8',
+    // );
     if (data.profile && data.profile !== '') {
       form.append('profile', data.profile);
     }
@@ -56,19 +60,23 @@ function EditPage({ ...basisProps }: EditPageProps) {
     form.append('age', String(data.age));
 
     mutate({
-      // data: {
-      //   name: data.name,
-      //   nickname: data.nickname,
-      //   phone: data.phone.replace(/-/g, ''),
-      //   // phone: data.phone,
-      //   address: '서울특별시 송파구 올림픽로 240',
-      //   email: data.email,
-      //   profile: data.profile,
-      //   gender: data.gender,
-      //   age: data.age,
-      // },
       data: form,
     });
+
+    // mutate({
+    //   // data: {
+    //   //   name: data.name,
+    //   //   nickname: data.nickname,
+    //   //   phone: data.phone.replace(/-/g, ''),
+    //   //   // phone: data.phone,
+    //   //   address: '서울특별시 송파구 올림픽로 240',
+    //   //   email: data.email,
+    //   //   profile: data.profile,
+    //   //   gender: data.gender,
+    //   //   age: data.age,
+    //   // },
+    //   data: form,
+    // });
 
     // instance
     //   .patch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/me/`, {

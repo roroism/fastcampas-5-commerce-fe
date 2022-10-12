@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
+import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
 
 import StarRating from '@components/common/StarRating/StarRating';
 
@@ -22,6 +23,10 @@ import { getToken } from '@utils/localStorage/token';
 interface MainPageProps extends ChakraProps {}
 
 function MainPage({ ...basisProps }: MainPageProps) {
+  const { data } = useGetMyInfoQuery({
+    options: { staleTime: 1800, cacheTime: Infinity },
+  });
+  console.log('main page data : ', data);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,7 +36,7 @@ function MainPage({ ...basisProps }: MainPageProps) {
   }, []);
 
   return (
-    <Box {...basisProps} overflow="hidden">
+    <Box as="main" {...basisProps} overflow="hidden">
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Box
         bgImage="./images/main/bg_main.png"

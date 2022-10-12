@@ -31,6 +31,7 @@ import StarRating from '@components/common/StarRating/StarRating';
 
 import { LAYOUT } from '@constants/layout';
 
+import OrderDrawer from './_fragments/OrderDrawer';
 import ReviewChartBar from './_fragments/ReviewChartBar';
 import ReviewItem, { Ireview } from './_fragments/ReviewItem';
 
@@ -44,27 +45,20 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
   const detailInfoRef = useRef<HTMLDivElement>(null);
   const orderInfoRef = useRef<HTMLDivElement>(null);
   const reviewRef = useRef<HTMLDivElement>(null);
-  const { data } = useGetProductByIdQuery({ variables: query.id as string });
+  const { data, isLoading } = useGetProductByIdQuery({
+    variables: query.id as string,
+  });
   const [countRate, setCountRate] = useState<Array<number>>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [quantity, setQuantity] = useState<number>(1);
+
   const [orderedList, setOrderedList] = useState<Array<Ireview> | null>([]);
   const orderingRateRef = useRef<HTMLSelectElement>(null);
   const orderingPhotoRef = useRef<HTMLSelectElement>(null);
+  const orderInfoButtonRef = useRef<HTMLButtonElement>(null);
 
   console.log('router.query : ', query.id);
   console.log('data : ', data);
   console.log('countRate : ', countRate);
-
-  const decQuantity = useCallback(() => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  }, [quantity]);
-
-  const incQuantity = useCallback(() => {
-    setQuantity((prev) => prev + 1);
-  }, []);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log('handleOrderingOnChange : ', data?.reviewList);
@@ -186,6 +180,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
       behavior: 'smooth',
       block: 'center',
     });
+    orderInfoButtonRef.current?.click();
   };
 
   const handleReviewClick = () => {
@@ -196,459 +191,330 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
   };
 
   return (
-    <>
-      <Box {...basisProps} pt="120px" pb="80px" px="16px">
-        <Box>
-          <Box borderTopRadius="20px" w="100%" overflow="hidden">
+    <Box minH="100vh">
+      {!isLoading && (
+        <>
+          <Box {...basisProps} pt="120px" pb="80px" px="16px">
             <Box>
-              <Image
-                w="100%"
-                src={data?.photo}
-                // src="/images/product/sampleImg.png"
-                // backgroundColor="yellow"
-              />
-            </Box>
-          </Box>
-          <Box
-            mt="20px"
-            borderTopRadius="20px"
-            boxShadow="0px -12px 10px -10px rgba(26, 26, 26, 0.1)"
-          >
-            <Flex flexDirection="column" ml="16px" pt="30px">
-              <Flex fontSize="1.25rem">
-                <Box as="strong">{data?.name}</Box>
-                <Box
-                  as="span"
-                  style={{
-                    paddingLeft: '5px',
-                    color: 'gray.600',
-                  }}
-                >
-                  {data?.capacity}ml
-                </Box>
-              </Flex>
-
-              <Box mt="10px" fontSize="1.25rem">
-                <Box
-                  as="span"
-                  display="inline-block"
-                  color="primary.500"
-                  fontWeight="700"
-                >
-                  {priceFormat(data?.price)}
-                </Box>
-                원
-              </Box>
-              <Box fontSize="0.75rem" fontWeight="700">
-                3만원 이상 구매시
-                <Box as="span" color="primary.500">
-                  &nbsp;무료배송
-                </Box>
-              </Box>
-
-              <Text my="10px">{data?.description}</Text>
-              <Flex>
-                <Flex alignItems="center">
+              <Box w="100%" minH="300px" overflow="hidden">
+                <Box>
                   <Image
-                    src="/icons/svg/product/star.svg"
-                    w="10px"
-                    h="10px"
-                    alt="star"
-                    mr="8px"
+                    w="100%"
+                    src={data?.photo}
+                    // src="/images/product/sampleImg.png"
+                    // backgroundColor="yellow"
                   />
-                </Flex>
-                <Box as="span" fontWeight="700">
-                  {data?.avgRate?.toFixed(1) || '0'}
                 </Box>
-                <Box as="span" color="gray.700">
-                  &nbsp;&#40;리뷰 {data?.reviewCount}개&#41;
-                </Box>
-              </Flex>
-            </Flex>
-            <Box mx="16px" mt="15px" py="4px">
-              <Button
-                variant="outline"
-                colorScheme="primary"
-                w="100%"
-                h="50px"
-                borderRadius="25px"
-                size="sd"
-                py="12px"
-                mb="10px"
-                onClick={onOpen}
-              >
-                장바구니
-              </Button>
-              <Button
-                colorScheme="primary"
-                w="100%"
-                h="50px"
-                borderRadius="25px"
-                size="sd"
-                py="12px"
-                onClick={onOpen}
-              >
-                바로구매
-              </Button>
-            </Box>
-          </Box>
-        </Box>
-        <Box>
-          <Box
-            // position="sticky"
-            // top={LAYOUT.HEADER.HEIGHT}
-            bg={colorMode === 'light' ? '#ffffff' : 'gray.700'}
-          >
-            <Flex w="full" h="80px" justify="space-around" alignItems="center">
-              <Box
-                as="button"
-                color={colorMode === 'light' ? 'gray.600' : '#ffffff'}
-                onClick={handleDetailInfoClick}
-              >
-                상세정보
               </Box>
               <Box
-                as="button"
-                fontWeight="400"
-                color={colorMode === 'light' ? 'gray.600' : '#ffffff'}
-                _hover={{ cursor: 'pointer' }}
-                onClick={handleOrderInfoClick}
+                mt="20px"
+                borderTopRadius="20px"
+                boxShadow="0px -12px 10px -10px rgba(26, 26, 26, 0.1)"
               >
-                구매정보
-              </Box>
-              <Box
-                as="button"
-                fontWeight="400"
-                color={colorMode === 'light' ? 'gray.600' : '#ffffff'}
-                _hover={{ cursor: 'pointer' }}
-                onClick={handleReviewClick}
-              >
-                {/* 리뷰 ({reviews?.length}) */}
-                리뷰 &#40;{data?.reviewCount}&#41;
-              </Box>
-            </Flex>
-          </Box>
-
-          <Box
-            maxH="477px"
-            // backgroundColor="yellow"
-            ref={detailInfoRef}
-            overflow="hidden"
-          >
-            <Box dangerouslySetInnerHTML={{ __html: data?.detail || '' }}></Box>
-          </Box>
-
-          <Accordion defaultIndex={[1]} allowMultiple>
-            <AccordionItem borderWidth={0}>
-              {({ isExpanded }) => (
-                <>
-                  <AccordionPanel px={0} pb="20px" pt={0} overflow="hidden">
+                <Flex flexDirection="column" ml="16px" pt="30px">
+                  <Flex fontSize="1.25rem">
+                    <Box as="strong">{data?.name}</Box>
                     <Box
-                      dangerouslySetInnerHTML={{ __html: data?.detail || '' }}
-                      mt="-477px"
-                    ></Box>
-                  </AccordionPanel>
-                  <Box px="16px" py="1px">
-                    <AccordionButton
-                      {...ButtonStyle}
-                      _expanded={{ border: '1px solid black' }}
-                      border="1px solid black"
+                      as="span"
+                      style={{
+                        paddingLeft: '5px',
+                        color: 'gray.600',
+                      }}
                     >
-                      {isExpanded ? (
-                        <Box as="span" fontWeight="700" flex="1">
-                          상세정보 접기
-                          <AccordionIcon />
-                        </Box>
-                      ) : (
-                        <Box as="span" fontWeight="700" flex="1">
-                          상세정보 펼처보기
-                          <AccordionIcon />
-                        </Box>
-                      )}
+                      {data?.capacity}ml
+                    </Box>
+                  </Flex>
+
+                  <Box mt="10px" fontSize="1.25rem">
+                    <Box
+                      as="span"
+                      display="inline-block"
+                      color="primary.500"
+                      fontWeight="700"
+                    >
+                      {priceFormat(data?.price)}
+                    </Box>
+                    원
+                  </Box>
+                  <Box fontSize="0.75rem" fontWeight="700">
+                    3만원 이상 구매시
+                    <Box as="span" color="primary.500">
+                      &nbsp;무료배송
+                    </Box>
+                  </Box>
+
+                  <Text my="10px">{data?.description}</Text>
+                  <Flex>
+                    <Flex alignItems="center">
+                      <Image
+                        src="/icons/svg/product/star.svg"
+                        w="10px"
+                        h="10px"
+                        alt="star"
+                        mr="8px"
+                      />
+                    </Flex>
+                    <Box as="span" fontWeight="700">
+                      {data?.avgRate?.toFixed(1) || '0'}
+                    </Box>
+                    <Box as="span" color="gray.700">
+                      &nbsp;&#40;리뷰 {data?.reviewCount}개&#41;
+                    </Box>
+                  </Flex>
+                </Flex>
+                <Box mx="16px" mt="15px" py="4px">
+                  <Button
+                    variant="outline"
+                    colorScheme="primary"
+                    w="100%"
+                    h="50px"
+                    borderRadius="25px"
+                    size="sd"
+                    py="12px"
+                    mb="10px"
+                    onClick={onOpen}
+                  >
+                    장바구니
+                  </Button>
+                  <Button
+                    colorScheme="primary"
+                    w="100%"
+                    h="50px"
+                    borderRadius="25px"
+                    size="sd"
+                    py="12px"
+                    onClick={onOpen}
+                  >
+                    바로구매
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+            <Box>
+              <Box
+                // position="sticky"
+                // top={LAYOUT.HEADER.HEIGHT}
+                bg={colorMode === 'light' ? '#ffffff' : 'gray.700'}
+              >
+                <Flex
+                  w="full"
+                  h="80px"
+                  justify="space-around"
+                  alignItems="center"
+                >
+                  <Box
+                    as="button"
+                    color={colorMode === 'light' ? 'gray.600' : '#ffffff'}
+                    onClick={handleDetailInfoClick}
+                  >
+                    상세정보
+                  </Box>
+                  <Box
+                    as="button"
+                    fontWeight="400"
+                    color={colorMode === 'light' ? 'gray.600' : '#ffffff'}
+                    _hover={{ cursor: 'pointer' }}
+                    onClick={handleOrderInfoClick}
+                  >
+                    구매정보
+                  </Box>
+                  <Box
+                    as="button"
+                    fontWeight="400"
+                    color={colorMode === 'light' ? 'gray.600' : '#ffffff'}
+                    _hover={{ cursor: 'pointer' }}
+                    onClick={handleReviewClick}
+                  >
+                    {/* 리뷰 ({reviews?.length}) */}
+                    리뷰 &#40;{data?.reviewCount}&#41;
+                  </Box>
+                </Flex>
+              </Box>
+
+              <Box
+                maxH="477px"
+                // backgroundColor="yellow"
+                ref={detailInfoRef}
+                overflow="hidden"
+              >
+                <Box
+                  dangerouslySetInnerHTML={{ __html: data?.detail || '' }}
+                ></Box>
+              </Box>
+
+              <Accordion defaultIndex={[1]} allowMultiple>
+                <AccordionItem borderWidth={0}>
+                  {({ isExpanded }) => (
+                    <>
+                      <AccordionPanel px={0} pb="20px" pt={0} overflow="hidden">
+                        <Box
+                          dangerouslySetInnerHTML={{
+                            __html: data?.detail || '',
+                          }}
+                          mt="-477px"
+                        ></Box>
+                      </AccordionPanel>
+                      <Box px="16px" py="1px">
+                        <AccordionButton
+                          {...ButtonStyle}
+                          _expanded={{ border: '1px solid black' }}
+                          border="1px solid black"
+                        >
+                          {isExpanded ? (
+                            <Box as="span" fontWeight="700" flex="1">
+                              상세정보 접기
+                              <AccordionIcon />
+                            </Box>
+                          ) : (
+                            <Box as="span" fontWeight="700" flex="1">
+                              상세정보 펼처보기
+                              <AccordionIcon />
+                            </Box>
+                          )}
+                        </AccordionButton>
+                      </Box>
+                    </>
+                  )}
+                </AccordionItem>
+              </Accordion>
+
+              <Accordion defaultIndex={[1]} allowMultiple pt="25px">
+                <AccordionItem>
+                  <Box ref={orderInfoRef}>
+                    <AccordionButton py="15.5px" ref={orderInfoButtonRef}>
+                      <Box
+                        as="h3"
+                        // ref={orderInfoRef}
+                        fontWeight="700"
+                        flex="1"
+                        textAlign="left"
+                      >
+                        주문 및 배송 안내
+                      </Box>
+                      <AccordionIcon />
                     </AccordionButton>
                   </Box>
-                </>
-              )}
-            </AccordionItem>
-          </Accordion>
-
-          <Accordion defaultIndex={[1]} allowMultiple pt="25px">
-            <AccordionItem>
-              <Box ref={orderInfoRef}>
-                {/* <AccordionButton py="15.5px" ref={buttonRef}> */}
-                <AccordionButton py="15.5px">
-                  <Box
-                    as="h3"
-                    // ref={orderInfoRef}
-                    fontWeight="700"
-                    flex="1"
-                    textAlign="left"
-                  >
-                    주문 및 배송 안내
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </Box>
-              <AccordionPanel px="16px" pt="15px" pb="20px">
-                <Box as="p" fontWeight="700">
-                  [주문 및 배송 안내]
-                </Box>
-                <VStack spacing="10px" alignItems="flex-start" py="20px">
-                  <Box as="p">배송방법 : 인코스런 택배</Box>
-                  <Box as="p">배송지역 : 전국</Box>
-                  <Box>
-                    <Text>
-                      배송비용 : 단품 상품 구매 시 3,000원 배송비 발생
-                    </Text>
-                    <Text pl="71px">
-                      그외 단품 묶음 구매의 경우 30,000원 이상 구매 시 무료배송
-                    </Text>
-                  </Box>
-                </VStack>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
-        </Box>
-
-        <Box px="16px">
-          <HStack pt="51px" pb="30px" justify="space-between">
-            <Box ref={reviewRef} fontWeight="700">
-              리뷰&nbsp;
-              <span style={{ color: '#FF710B' }}>
-                {data?.reviewList.length}
-              </span>
-              건
+                  <AccordionPanel px="16px" pt="15px" pb="20px">
+                    <Box as="p" fontWeight="700">
+                      [주문 및 배송 안내]
+                    </Box>
+                    <VStack spacing="10px" alignItems="flex-start" py="20px">
+                      <Box as="p">배송방법 : 인코스런 택배</Box>
+                      <Box as="p">배송지역 : 전국</Box>
+                      <Box>
+                        <Text>
+                          배송비용 : 단품 상품 구매 시 3,000원 배송비 발생
+                        </Text>
+                        <Text pl="71px">
+                          그외 단품 묶음 구매의 경우 30,000원 이상 구매 시
+                          무료배송
+                        </Text>
+                      </Box>
+                    </VStack>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
             </Box>
-            <HStack spacing="10px">
-              <Select
-                fontWeight="700"
-                fontSize="0.75rem"
-                w="115px"
-                h="30px"
-                bg="gray.200"
-                borderRadius="5px"
-                onChange={handleOrderingOnChange}
-                ref={orderingRateRef}
-                defaultValue="latestOrder"
-              >
-                <option value="latestOrder">최신순</option>
-                <option value="highRating">평점 높은 순</option>
-                <option value="lowRating">평점 낮은 순</option>
-              </Select>
-              <Select
-                fontWeight="700"
-                fontSize="0.75rem"
-                w="100px"
-                h="30px"
-                bg="gray.200"
-                borderRadius="5px"
-                onChange={handleOrderingOnChange}
-                ref={orderingPhotoRef}
-                defaultValue="allview"
-              >
-                <option value="allview">전체보기</option>
-                <option value="photoview">포토리뷰</option>
-              </Select>
-            </HStack>
-          </HStack>
-          <Flex justify="space-between" alignItems="center" pb="21px">
-            <HStack spacing={0}>
-              <Box
-                fontWeight="700"
-                bg="primary.500"
-                p="0px 7px"
-                ml="6px"
-                mr="12px"
-                borderRadius="15px"
-                color="white"
-              >
-                {data?.avgRate?.toFixed(1) || '0'}
-              </Box>
-              <StarRating
-                starRating={Number(data?.avgRate?.toFixed())}
-              ></StarRating>
-            </HStack>
-            <Box w="1px" h="70px" bg="gray.200"></Box>
-            <VStack spacing={0} alignItems="center">
-              <HStack spacing="23px">
-                {data?.reviewList &&
-                  countRate &&
-                  countRate.map((count, idx) => {
-                    return (
-                      <ReviewChartBar
-                        key={idx}
-                        count={count}
-                        countAll={data?.reviewList.length}
-                      />
-                    );
-                  })}
-              </HStack>
-              <Box w="150px" h="1px" bg="gray.200"></Box>
-              <HStack
-                fontWeight="0.75rem"
-                spacing="15px"
-                mt="4px"
-                color="gray.600"
-              >
-                <Box>1점</Box>
-                <Box>2점</Box>
-                <Box>3점</Box>
-                <Box>4점</Box>
-                <Box>5점</Box>
-              </HStack>
-            </VStack>
-          </Flex>
 
-          {orderedList &&
-            orderedList.map((review) => (
-              <ReviewItem key={review?.id} review={review} />
-            ))}
-        </Box>
-      </Box>
-
-      <Drawer
-        placement="bottom"
-        onClose={onClose}
-        isOpen={isOpen}
-        autoFocus={false}
-      >
-        <DrawerOverlay />
-        <DrawerContent bg="transparent">
-          <DrawerBody px="16px" py="20px" bg="white" borderTopRadius="20px">
-            <Box>
-              <VStack
-                alignItems="flex-start"
-                p="10px"
-                w="full"
-                bg="gray.200"
-                borderRadius="5px"
-              >
-                <Box>{data?.name}</Box>
-                <Flex justify="space-between" w="full" mt="4px">
-                  <Flex h="25px" alignSelf="center">
-                    <Box
-                      position="relative"
-                      bg="white"
-                      border="1px solid #EAECF0"
-                      borderRadius="5px 0px 0px 5px"
-                      p={0}
-                      w="25px"
-                      h="25px"
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '1px',
-                        width: '9px',
-                        backgroundColor: '#4A4D55',
-                        position: 'absolute',
-                        top: '11px',
-                        left: '7px',
-                      }}
-                      _hover={{ cursor: 'pointer' }}
-                      onClick={decQuantity}
-                    ></Box>
-                    <Flex
-                      w="23px"
-                      h="full"
-                      borderTop="1px solid #EAECF0"
-                      borderBottom="1px solid #EAECF0"
-                    >
-                      <Input
-                        w="full"
-                        h="full"
-                        border="none"
-                        fontSize="12px"
-                        textAlign="center"
-                        color="gray.800"
-                        p={0}
-                        bg="white"
-                        value={quantity}
-                        readOnly
-                      ></Input>
-                    </Flex>
-                    <Box
-                      position="relative"
-                      bg="white"
-                      border="1px solid #EAECF0"
-                      borderRadius="0px 5px 5px 0px"
-                      w="25px"
-                      h="25px"
-                      p={0}
-                      _before={{
-                        content: '""',
-                        display: 'block',
-                        width: '1px',
-                        height: '9px',
-                        backgroundColor: '#4A4D55',
-                        position: 'absolute',
-                        top: '7px',
-                        left: '11px',
-                      }}
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '1px',
-                        width: '9px',
-                        backgroundColor: '#4A4D55',
-                        position: 'absolute',
-                        top: '11px',
-                        left: '7px',
-                      }}
-                      onClick={incQuantity}
-                      _hover={{ cursor: 'pointer' }}
-                    ></Box>
-                  </Flex>
-                  <Flex fontWeight="700" color="gray.600" alignItems="center">
-                    {/* {priceToString(product?.price)}원
-                     */}
-                    {data?.price}원
-                  </Flex>
-                </Flex>
-              </VStack>
-              <Flex justify="space-between" w="full" pt="15px">
-                <Box>
-                  총 수량
-                  <span style={{ color: '#FF710B' }}> {quantity}</span> 개
-                </Box>
-                <Box>
-                  합계
-                  <span style={{ fontWeight: '700' }}>
-                    {/* {priceToString(quantity * product.price)} */}
-                    {(data?.price || 0) * quantity}
+            <Box px="16px">
+              <HStack pt="51px" pb="30px" justify="space-between">
+                <Box ref={reviewRef} fontWeight="700">
+                  리뷰&nbsp;
+                  <span style={{ color: '#FF710B' }}>
+                    {data?.reviewList.length}
                   </span>
-                  원
+                  건
                 </Box>
+                <HStack spacing="10px">
+                  <Select
+                    fontWeight="700"
+                    fontSize="0.75rem"
+                    w="115px"
+                    h="30px"
+                    bg="gray.200"
+                    borderRadius="5px"
+                    onChange={handleOrderingOnChange}
+                    ref={orderingRateRef}
+                    defaultValue="latestOrder"
+                  >
+                    <option value="latestOrder">최신순</option>
+                    <option value="highRating">평점 높은 순</option>
+                    <option value="lowRating">평점 낮은 순</option>
+                  </Select>
+                  <Select
+                    fontWeight="700"
+                    fontSize="0.75rem"
+                    w="100px"
+                    h="30px"
+                    bg="gray.200"
+                    borderRadius="5px"
+                    onChange={handleOrderingOnChange}
+                    ref={orderingPhotoRef}
+                    defaultValue="allview"
+                  >
+                    <option value="allview">전체보기</option>
+                    <option value="photoview">포토리뷰</option>
+                  </Select>
+                </HStack>
+              </HStack>
+              <Flex justify="space-between" alignItems="center" pb="21px">
+                <HStack spacing={0}>
+                  <Box
+                    fontWeight="700"
+                    bg="primary.500"
+                    p="0px 7px"
+                    ml="6px"
+                    mr="12px"
+                    borderRadius="15px"
+                    color="white"
+                  >
+                    {data?.avgRate?.toFixed(1) || '0'}
+                  </Box>
+                  <StarRating
+                    starRating={Number(data?.avgRate?.toFixed())}
+                  ></StarRating>
+                </HStack>
+                <Box w="1px" h="70px" bg="gray.200"></Box>
+                <VStack spacing={0} alignItems="center">
+                  <HStack spacing="23px">
+                    {data?.reviewList &&
+                      countRate &&
+                      countRate.map((count, idx) => {
+                        return (
+                          <ReviewChartBar
+                            key={idx}
+                            count={count}
+                            countAll={data?.reviewList.length}
+                          />
+                        );
+                      })}
+                  </HStack>
+                  <Box w="150px" h="1px" bg="gray.200"></Box>
+                  <HStack
+                    fontWeight="0.75rem"
+                    spacing="15px"
+                    mt="4px"
+                    color="gray.600"
+                  >
+                    <Box>1점</Box>
+                    <Box>2점</Box>
+                    <Box>3점</Box>
+                    <Box>4점</Box>
+                    <Box>5점</Box>
+                  </HStack>
+                </VStack>
               </Flex>
-              <Flex justify="space-between" w="100%" pt="15px" pb="10px">
-                <Button
-                  colorScheme="primary"
-                  w="calc(50% - 6.5px)"
-                  h="50px"
-                  borderRadius="25px"
-                  size="sd"
-                  py="12px"
-                  // onClick={SendQuery}
-                >
-                  바로구매
-                </Button>
-                <Button
-                  variant="outline"
-                  colorScheme="primary"
-                  w="calc(50% - 6.5px)"
-                  h="50px"
-                  borderRadius="25px"
-                  size="sd"
-                  py="12px"
-                  // onClick={postCart}
-                >
-                  장바구니
-                </Button>
-              </Flex>
+
+              {orderedList &&
+                orderedList.map((review) => (
+                  <ReviewItem key={review?.id} review={review} />
+                ))}
             </Box>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </>
+          </Box>
+          <OrderDrawer onClose={onClose} isOpen={isOpen} data={data} />
+        </>
+      )}
+    </Box>
   );
 }
 

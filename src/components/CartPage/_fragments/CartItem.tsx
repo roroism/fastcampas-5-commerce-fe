@@ -244,14 +244,17 @@ const CartItem = ({
                 ></Box>
               </Flex>
               <Flex alignSelf="center" as="strong" color="gray.600">
-                {productData?.price}원
+                {priceFormat(productData?.price)}원
               </Flex>
             </Flex>
           </Flex>
           <Flex mt="15px" justifyContent="space-between">
             <Flex alignItems="center">배송비 무료</Flex>
             <Box as="strong" fontSize="1.25rem">
-              {(productData?.price || 100000) * (cartData?.count || 1)}원
+              {priceFormat(
+                (productData?.price || 100000) * (cartData?.count || 1),
+              )}
+              원
             </Box>
           </Flex>
         </Flex>

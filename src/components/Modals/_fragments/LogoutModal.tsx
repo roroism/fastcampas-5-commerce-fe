@@ -63,9 +63,10 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
               w="155px"
               h="auto"
               borderRadius="25px"
-              backgroundColor="white"
-              color="primary.500"
+              variant="outline"
+              colorScheme="primary"
               border="1px solid"
+              fontSize="1rem"
             >
               취소
             </Button>
@@ -76,8 +77,9 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
               w="155px"
               h="auto"
               borderRadius="25px"
-              backgroundColor="primary.500"
-              color="white"
+              variant="solid"
+              colorScheme="primary"
+              fontSize="1rem"
             >
               확인
             </Button>

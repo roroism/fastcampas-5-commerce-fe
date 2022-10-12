@@ -118,6 +118,7 @@ function OrderDrawer({
       mutatingCount({ id: hasProductInCartitem.id, data: form });
     }
 
+    setQuantity(1);
     modalOnOpen();
   };
 

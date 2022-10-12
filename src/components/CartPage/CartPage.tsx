@@ -175,7 +175,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
   return isCartitem ? (
     <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
-      <Box minH="100vh">
+      <Box>
         <Flex
           justifyContent="space-between"
           color="gray.600"

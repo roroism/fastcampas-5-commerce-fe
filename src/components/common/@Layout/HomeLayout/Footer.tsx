@@ -7,9 +7,16 @@ import {
   UnorderedList,
 } from '@chakra-ui/react';
 
+import { LAYOUT } from '@constants/layout';
+
 const Footer = () => {
   return (
-    <Container bg="gray.800" as="footer" w={{ base: '375px' }}>
+    <Container
+      bg="gray.800"
+      as="footer"
+      w={{ base: '375px' }}
+      h={LAYOUT.FOOTER.HEIGHT}
+    >
       <Box h="280px" color="white" w="100%" pt="35px" boxSizing="border-box">
         <Flex
           gap="40px"

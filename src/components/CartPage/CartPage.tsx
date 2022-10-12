@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Box,
@@ -24,6 +25,9 @@ import {
   useGetMyInfoQuery,
   useGetProductByIdQueries,
 } from '@apis/reactquery/QueryApi.query';
+import { CartItemDTOType } from '@apis/reactquery/QueryApi.type';
+import { orderSliceAction } from '@features/order/orderSlice';
+import useAppStore from '@features/useAppStore';
 
 import { LAYOUT } from '@constants/layout';
 import { useQueryClient } from '@tanstack/react-query';
@@ -43,7 +47,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
   const { data: userData } = useGetMyInfoQuery({
     options: { staleTime: 1800, cacheTime: Infinity },
   });
-  const { data: cartData } = useGetCartQuery({
+  const { data: cartData = [] } = useGetCartQuery({
     variables: userData?.id,
     options: {
       enabled: !!userData,
@@ -69,6 +73,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
       },
     },
   });
+
   const { query: productData } = useGetProductByIdQueries(
     {
       options: { enabled: !!productIdList },
@@ -104,10 +109,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
               const findedProduct = productData.find(
                 (product: any) => product?.data?.id === item.productId,
               );
-              console.log(
-                'Number(findedProduct?.data?.price) * item.count : ',
-                Number(findedProduct?.data?.price) * item.count,
-              );
+
               return Number(findedProduct?.data?.price) * item.count;
             })
             .reduce(
@@ -119,32 +121,26 @@ function CartPage({ ...basisProps }: CartPageProps) {
     );
   }, [cartData, productData]);
 
-  // const [checkItems, setCheckItems] = useState([]);
-
-  // 체크박스 단일 선택
-  // const handleSingleCheck = (checked, id) => {
-  //   if (checked) {
-  //     // 단일 선택 시 체크된 아이템을 배열에 추가
-  //     setCheckItems(prev => [...prev, id]);
-  //   } else {
-  //     // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
-  //     setCheckItems(checkItems.filter((el) => el !== id));
-  //   }
-  // };
-
+  // const [checkItems, setCheckItems] = useState<CartItemDTOType[]>([]);
+  const { value: checkItems } = useAppStore((state) => state.ORDER);
+  const dispatch = useDispatch();
+  // console.log('checkItems ::: ', checkItems);
   // 체크박스 전체 선택
-  //  const handleAllCheck = (checked) => {
-  //   if(checked) {
-  //     // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
-  //     const idArray = [];
-  //     data.forEach((el) => idArray.push(el.id));
-  //     setCheckItems(idArray);
-  //   }
-  //   else {
-  //     // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
-  //     setCheckItems([]);
-  //   }
-  // }
+  const handleAllCheck = (checked: boolean) => {
+    // console.log('checked : ', checked);
+    if (checked) {
+      // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
+      // const idArray = [];
+      // cartData[0]?.cartitem?.map((el) => idArray.push(el));
+      // console.log('cartData[0] ::::::::::', cartData[0]);
+      // setCheckItems([...cartData[0]?.cartitem]);
+      dispatch(orderSliceAction.productInCart([...cartData[0]?.cartitem]));
+    } else {
+      // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
+      // setCheckItems([]);
+      dispatch(orderSliceAction.productInCart([]));
+    }
+  };
   console.log('userData : ', userData);
   console.log('cartData : ', cartData);
   useEffect(() => {
@@ -187,12 +183,13 @@ function CartPage({ ...basisProps }: CartPageProps) {
             <Checkbox
               colorScheme="primary"
               w="auto"
-              // onChange={onChange}
-              // isChecked={item?.checked}
-
-              // onChange={(e) => handleAllCheck(e.target.checked)}
+              onChange={(e) => handleAllCheck(e.target.checked)}
               // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
-              // checked={checkItems.length === data.length ? true : false}
+              isChecked={
+                checkItems.length === cartData[0]?.cartitem?.length
+                  ? true
+                  : false
+              }
             >
               모두선택
             </Checkbox>
@@ -208,7 +205,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
                 const findedProduct = productData.find(
                   (product: any) => product?.data?.id === item.productId,
                 );
-                console.log('findedProduct : ', findedProduct);
+                // console.log('findedProduct : ', findedProduct);
                 return (
                   <CartItem
                     key={item.id}
@@ -216,6 +213,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
                     cartData={item}
                     mutatingCount={mutatingCount}
                     mutatingDelete={mutatingDelete}
+                    checkUseState={[checkItems, dispatch]}
                   />
                 );
               })}
@@ -256,8 +254,8 @@ function CartPage({ ...basisProps }: CartPageProps) {
             w="100%"
             h="50px"
             borderRadius="25px"
-            backgroundColor="primary.500"
-            color="white"
+            variant="solid"
+            colorScheme="primary"
             fontSize="1rem"
           >
             결제하기

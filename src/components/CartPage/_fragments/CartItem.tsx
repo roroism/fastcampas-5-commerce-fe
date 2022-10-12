@@ -18,7 +18,9 @@ import {
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
 } from '@apis/reactquery/QueryApi.type';
+import { orderSliceAction } from '@features/order/orderSlice';
 
+import { Dispatch } from '@reduxjs/toolkit';
 import { UseMutateFunction, useQueryClient } from '@tanstack/react-query';
 
 import priceFormat from 'hooks/priceFormat';
@@ -33,6 +35,7 @@ interface CartItemProps extends ChakraProps {
     unknown
   >;
   mutatingDelete: UseMutateFunction<boolean, any, string, unknown>;
+  checkUseState: [CartItemDTOType[], Dispatch];
 }
 
 const CartItem = ({
@@ -40,6 +43,7 @@ const CartItem = ({
   cartData,
   mutatingCount,
   mutatingDelete,
+  checkUseState: [checkItems, dispatch],
   ...basisProps
 }: CartItemProps) => {
   const handleDecQuantity = () => {
@@ -62,6 +66,27 @@ const CartItem = ({
     mutatingDelete(String(cartData?.id));
   };
 
+  // 체크박스 단일 선택
+  const handleSingleCheck = (checked: boolean) => {
+    if (checked) {
+      // 단일 선택 시 체크된 아이템을 배열에 추가
+      // setCheckItems((prev: Array<CartItemDTOType>) => [...prev, cartData]);
+      dispatch(
+        orderSliceAction.productInCart([
+          ...checkItems,
+          cartData,
+        ] as CartItemDTOType[]),
+      );
+    } else {
+      // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
+      dispatch(
+        orderSliceAction.productInCart(
+          checkItems.filter((el: CartItemDTOType) => el.id !== cartData?.id),
+        ),
+      );
+    }
+  };
+
   return (
     <Box
       w="100%"
@@ -82,12 +107,15 @@ const CartItem = ({
             colorScheme="primary"
             w="20px"
             h="20px"
-            // onChange={onChange}
-            // isChecked={item?.checked}
-
-            // onChange={(e) => handleSingleCheck(e.target.checked, data.id)}
+            onChange={(e) => handleSingleCheck(e.target.checked)}
             // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-            // checked={checkItems.includes(data.id) ? true : false} />
+            isChecked={
+              checkItems.some(
+                (item: CartItemDTOType) => item.id === cartData?.id,
+              )
+                ? true
+                : false
+            }
           ></Checkbox>
         </Box>
         <Flex flexDirection="column" justifyContent="flex-start" flexGrow={1}>

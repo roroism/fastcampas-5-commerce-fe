@@ -270,6 +270,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
             variant="solid"
             colorScheme="primary"
             fontSize="1rem"
+            disabled={checkItems.length === 0 ? true : false}
           >
             결제하기
           </Button>

@@ -59,7 +59,7 @@ function KakaoPage({ ...basisProps }: KakaoPageProps) {
 
   return (
     <>
-      <Box {...basisProps} h="100%">
+      <Box {...basisProps} h="100vh">
         <Flex w="full" h="full" justify="center" alignItems="center">
           <Spinner
             thickness="4px"

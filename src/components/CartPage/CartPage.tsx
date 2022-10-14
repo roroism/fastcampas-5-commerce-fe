@@ -44,9 +44,10 @@ function CartPage({ ...basisProps }: CartPageProps) {
   const [productIdList, setProductIdList] = useState<Array<string>>();
   const [totalPrice, setTotalPrice] = useState<string>('');
   const [isCartitem, setIsCartitem] = useState<boolean>(true);
-  const { data: userData } = useGetMyInfoQuery({
-    options: { staleTime: 1800, cacheTime: Infinity },
-  });
+  const { data: userData } = useGetMyInfoQuery();
+  //   {
+  //   options: { staleTime: 1800, cacheTime: Infinity },
+  // }
   const { data: cartData = [] } = useGetCartQuery({
     variables: userData?.id,
     options: {
@@ -76,7 +77,12 @@ function CartPage({ ...basisProps }: CartPageProps) {
 
   const { query: productData } = useGetProductByIdQueries(
     {
-      options: { enabled: !!productIdList },
+      // options: { enabled: !!productIdList },
+      options: {
+        onSuccess: (data) => {
+          console.log('cart data : ', data);
+        },
+      },
       variables: '',
     },
     productIdList,
@@ -261,19 +267,23 @@ function CartPage({ ...basisProps }: CartPageProps) {
           </Flex>
         </Box>
         <Box>
-          <Button
-            mt="20px"
-            fontWeight="700"
-            w="100%"
-            h="50px"
-            borderRadius="25px"
-            variant="solid"
-            colorScheme="primary"
-            fontSize="1rem"
-            disabled={checkItems.length === 0 ? true : false}
-          >
-            결제하기
-          </Button>
+          <NextLink href="/order" passHref>
+            <Link>
+              <Button
+                mt="20px"
+                fontWeight="700"
+                w="100%"
+                h="50px"
+                borderRadius="25px"
+                variant="solid"
+                colorScheme="primary"
+                fontSize="1rem"
+                disabled={checkItems.length === 0 ? true : false}
+              >
+                결제하기
+              </Button>
+            </Link>
+          </NextLink>
         </Box>
       </Box>
     </Box>

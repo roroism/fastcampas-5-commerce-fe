@@ -79,6 +79,24 @@ export type ProductInCartItemDTOType = {
   count: number;
 };
 
+export type OrderDTOType = {
+  id: number;
+  userId: number;
+  price: number;
+  shippingPrice: number;
+  amount: number;
+  method: string;
+  status: string;
+  userName: string;
+  userPhone: string;
+  userAddr: string;
+  shipName: string;
+  shipPhone: string;
+  shipAddr: string;
+  orderMessage: string;
+  created: Date;
+};
+
 // export type CartDTOType = [
 //   {
 //     cartitem: Array<Icartitem>;

@@ -12,6 +12,7 @@ import {
   MyInfoDTOType,
   MyInfoParamGetType,
   MyInfoParamPatchType,
+  OrderDTOType,
   ProductDTOType,
   ProductDetailDTOType,
   ProductInCartItemDTOType,
@@ -148,6 +149,16 @@ export class ProductApi {
     const { data } = await this.axios({
       method: 'DELETE',
       url: `/v1/cart/item/${id}/`,
+    });
+    return data;
+  };
+
+  postOrder = async (body: FormData): Promise<OrderDTOType> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/v1/order/`,
+      data: body,
+      headers: { 'Content-Type': 'multipart/form-data' },
     });
     return data;
   };

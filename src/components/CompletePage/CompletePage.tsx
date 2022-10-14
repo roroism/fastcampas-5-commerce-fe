@@ -40,7 +40,7 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
             flexDirection="column"
             gap="10px"
           >
-            <OrderItem paymentCompleted />
+            {/* <OrderItem paymentCompleted /> */}
           </UnorderedList>
         </Box>
       </Box>

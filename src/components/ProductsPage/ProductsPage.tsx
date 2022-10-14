@@ -54,9 +54,10 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
     }
   }, [isShow]);
 
-  const { data: userData } = useGetMyInfoQuery({
-    options: { staleTime: 1800, cacheTime: Infinity },
-  });
+  const { data: userData } = useGetMyInfoQuery();
+  //   {
+  //   options: { staleTime: 1800, cacheTime: Infinity },
+  // }
   const { data: cartData = [] } = useGetCartQuery({
     variables: userData?.id,
     options: {
@@ -67,6 +68,7 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
           const form = new FormData();
           form.append('userId', String(userData?.id));
           productApi.postCart(form);
+          console.log('장바구니 생성!!!!!');
           // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
         } else if (data[0].cartitem.length === 0) {
           // 장바구니 o 상품 x

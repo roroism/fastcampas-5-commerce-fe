@@ -66,7 +66,7 @@ export function useGetProductByIdQueries(
   productIdList?: Array<string> | undefined,
 ) {
   // const queryKey = PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables);
-
+  console.log('params ::: ', params);
   const queryKeyList: any[] = [];
 
   const queryList =
@@ -76,7 +76,7 @@ export function useGetProductByIdQueries(
       return {
         queryKey: PRODUCT_API_QUERY_KEY.GET_BY_ID(item),
         queryFn: () => productApi.getProductById(item),
-        staleTime: Infinity,
+        onSuccess: params?.options?.onSuccess,
       };
     }) || [];
 

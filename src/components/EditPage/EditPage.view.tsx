@@ -53,7 +53,7 @@ const EditPageView = ({
   onSubmit,
   ...basisProps
 }: EditPageViewProp) => {
-  const [preview, setPreview] = useState<string>();
+  const [preview, setPreview] = useState<string>('');
   const avatarRef = useRef<HTMLInputElement>(null);
   const [img, setImg] = useState(avatarRef.current?.files);
   const { data: myInfo } = useGetMyInfoQuery();
@@ -80,14 +80,40 @@ const EditPageView = ({
     if (myInfo?.gender) setValue('gender', myInfo?.gender);
     if (myInfo?.age) setValue('age', myInfo?.age);
     if (myInfo?.profile) setPreview(myInfo?.profile);
+    setValue('profile', myInfo?.profile || '');
+    // const getImg = async () => {
+    //   const upload = await axios
+    //     .get(
+    //       `${myInfo?.profile}`,
+    //       // { file: file },
+    //       // file,
+    //       // form,
+    //       {
+    //         baseURL: '',
+    //         // headers: {
+    //         //   'Content-Type': file.type,
+    //         // },
+    //       },
+    //     )
+    //     .then((res) => {
+    //       console.log('getImg : ', res);
+    //       console.log('getImg upload : ', upload);
+    //       // if (myInfo?.profile) setPreview(myInfo?.profile);
+    //       setValue('profile', myInfo?.profile);
+    //     })
+    //     .catch((err) => {
+    //       console.log('getImg : ', err);
+    //     });
+    // };
+    // getImg();
   }, [myInfo]);
 
   const handleAvatar = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('클릭1');
+    // console.log('클릭1');
     if (avatarRef.current) {
       avatarRef.current.click();
-      console.log('클릭2');
+      // console.log('클릭2');
     }
   };
 
@@ -103,19 +129,22 @@ const EditPageView = ({
       const file = avatarRef.current?.files[0];
       setPreview(URL.createObjectURL(file));
 
-      console.log('avatarRef.current?.files', avatarRef.current?.files);
+      // console.log('avatarRef.current?.files', avatarRef.current?.files);
       console.log('avatarRef.current?.files[0]', avatarRef.current?.files[0]);
       console.log('URL.createObjectURL(file)', URL.createObjectURL(file));
       // const form = new FormData();
       // form.append('file', file);
+      let resPresignedUrl = '';
+
       instance
         .post(`/v1/presigned_url/`, {
           name: file.name,
         })
         .then(async (res) => {
           console.log('presignedUrl : ', res.data.url);
-          setValue('profile', res.data.url);
-          console.log('file.type : ', file.type);
+          resPresignedUrl = res.data.url;
+
+          // console.log('file.type : ', file.type);
           const upload = await axios
             .put(
               `${res.data.url}`,
@@ -132,6 +161,13 @@ const EditPageView = ({
             .then((res) => {
               console.log('success : s3 file upload res : ', res);
               console.log('success : s3 file upload upload : ', upload);
+              console.log(
+                'success : s3 file upload resPresignedUrl : ',
+                resPresignedUrl,
+              );
+
+              setValue('profile', resPresignedUrl.split('?')[0]);
+              setPreview(resPresignedUrl.split('?')[0]);
             })
             .catch((err) => {
               console.log('presignedUrl put error : ', err);
@@ -146,9 +182,19 @@ const EditPageView = ({
   return (
     <>
       <Box {...basisProps} mt="130px">
-        <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
-          회원정보수정
-        </Text>
+        {/* <NextLink href="/mypage/edit" passHref>
+          <Link>
+            <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
+              회원정보수정
+            </Text>
+          </Link>
+        </NextLink> */}
+        <a href="/mypage/edit">
+          <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
+            회원정보수정
+          </Text>
+        </a>
+
         <Box as="form" onSubmit={onSubmit} {...basisProps}>
           <Text as="h3" fontWeight="700">
             회원정보입력

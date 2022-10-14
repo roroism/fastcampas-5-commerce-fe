@@ -53,9 +53,16 @@ function EditPage({ ...basisProps }: EditPageProps) {
     //   'profile',
     //   'https://img.freepik.com/free-photo/beautiful-shot-of-a-crystal-clear-lake-next-to-a-snowy-mountain-base-during-a-sunny-day_181624-5459.jpg?w=1060&t=st=1665463203~exp=1665463803~hmac=16fe5687a5172be894e7d708ca09e623cd50466c6cf9c2cc03a2ae66536dceb8',
     // );
+    // form.append('profile', data.profile || '');
+    // form.append(
+    //   'profile',
+    //   'https://incourse-commerce-prod-bucket.s3.amazonaws.com/media/8732e50d-810a-4824-bfe7-c2284a7c9de4.jpg',
+    // );
     if (data.profile && data.profile !== '') {
+      console.log('if data.profile : ', data.profile);
       form.append('profile', data.profile);
     }
+    // form.append('profile', 'a');
     form.append('gender', data.gender as string);
     form.append('age', String(data.age));
 

@@ -9,15 +9,22 @@ import {
   ExampleDTOType,
   ExampleParamPatchType,
   ExampleParamPutType,
+  IOrderForm,
   MyInfoDTOType,
   MyInfoParamGetType,
   MyInfoParamPatchType,
+  OrderByOrderIdDTOType,
+  OrderByOrderIdParamGetType,
   OrderDTOType,
+  OrderParamGetType,
+  OrderStatusDTOType,
+  OrderStatusParamPostType,
   ProductDTOType,
   ProductDetailDTOType,
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
   ProductParamGetType,
+  putOrderByOrderIdParamPutType,
 } from './QueryApi.type';
 
 export class ProductApi {
@@ -154,15 +161,66 @@ export class ProductApi {
   };
 
   postOrder = async (body: FormData): Promise<OrderDTOType> => {
+    // postOrder = async (body: IOrderForm): Promise<OrderDTOType> => {
     const { data } = await this.axios({
       method: 'POST',
       url: `/v1/order/`,
       data: body,
       headers: { 'Content-Type': 'multipart/form-data' },
     });
+
+    // const { data } = await this.axios.put(`v1/order/`, { ...body });
+
     return data;
   };
 
+  getOrder = async (params?: OrderParamGetType): Promise<OrderDTOType[]> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/order/?user_id=${params}`,
+      params,
+    });
+    console.log('order - data : ', data);
+    return data;
+  };
+
+  getOrderByOrderId = async (
+    params?: OrderByOrderIdParamGetType,
+  ): Promise<OrderByOrderIdDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/order/${params}/`,
+      params,
+    });
+    console.log('order - data : ', data);
+    return data;
+  };
+
+  putOrderByOrderId = async (
+    req: putOrderByOrderIdParamPutType,
+  ): Promise<OrderByOrderIdDTOType> => {
+    console.log('putProductInCartItem req : ', req);
+    const { data } = await this.axios({
+      method: 'PUT',
+      url: `/v1/order/${req.id}/`,
+      data: req.data,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  postOrderStatus = async (
+    body: OrderStatusParamPostType,
+  ): Promise<OrderStatusDTOType> => {
+    // postOrder = async (body: IOrderForm): Promise<OrderDTOType> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/v1/order/status/${body.id}`,
+      data: body.data,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
   // patchProductInCartItem = async (
   //   req: ProductInCartItemParamPatchType,
   // ): Promise<ProductInCartItemDTOType> => {

@@ -12,6 +12,7 @@ import productApi from './QueryApi';
 import {
   CartParamGetType,
   MyInfoParamGetType,
+  OrderParamGetType,
   ProductDTOType,
   ProductDetailDTOType,
   ProductParamGetType,
@@ -145,6 +146,46 @@ export function useGetCartQuery(
   //   form.append('userId', String(params?.variables));
 
   // }
+
+  return { ...query, queryKey };
+}
+
+export const ORDER_API_QUERY_KEY = {
+  GET: (param: OrderParamGetType) => ['order', param],
+  // GET_BY_ID: (id?: string) => ['product-by-id', id],
+};
+
+export function useGetOrderQuery(
+  params: QueryHookParams<typeof productApi.getOrder>,
+) {
+  // console.log('params?.variables : ', params?.variables);
+  const queryKey = ORDER_API_QUERY_KEY.GET(params?.variables as string);
+  const query = useQuery(
+    queryKey,
+    () => productApi.getOrder(params?.variables),
+    params?.options,
+  );
+
+  return { ...query, queryKey };
+}
+
+export const ORDER_BY_ORDERID_API_QUERY_KEY = {
+  GET: (param: OrderParamGetType) => ['order-by-orderid', param],
+  // GET_BY_ID: (id?: string) => ['product-by-id', id],
+};
+
+export function useGetOrderByOrderIdQuery(
+  params: QueryHookParams<typeof productApi.getOrderByOrderId>,
+) {
+  console.log('params?.variables : ', params?.variables);
+  const queryKey = ORDER_BY_ORDERID_API_QUERY_KEY.GET(
+    params?.variables as string,
+  );
+  const query = useQuery(
+    queryKey,
+    () => productApi.getOrderByOrderId(params?.variables),
+    params?.options,
+  );
 
   return { ...query, queryKey };
 }

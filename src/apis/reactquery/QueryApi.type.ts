@@ -97,6 +97,38 @@ export type OrderDTOType = {
   created: Date;
 };
 
+export type IOrderForm = {
+  userId: number;
+  price: number;
+  paymentKey?: string | null;
+  method: 'CARD';
+  userName: string;
+  userPhone: string;
+  userAddr: string;
+  shipName: string;
+  shipPhone: string;
+  shipAddr: string;
+  orderMessage: string;
+};
+
+export type OrderByOrderIdDTOType = {
+  id: number;
+  price: number;
+  userId: number;
+  shippingPrice: number;
+  amount: number;
+  method: string;
+  status: string;
+  userName: string;
+  userPhone: string;
+  userAddr: string;
+  shipName: string;
+  shipPhone: string;
+  shipAddr: string;
+  orderMessage: string;
+  created: Date;
+};
+
 // export type CartDTOType = [
 //   {
 //     cartitem: Array<Icartitem>;
@@ -104,6 +136,16 @@ export type OrderDTOType = {
 //     userId: number;
 //   },
 // ];
+
+export type OrderStatusDTOType = {
+  id: number;
+  orderId: string;
+  productId: number;
+  count: number;
+  shippingStatus: string;
+  created: string;
+};
+
 export type CartParamGetType = {};
 
 export type CartParamPostType = {};
@@ -115,6 +157,8 @@ export type ProductInCartItemParamPutType = {
   data: FormData;
 };
 
+export type OrderByOrderIdParamGetType = {};
+
 // export type ProductInCartItemParamPatchType = {
 //   id: number;
 //   data: FormData;
@@ -123,6 +167,18 @@ export type ProductInCartItemParamPutType = {
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
+export type OrderParamGetType = {};
+
+export type putOrderByOrderIdParamPutType = {
+  id: number;
+  data: FormData;
+};
+
+export type OrderStatusParamPostType = {
+  id: number;
+  data: FormData;
+};
+
 export type ExampleParamPutType = {
   id: string;
   data: ProductDTOType;

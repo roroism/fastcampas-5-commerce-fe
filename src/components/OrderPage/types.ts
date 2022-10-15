@@ -10,6 +10,7 @@ export type FormOrderDataType = {
   shipAddrDetail: string;
   orderMessage: string;
   method: 'CARD';
+  price: string;
 };
 
 export type PaymentProductType = {

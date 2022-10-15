@@ -1,18 +1,21 @@
 import { Box, ChakraProps, Flex, Image, Text } from '@chakra-ui/react';
 
+import { PaymentStatus } from '@apis/reactquery/QueryApi.type';
+
 import { PaymentProductType } from '../types';
 
 interface OrderItemProps extends ChakraProps {
   product: PaymentProductType;
   paymentCompleted?: boolean;
+  paymentStatus?: PaymentStatus;
 }
 
 const OrderItem = ({
   product,
-  paymentCompleted,
+  paymentStatus,
   ...basisProps
 }: OrderItemProps) => {
-  console.log('OrderItem product : ', product);
+  // console.log('OrderItem product : ', product);
   return (
     <Box
       as="li"
@@ -41,10 +44,10 @@ const OrderItem = ({
             {product.price} / {product.count}
           </Box>
         </Flex>
-        {paymentCompleted && (
+        {paymentStatus && (
           <Flex alignItems="center">
             <Text fontWeight="700" fontSize="0.75rem" color="primary.500">
-              결제완료
+              {paymentStatus === PaymentStatus.DONE ? '결제완료' : '기타사항'}
             </Text>
           </Flex>
         )}

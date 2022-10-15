@@ -79,6 +79,17 @@ export type ProductInCartItemDTOType = {
   count: number;
 };
 
+export enum PaymentStatus {
+  READY = 'READY',
+  IN_PROGRESS = 'IN_PROGRESS',
+  WAITING_FOR_DEPOSIT = 'WAITING_FOR_DEPOSIT',
+  DONE = 'DONE',
+  CANCELED = 'CANCELED',
+  PARTIAL_CANCELED = 'PARTIAL_CANCELED',
+  ABORTED = 'ABORTED',
+  EXPIRED = 'EXPIRED',
+}
+
 export type OrderDTOType = {
   id: number;
   userId: number;
@@ -86,7 +97,7 @@ export type OrderDTOType = {
   shippingPrice: number;
   amount: number;
   method: string;
-  status: string;
+  status: PaymentStatus;
   userName: string;
   userPhone: string;
   userAddr: string;
@@ -118,7 +129,7 @@ export type OrderByOrderIdDTOType = {
   shippingPrice: number;
   amount: number;
   method: string;
-  status: string;
+  status: PaymentStatus;
   userName: string;
   userPhone: string;
   userAddr: string;
@@ -137,12 +148,20 @@ export type OrderByOrderIdDTOType = {
 //   },
 // ];
 
+export enum ShippingStatus {
+  PAID = 'PAID',
+  WAIT = 'WAIT',
+  INPROGRESS = 'INPROGRESS',
+  DONE = 'DONE',
+  CANCELED = 'CANCELED',
+}
+
 export type OrderStatusDTOType = {
   id: number;
   orderId: string;
   productId: number;
   count: number;
-  shippingStatus: string;
+  shippingStatus: ShippingStatus;
   created: string;
 };
 

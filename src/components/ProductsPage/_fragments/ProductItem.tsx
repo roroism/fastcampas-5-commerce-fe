@@ -122,17 +122,6 @@ const ProductItem = ({ product }: ProductItemProps) => {
 
         <Flex gap="10px" justifyContent="space-between" mx="17px">
           <Button
-            colorScheme="primary"
-            w="150px"
-            h="50px"
-            borderRadius="25px"
-            size="sd"
-            py="12px"
-            onClick={onOpen}
-          >
-            바로구매
-          </Button>
-          <Button
             variant="outline"
             colorScheme="primary"
             w="150px"
@@ -143,6 +132,17 @@ const ProductItem = ({ product }: ProductItemProps) => {
             onClick={onOpen}
           >
             장바구니
+          </Button>
+          <Button
+            colorScheme="primary"
+            w="150px"
+            h="50px"
+            borderRadius="25px"
+            size="sd"
+            py="12px"
+            onClick={onOpen}
+          >
+            바로구매
           </Button>
         </Flex>
       </Box>

@@ -7,46 +7,82 @@ import { Box, ChakraProps, Flex, Spinner, Text } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 import productApi from '@apis/reactquery/QueryApi';
-import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
-
-interface IOrderForm {
-  userId: number;
-  price: number;
-  paymentKey: string;
-  method: 'CARD';
-  userName: string;
-  userPhone: string;
-  userAddr: string;
-  shipName: string;
-  shipPhone: string;
-  shipAddr: string;
-  orderMessage: string;
-}
+import {
+  useGetMyInfoQuery,
+  useGetOrderByOrderIdQuery,
+  useGetOrderQuery,
+} from '@apis/reactquery/QueryApi.query';
 
 interface PaymentSuccessPageProps extends ChakraProps {}
 
 function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
-  const { data: userData } = useGetMyInfoQuery();
   const router = useRouter();
-
   const { orderId, paymentKey, amount } = router.query;
+  // const { data: userData } = useGetMyInfoQuery();
+
+  // const { data: paymentData } = useGetOrderQuery({
+  //   // [0]
+  //   variables: userData?.id?.toString(),
+  // });
+
+  const { data: paymentByOrderIdData } = useGetOrderByOrderIdQuery({
+    variables: orderId,
+  });
 
   useEffect(() => {
-    const form = new FormData();
-    form.append('userId', userData?.id?.toString() || '');
-    form.append('price', amount as string);
-    // form.append('paymentKey', paymentKey as string);
-    // form.append('paymentKey', null);
-    form.append('method', 'CARD');
-    form.append('userName', userData?.name as string);
-    form.append('userPhone', userData?.phone as string);
-    // form.append('userAddr', ); // 주소
-    // form.append('shipName', ); // 배송받을사람
-    // form.append('shipPhone', ); // 배송연락처
-    // form.append('shipAddr', ); // 배송지주소
-    // form.append('orderMessage', ); // 배송요청사항
+    console.log('paymentByOrderIdData : ', paymentByOrderIdData);
+    console.log(
+      'Number(amount) === paymentByOrderIdData.price : ',
+      Number(amount) === paymentByOrderIdData?.price,
+    );
+    if (
+      orderId &&
+      paymentKey &&
+      amount &&
+      typeof orderId === 'string' &&
+      typeof amount === 'string' &&
+      typeof paymentKey === 'string'
+    ) {
+      if (
+        paymentByOrderIdData &&
+        Number(amount) === paymentByOrderIdData.price
+      ) {
+        const form = new FormData();
+        form.append('price', amount);
+        form.append('paymentKey', paymentKey);
+        form.append('method', paymentByOrderIdData?.method as string);
+        form.append('userName', paymentByOrderIdData?.userName as string);
+        form.append('userPhone', paymentByOrderIdData?.userPhone as string);
+        form.append('userAddr', paymentByOrderIdData?.userAddr as string); // 주소
+        form.append('shipName', paymentByOrderIdData?.shipName as string); // 배송받을사람
+        form.append('shipPhone', paymentByOrderIdData?.shipPhone as string); // 배송연락처
+        form.append('shipAddr', paymentByOrderIdData?.shipAddr as string); // 배송지주소
+        form.append(
+          'orderMessage',
+          paymentByOrderIdData?.orderMessage as string,
+        ); // 배송요청사항
 
-    // const paymentResult = await productApi.postOrder(form);
+        const paymentResult = async () =>
+          await productApi.putOrderByOrderId({
+            id: Number(orderId),
+            data: form,
+          });
+        paymentResult();
+
+        console.log('paymentResult : ', paymentResult);
+
+        // const PaymentAuthorizationCall = async () => {
+        //   const PaymentAuthorizationStatus = await axios.post(
+        //     'https://api.tosspayments.com/v1/payments/confirm',
+        //   );
+        // };
+
+        router.replace({
+          pathname: `/order/complete`,
+          query: { orderId: orderId },
+        });
+      }
+    }
   }, []);
 
   return (

@@ -31,7 +31,7 @@ function MainPage({ ...basisProps }: MainPageProps) {
   //   {
   //   options: { staleTime: 1800, cacheTime: Infinity },
   // }
-  console.log('main page data : ', userData);
+  // console.log('main page data : ', userData);
 
   const { data: cartData = [] } = useGetCartQuery({
     variables: userData?.id,

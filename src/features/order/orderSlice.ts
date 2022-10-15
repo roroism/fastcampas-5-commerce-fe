@@ -40,6 +40,16 @@ export const orderSlice = createSlice({
     deleteAllProductInCart: (state) => {
       state.value = [];
     },
+    editCountProductInCart: (state, action) => {
+      const findedIdx = state.value.findIndex(
+        (item) => item.id === action.payload.id,
+      );
+
+      const olditem = state.value[findedIdx];
+      const count = action.payload.count;
+      const newitem = { ...olditem, count: count };
+      state.value[findedIdx] = newitem;
+    },
     // addPaymentProductList: (state, action) => {
     //   state.paymentList = state.value.map((item) => {
     //     const findedProduct = action.payload.find(
@@ -75,6 +85,9 @@ export const orderSlice = createSlice({
           price: action?.payload?.price,
         });
       }
+    },
+    deletePaymentProduct: (state) => {
+      state.paymentList = [];
     },
   },
 });

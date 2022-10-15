@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   Box,
@@ -46,20 +46,50 @@ const CartItem = ({
   checkUseState: [checkItems, dispatch],
   ...basisProps
 }: CartItemProps) => {
+  const checkBoxRef = useRef<HTMLInputElement>(null);
+
   const handleDecQuantity = () => {
     if ((cartData?.count || 1) > 1) {
       const form = new FormData();
       form.append('count', String((cartData?.count || 2) - 1));
-
       mutatingCount({ id: cartData?.id as number, data: form });
+      // dispatch(
+      //   orderSliceAction.editCountProductInCart({
+      //     id: cartData?.id,
+      //     count: (cartData?.count || 2) - 1,
+      //   }),
+      // );
+
+      if (checkBoxRef.current?.checked) {
+        dispatch(
+          orderSliceAction.editCountProductInCart({
+            id: cartData?.id,
+            count: (cartData?.count || 2) - 1,
+          }),
+        );
+      }
     }
   };
 
   const handleIncQuantity = () => {
     const form = new FormData();
     form.append('count', String((cartData?.count || 1) + 1));
-
     mutatingCount({ id: cartData?.id as number, data: form });
+    // dispatch(
+    //   orderSliceAction.editCountProductInCart({
+    //     id: cartData?.id,
+    //     count: (cartData?.count || 1) + 1,
+    //   }),
+    // );
+
+    if (checkBoxRef.current?.checked) {
+      dispatch(
+        orderSliceAction.editCountProductInCart({
+          id: cartData?.id,
+          count: (cartData?.count || 1) + 1,
+        }),
+      );
+    }
   };
 
   const handleDeleteCartitem = () => {
@@ -73,11 +103,29 @@ const CartItem = ({
       // 단일 선택 시 체크된 아이템을 배열에 추가
       // setCheckItems((prev: Array<CartItemDTOType>) => [...prev, cartData]);
       dispatch(orderSliceAction.addProductInCart(cartData));
+
+      dispatch(
+        orderSliceAction.editCountProductInCart({
+          id: cartData?.id,
+          count: cartData?.count,
+        }),
+      );
     } else {
       // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
       dispatch(orderSliceAction.deleteProductInCart(cartData?.id));
     }
   };
+
+  // useEffect(() => {
+  //   if (checkItems.some((item: CartItemDTOType) => item.id === cartData?.id)) {
+  //     dispatch(
+  //       orderSliceAction.editCountProductInCart({
+  //         id: cartData?.id,
+  //         count: cartData?.count,
+  //       }),
+  //     );
+  //   }
+  // }, [checkItems]);
 
   return (
     <Box
@@ -99,6 +147,7 @@ const CartItem = ({
             colorScheme="primary"
             w="20px"
             h="20px"
+            ref={checkBoxRef}
             onChange={(e) => handleSingleCheck(e.target.checked)}
             // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
             isChecked={
@@ -113,7 +162,11 @@ const CartItem = ({
         <Flex flexDirection="column" justifyContent="flex-start" flexGrow={1}>
           <Flex>
             <Box w="90px" h="90px" backgroundColor="#f9f9f9" mr="10px">
-              <Image w="100%"></Image>
+              <Image
+                w="100%"
+                src={productData?.photo}
+                alt={`${productData?.name} 이미지`}
+              ></Image>
             </Box>
             <Flex
               flexDirection="column"

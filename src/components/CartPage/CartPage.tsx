@@ -16,7 +16,7 @@ import {
 import instance from '@apis/_axios/instance';
 import productApi from '@apis/reactquery/QueryApi';
 import {
-  useDeleteExampleMutation,
+  useDeleteCartItemMutation,
   usePutProductInCartItemMutation,
 } from '@apis/reactquery/QueryApi.mutation';
 import {
@@ -44,6 +44,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
   const [productIdList, setProductIdList] = useState<Array<string>>();
   const [totalPrice, setTotalPrice] = useState<string>('');
   const [isCartitem, setIsCartitem] = useState<boolean>(true);
+  const allCheckBoxRef = useRef<HTMLInputElement>(null);
   const { data: userData } = useGetMyInfoQuery();
   //   {
   //   options: { staleTime: 1800, cacheTime: Infinity },
@@ -62,10 +63,12 @@ function CartPage({ ...basisProps }: CartPageProps) {
           setIsCartitem(false);
         } else if (data[0].cartitem.length === 0) {
           // 장바구니 o 상품 x
+          // dispatch(orderSliceAction.productInCart([...data[0]?.cartitem]));
           // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
           setIsCartitem(false);
         } else {
           // 장바구니 o 상품 o
+          // dispatch(orderSliceAction.productInCart([...data[0]?.cartitem]));
           // product 마다 이름 가져오기.
           setProductIdList(
             data[0].cartitem.map((item) => item.productId.toString()),
@@ -98,7 +101,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
     },
   });
 
-  const { mutate: mutatingDelete } = useDeleteExampleMutation({
+  const { mutate: mutatingDelete } = useDeleteCartItemMutation({
     options: {
       onSuccess(data, variables, context) {
         queryClient.invalidateQueries(CART_API_QUERY_KEY.GET(userData?.id));
@@ -136,14 +139,11 @@ function CartPage({ ...basisProps }: CartPageProps) {
     // console.log('checked : ', checked);
     if (checked) {
       // 전체 선택 클릭 시 데이터의 모든 아이템(id)를 담은 배열로 checkItems 상태 업데이트
-      // const idArray = [];
-      // cartData[0]?.cartitem?.map((el) => idArray.push(el));
-      // console.log('cartData[0] ::::::::::', cartData[0]);
-      // setCheckItems([...cartData[0]?.cartitem]);
+
       dispatch(orderSliceAction.productInCart([...cartData[0]?.cartitem]));
     } else {
       // 전체 선택 해제 시 checkItems 를 빈 배열로 상태 업데이트
-      // setCheckItems([]);
+
       dispatch(orderSliceAction.deleteAllProductInCart());
     }
   };
@@ -198,6 +198,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
             <Checkbox
               colorScheme="primary"
               w="auto"
+              // ref={allCheckBoxRef}
               onChange={(e) => handleAllCheck(e.target.checked)}
               // 데이터 개수와 체크된 아이템의 개수가 다를 경우 선택 해제 (하나라도 해제 시 선택 해제)
               isChecked={

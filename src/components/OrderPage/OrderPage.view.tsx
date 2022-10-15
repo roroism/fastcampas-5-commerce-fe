@@ -60,15 +60,20 @@ function OrderPageView({
 }: OrderPageViewProps) {
   const [orderInfo, setOrderInfo] = useState<FormOrderDataType>();
   const [isAgreement, setIsAgreement] = useState<boolean>(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const { data: userData } = useGetMyInfoQuery();
 
   console.log('watch() : ', watch());
 
   useEffect(() => {
-    // setOrderInfo({
-    //   name: userData?.name,
-    //   phone: userData?.phone.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`),
-    // });
+    const price = paymentList
+      .map((item: PaymentProductType) => item.price * item.count)
+      .reduce((prev: number, cur: number) => prev + cur, 0);
+    setTotalPrice(price);
+    setValue('price', price.toString());
+  }, [paymentList]);
+
+  useEffect(() => {
     if (userData?.id) setValue('userId', userData?.id?.toString());
     if (userData?.name) setValue('userName', userData?.name || '');
     if (userData?.phone)
@@ -79,26 +84,14 @@ function OrderPageView({
       );
   }, [userData]);
 
-  console.log('orderInfo : ', orderInfo);
-
-  // const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { value, name } = event.target;
-  //   setOrderInfo({
-  //     ...orderInfo,
-  //     [name]: value,
-  //   });
-  // };
-
   useEffect(() => {
     if (orderFullAddress) {
-      // setOrderInfo((prev) => ({ ...prev, address: orderFullAddress }));
       setValue('userAddr', orderFullAddress);
     }
   }, [orderFullAddress]);
 
   useEffect(() => {
     if (shippingFullAddress) {
-      // setOrderInfo((prev) => ({ ...prev, address: orderFullAddress }));
       setValue('shipAddr', shippingFullAddress);
     }
   }, [shippingFullAddress]);
@@ -136,6 +129,7 @@ function OrderPageView({
     <Box mt={LAYOUT.HEADER.HEIGHT} px="16px" pb="80px">
       <Box as="form" onSubmit={onSubmit}>
         <input type="hidden" {...register('userId')} />
+        <input type="hidden" {...register('price')} />
         <Box {...basisProps}>
           <Text as="h3" fontWeight="700" fontSize="1.25rem">
             주문결제
@@ -347,7 +341,7 @@ function OrderPageView({
           >
             <Flex justifyContent="space-between" color="gray.600">
               <Box>총 상품금액</Box>
-              <Box textAlign="right">108,000&nbsp;원</Box>
+              <Box textAlign="right">{totalPrice}&nbsp;원</Box>
             </Flex>
             <Flex justifyContent="space-between" color="gray.600">
               <Box>총 배송비</Box>
@@ -358,7 +352,7 @@ function OrderPageView({
             <Flex justifyContent="space-between" pt="20px">
               <Box>결제금액</Box>
               <Box as="strong" textAlign="right" color="primary.500">
-                108,000&nbsp;원
+                {totalPrice}&nbsp;원
               </Box>
             </Flex>
           </Box>

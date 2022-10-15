@@ -11,6 +11,7 @@ import useValidateWithByte from 'hooks/useValidateWithByte';
 
 export const FormSchema = yup.object().shape({
   userId: yup.string().required(),
+  price: yup.string().required(),
   userName: yup
     .string()
     .required('이름은 필수입니다.')

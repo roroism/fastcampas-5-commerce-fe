@@ -49,34 +49,36 @@ function CartPage({ ...basisProps }: CartPageProps) {
   //   {
   //   options: { staleTime: 1800, cacheTime: Infinity },
   // }
-  const { data: cartData = [] } = useGetCartQuery({
-    variables: userData?.id,
-    options: {
-      enabled: !!userData,
-      onSuccess: (data) => {
-        if (data.length === 0) {
-          // 장바구니 x 상품 x
-          const form = new FormData();
-          form.append('userId', String(userData?.id));
-          productApi.postCart(form);
-          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
-          setIsCartitem(false);
-        } else if (data[0].cartitem.length === 0) {
-          // 장바구니 o 상품 x
-          // dispatch(orderSliceAction.productInCart([...data[0]?.cartitem]));
-          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
-          setIsCartitem(false);
-        } else {
-          // 장바구니 o 상품 o
-          // dispatch(orderSliceAction.productInCart([...data[0]?.cartitem]));
-          // product 마다 이름 가져오기.
-          setProductIdList(
-            data[0].cartitem.map((item) => item.productId.toString()),
-          );
-        }
+  const { data: cartData = [], isLoading: isLoadingCartData } = useGetCartQuery(
+    {
+      variables: userData?.id,
+      options: {
+        enabled: !!userData,
+        onSuccess: (data) => {
+          if (data.length === 0) {
+            // 장바구니 x 상품 x
+            const form = new FormData();
+            form.append('userId', String(userData?.id));
+            productApi.postCart(form);
+            // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+            setIsCartitem(false);
+          } else if (data[0].cartitem.length === 0) {
+            // 장바구니 o 상품 x
+            // dispatch(orderSliceAction.productInCart([...data[0]?.cartitem]));
+            // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+            setIsCartitem(false);
+          } else {
+            // 장바구니 o 상품 o
+            // dispatch(orderSliceAction.productInCart([...data[0]?.cartitem]));
+            // product 마다 이름 가져오기.
+            setProductIdList(
+              data[0].cartitem.map((item) => item.productId.toString()),
+            );
+          }
+        },
       },
     },
-  });
+  );
 
   const { query: productData } = useGetProductByIdQueries(
     {
@@ -234,6 +236,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
                     mutatingCount={mutatingCount}
                     mutatingDelete={mutatingDelete}
                     checkUseState={[checkItems, dispatch]}
+                    isLoadingCartData={isLoadingCartData}
                   />
                 );
               })}

@@ -7,6 +7,7 @@ import {
   Flex,
   Image,
   Input,
+  Skeleton,
   VisuallyHidden,
 } from '@chakra-ui/react';
 
@@ -36,6 +37,7 @@ interface CartItemProps extends ChakraProps {
   >;
   mutatingDelete: UseMutateFunction<boolean, any, string, unknown>;
   checkUseState: [CartItemDTOType[], Dispatch];
+  isLoadingCartData: boolean;
 }
 
 const CartItem = ({
@@ -44,6 +46,7 @@ const CartItem = ({
   mutatingCount,
   mutatingDelete,
   checkUseState: [checkItems, dispatch],
+  isLoadingCartData,
   ...basisProps
 }: CartItemProps) => {
   const checkBoxRef = useRef<HTMLInputElement>(null);
@@ -161,13 +164,15 @@ const CartItem = ({
         </Box>
         <Flex flexDirection="column" justifyContent="flex-start" flexGrow={1}>
           <Flex>
-            <Box w="90px" h="90px" backgroundColor="#f9f9f9" mr="10px">
-              <Image
-                w="100%"
-                src={productData?.photo}
-                alt={`${productData?.name} 이미지`}
-              ></Image>
-            </Box>
+            <Skeleton isLoaded={!isLoadingCartData} mr="10px">
+              <Box w="90px" h="90px" backgroundColor="#f9f9f9" mr="10px">
+                <Image
+                  w="100%"
+                  src={productData?.photo}
+                  alt={`${productData?.name} 이미지`}
+                ></Image>
+              </Box>
+            </Skeleton>
             <Flex
               flexDirection="column"
               overflow="hidden"

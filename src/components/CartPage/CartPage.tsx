@@ -235,7 +235,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
                     cartData={item}
                     mutatingCount={mutatingCount}
                     mutatingDelete={mutatingDelete}
-                    checkUseState={[checkItems, dispatch]}
+                    checkUseState={[checkItems as CartItemDTOType[], dispatch]}
                     isLoadingCartData={isLoadingCartData}
                   />
                 );

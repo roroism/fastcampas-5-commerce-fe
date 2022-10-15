@@ -7,9 +7,29 @@ import { PaymentProductType } from '@components/OrderPage/types';
 
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
+export interface IvalueInOrderStateType {
+  id: number | null;
+  productId: number;
+  cartId: number;
+  count: number;
+}
+
+export interface IpaymentListInOrderStateType {
+  id: number | null;
+  productId: number;
+  cartId: number;
+  count: number;
+  name: string;
+  capacity: number;
+  photo: string;
+  price: number;
+}
+
 export interface OrderStateType {
-  value: CartItemDTOType[];
-  paymentList: PaymentProductType[];
+  // value: CartItemDTOType[];
+  value: IvalueInOrderStateType[];
+  // paymentList: PaymentProductType[];
+  paymentList: IpaymentListInOrderStateType[];
   status: 'idle' | 'loading' | 'failed';
 }
 
@@ -25,7 +45,7 @@ export const orderSlice = createSlice({
   reducers: {
     productInCart: (
       state,
-      action: PayloadAction<CartItemDTOType[]> | undefined,
+      action: PayloadAction<IvalueInOrderStateType[]> | undefined,
     ) => {
       state.value = action?.payload || [];
     },
@@ -34,7 +54,7 @@ export const orderSlice = createSlice({
     },
     deleteProductInCart: (state, action) => {
       state.value = state.value.filter(
-        (el: CartItemDTOType) => el.id !== action.payload,
+        (el: IvalueInOrderStateType) => el.id !== action.payload,
       );
     },
     deleteAllProductInCart: (state) => {

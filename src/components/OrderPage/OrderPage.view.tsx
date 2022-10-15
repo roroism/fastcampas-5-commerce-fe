@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
+import { IpaymentListInOrderStateType } from '@features/order/orderSlice';
 
 import { LAYOUT } from '@constants/layout';
 
@@ -30,7 +31,7 @@ interface OrderPageViewProps extends ChakraProps {
   useOrderPostcode: any;
   useShippingPostcode: any;
   useCheckItems: any;
-  paymentList: PaymentProductType[];
+  paymentList: IpaymentListInOrderStateType[];
 }
 
 function OrderPageView({
@@ -67,7 +68,7 @@ function OrderPageView({
 
   useEffect(() => {
     const price = paymentList
-      .map((item: PaymentProductType) => item.price * item.count)
+      .map((item: IpaymentListInOrderStateType) => item.price * item.count)
       .reduce((prev: number, cur: number) => prev + cur, 0);
     setTotalPrice(price);
     setValue('price', price.toString());

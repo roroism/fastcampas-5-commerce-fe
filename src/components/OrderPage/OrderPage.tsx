@@ -33,20 +33,20 @@ const clientKey = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq';
 interface OrderPageProps extends ChakraProps {}
 
 function OrderPage({ ...basisProps }: OrderPageProps) {
-  const [postOrderResult, setPostOrderResult] = useState<OrderDTOType>();
+  // const [postOrderResult, setPostOrderResult] = useState<OrderDTOType>();
   const queryClient = useQueryClient();
   const formData = customUseFormforOrder();
   const { handleSubmit } = formData;
   const { data: userData } = useGetMyInfoQuery();
-  const { mutate: postOrderMutate } = usePostOrderMutation({
-    options: {
-      onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(CART_API_QUERY_KEY.GET());
-        setPostOrderResult(data);
-      },
-    },
-  });
-  const { mutate: postOrderStatusMutate } = usePostOrderStatusMutation();
+  // const { mutate: postOrderMutate } = usePostOrderMutation({
+  //   options: {
+  //     onSuccess: (data, variables, context) => {
+  //       queryClient.invalidateQueries(CART_API_QUERY_KEY.GET());
+  //       setPostOrderResult(data);
+  //     },
+  //   },
+  // });
+  // const { mutate: postOrderStatusMutate } = usePostOrderStatusMutation();
 
   const { data: orderIdData } = useGetOrderQuery({
     variables: userData?.id?.toString(),
@@ -85,7 +85,7 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
   const searchPostcode1 = usePostcode();
 
   const searchPostcode2 = usePostcode();
-  // console.log('paymentList ::: ', paymentList);
+  console.log('paymentList ::: ', paymentList);
 
   const onSubmit = handleSubmit((data) => {
     console.log('submit success ::: ', data);
@@ -93,21 +93,21 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     const form = new FormData();
     form.append('userId', data.userId);
     form.append('price', data.price);
-    // form.append('paymentKey', null);
+    form.append('paymentKey', '');
     form.append('method', data.method);
     form.append('userName', data.userName);
     form.append('userPhone', data.userPhone.replace(/-/g, ''));
     form.append('userAddrPost', data.userAddrPost);
+    form.append('userAddrDetail', data.userAddrDetail);
     form.append('shipName', data.shipName);
     form.append('shipPhone', data.shipPhone.replace(/-/g, ''));
     form.append('shipAddrPost', data.shipAddrPost);
+    form.append('shipAddrDetail', data.shipAddrDetail);
     form.append('orderMessage', data.orderMessage);
     // postOrderMutate(form);
     productApi.postOrder(form).then((res) => {
       console.log('productApi.postOrder res : ', res);
 
-      console.log('orderIdData ::: ', orderIdData);
-      console.log('postOrderResult :: ', postOrderResult);
       // if (orderIdData) {
       //   paymentList.forEach((item) => {
       //     const statusForm = new FormData();
@@ -117,17 +117,17 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
       //     postOrderStatusMutate({ id: Number(data.userId), data: statusForm });
       //   });
       // }
+
       if (res) {
+        console.log('paymentList ::: ', paymentList);
+        console.log('data.userId ::: ', data.userId);
         paymentList.forEach((item) => {
           const statusForm = new FormData();
           statusForm.append('orderId', res.id.toString());
           statusForm.append('productId', item.productId.toString());
           statusForm.append('count', item.count.toString());
           // postOrderStatusMutate({ id: Number(data.userId), data: statusForm });
-          productApi.postOrderStatus({
-            id: Number(data.userId),
-            data: statusForm,
-          });
+          productApi.postOrderStatus(statusForm);
         });
       }
 
@@ -151,22 +151,22 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
       // }
 
       //Promise를 사용하는 경우
-      // if (res) {
-      //   loadTossPayments(clientKey).then((tossPayments) => {
-      //     // ...
-      //     tossPayments.requestPayment('카드', {
-      //       // 결제 수단 파라미터
-      //       // 결제 정보 파라미터
-      //       amount: Number(data.price),
-      //       orderId: res.id.toString(),
-      //       // orderId: 'fXGzPmxWQFsyY1X67KrjS',
-      //       orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
-      //       customerName: data.userName,
-      //       successUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/success`,
-      //       failUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/fail`,
-      //     });
-      //   });
-      // }
+      if (res) {
+        loadTossPayments(clientKey).then((tossPayments) => {
+          // ...
+          tossPayments.requestPayment('카드', {
+            // 결제 수단 파라미터
+            // 결제 정보 파라미터
+            amount: Number(data.price),
+            orderId: res.id.toString(),
+            // orderId: 'fXGzPmxWQFsyY1X67KrjS',
+            orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
+            customerName: data.userName,
+            successUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/success`,
+            failUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/fail`,
+          });
+        });
+      }
     });
   });
 

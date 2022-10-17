@@ -96,7 +96,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
               </NextLink>
             </Box>
             <Box w="33.33%">
-              <NextLink href="/" passHref>
+              <NextLink href="/mypage/history" passHref>
                 <Link
                   display="flex"
                   flexDirection="column"

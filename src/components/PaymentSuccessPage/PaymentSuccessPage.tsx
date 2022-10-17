@@ -32,8 +32,8 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
   useEffect(() => {
     console.log('paymentByOrderIdData : ', paymentByOrderIdData);
     console.log(
-      'Number(amount) === paymentByOrderIdData.price : ',
-      Number(amount) === paymentByOrderIdData?.price,
+      'Number(amount) === paymentByOrderIdData.amount : ',
+      Number(amount) === paymentByOrderIdData?.amount,
     );
     if (
       orderId &&
@@ -45,7 +45,7 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
     ) {
       if (
         paymentByOrderIdData &&
-        Number(amount) === paymentByOrderIdData.price
+        Number(amount) === paymentByOrderIdData.amount
       ) {
         const form = new FormData();
         form.append('price', amount);
@@ -53,10 +53,24 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
         form.append('method', paymentByOrderIdData?.method as string);
         form.append('userName', paymentByOrderIdData?.userName as string);
         form.append('userPhone', paymentByOrderIdData?.userPhone as string);
-        form.append('userAddr', paymentByOrderIdData?.userAddr as string); // 주소
+        form.append(
+          'userAddrPost',
+          paymentByOrderIdData?.userAddrPost as string,
+        ); // 주소
+        form.append(
+          'userAddrDetail',
+          paymentByOrderIdData?.userAddrDetail as string,
+        ); // 주소
         form.append('shipName', paymentByOrderIdData?.shipName as string); // 배송받을사람
         form.append('shipPhone', paymentByOrderIdData?.shipPhone as string); // 배송연락처
-        form.append('shipAddr', paymentByOrderIdData?.shipAddr as string); // 배송지주소
+        form.append(
+          'shipAddrPost',
+          paymentByOrderIdData?.shipAddrPost as string,
+        ); // 배송지주소
+        form.append(
+          'shipAddrDetail',
+          paymentByOrderIdData?.shipAddrDetail as string,
+        ); // 배송지주소
         form.append(
           'orderMessage',
           paymentByOrderIdData?.orderMessage as string,
@@ -83,7 +97,7 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
         });
       }
     }
-  }, []);
+  }, [paymentByOrderIdData]);
 
   return (
     <>

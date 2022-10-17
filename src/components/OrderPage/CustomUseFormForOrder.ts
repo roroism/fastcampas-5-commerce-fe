@@ -23,7 +23,7 @@ export const FormSchema = yup.object().shape({
       console.log(/^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/.test(value));
       return /^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/.test(value);
     }),
-  userAddr: yup.string().required('배송주소는 필수입니다.'),
+  userAddrPost: yup.string().required('배송주소는 필수입니다.'),
   userAddrDetail: yup.string().required('배송주소는 필수입니다.'),
   shipName: yup
     .string()
@@ -36,7 +36,7 @@ export const FormSchema = yup.object().shape({
       console.log(/^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/.test(value));
       return /^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/.test(value);
     }),
-  shipAddr: yup.string().required('배송주소는 필수입니다.'),
+  shipAddrPost: yup.string().required('배송주소는 필수입니다.'),
   shipAddrDetail: yup.string().required('배송주소는 필수입니다.'),
   orderMessage: yup.string(),
   method: yup.string().required(),

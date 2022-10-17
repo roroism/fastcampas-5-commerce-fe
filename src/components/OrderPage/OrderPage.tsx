@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { result } from 'lodash';
+
 import { ChakraProps } from '@chakra-ui/react';
 
+import productApi from '@apis/reactquery/QueryApi';
 import {
   usePostOrderMutation,
   usePostOrderStatusMutation,
@@ -94,68 +97,77 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     form.append('method', data.method);
     form.append('userName', data.userName);
     form.append('userPhone', data.userPhone.replace(/-/g, ''));
-    form.append('userAddr', data.userAddr);
+    form.append('userAddrPost', data.userAddrPost);
     form.append('shipName', data.shipName);
     form.append('shipPhone', data.shipPhone.replace(/-/g, ''));
-    form.append('shipAddr', data.shipAddr);
+    form.append('shipAddrPost', data.shipAddrPost);
     form.append('orderMessage', data.orderMessage);
     // postOrderMutate(form);
+    productApi.postOrder(form).then((res) => {
+      console.log('productApi.postOrder res : ', res);
 
-    // console.log('orderIdData :: ', orderIdData);
-    // console.log('postOrderResult :: ', postOrderResult);
-    if (orderIdData) {
-      paymentList.forEach((item) => {
-        const statusForm = new FormData();
-        form.append('orderId', orderIdData[0].id.toString());
-        form.append('productId', item.productId.toString());
-        form.append('count', item.count.toString());
-        postOrderStatusMutate({ id: Number(data.userId), data: statusForm });
-      });
-    }
-
-    //     // async/await을 사용하는 경우
-    // async function main() {
-    //   const tossPayments = await loadTossPayments(clientKey)
-    // }
-    // console.log(
-    //   'successUrl : ',
-    //   `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/success`,
-    // );
-    // if (orderIdData) {
-    //   console.log('toss  :::  ', {
-    //     amount: Number(data.price),
-    //     orderId: orderIdData[0]?.id.toString(),
-    //     orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
-    //     customerName: data.userName,
-    //     successUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/success`,
-    //     failUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/fail`,
-    //   });
-    // }
-
-    //Promise를 사용하는 경우
-    if (orderIdData) {
-      loadTossPayments(clientKey).then((tossPayments) => {
-        // ...
-        tossPayments.requestPayment('카드', {
-          // 결제 수단 파라미터
-          // 결제 정보 파라미터
-          amount: Number(data.price),
-          // orderId: orderIdData[0]?.id.toString(),
-          orderId: 'fXGzPmxWQFsyY1X67KrjS',
-          orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
-          customerName: data.userName,
-          successUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/success`,
-          failUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/fail`,
-
-          // amount: 15000,
-          // orderId: 'fXGzPmxWQFsyY1X67KrjS',
-          // orderName: '토스 티셔츠 외 2건',
-          // customerName: '박토스',
-          // successUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/success`,
-          // failUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/fail`,
+      console.log('orderIdData ::: ', orderIdData);
+      console.log('postOrderResult :: ', postOrderResult);
+      // if (orderIdData) {
+      //   paymentList.forEach((item) => {
+      //     const statusForm = new FormData();
+      //     form.append('orderId', orderIdData[0].id.toString());
+      //     form.append('productId', item.productId.toString());
+      //     form.append('count', item.count.toString());
+      //     postOrderStatusMutate({ id: Number(data.userId), data: statusForm });
+      //   });
+      // }
+      if (res) {
+        paymentList.forEach((item) => {
+          const statusForm = new FormData();
+          statusForm.append('orderId', res.id.toString());
+          statusForm.append('productId', item.productId.toString());
+          statusForm.append('count', item.count.toString());
+          // postOrderStatusMutate({ id: Number(data.userId), data: statusForm });
+          productApi.postOrderStatus({
+            id: Number(data.userId),
+            data: statusForm,
+          });
         });
-      });
-    }
+      }
+
+      //     // async/await을 사용하는 경우
+      // async function main() {
+      //   const tossPayments = await loadTossPayments(clientKey)
+      // }
+      // console.log(
+      //   'successUrl : ',
+      //   `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/success`,
+      // );
+      // if (orderIdData) {
+      //   console.log('toss  :::  ', {
+      //     amount: Number(data.price),
+      //     orderId: orderIdData[0]?.id.toString(),
+      //     orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
+      //     customerName: data.userName,
+      //     successUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/success`,
+      //     failUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/fail`,
+      //   });
+      // }
+
+      //Promise를 사용하는 경우
+      // if (res) {
+      //   loadTossPayments(clientKey).then((tossPayments) => {
+      //     // ...
+      //     tossPayments.requestPayment('카드', {
+      //       // 결제 수단 파라미터
+      //       // 결제 정보 파라미터
+      //       amount: Number(data.price),
+      //       orderId: res.id.toString(),
+      //       // orderId: 'fXGzPmxWQFsyY1X67KrjS',
+      //       orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
+      //       customerName: data.userName,
+      //       successUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/success`,
+      //       failUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/fail`,
+      //     });
+      //   });
+      // }
+    });
   });
 
   return (

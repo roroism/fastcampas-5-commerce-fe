@@ -180,7 +180,7 @@ export class ProductApi {
     const { data } = await this.axios({
       method: 'GET',
       url: `/v1/order/?user_id=${params}`,
-      params,
+      // params,
     });
     console.log('order - data : ', data);
     return data;
@@ -192,7 +192,7 @@ export class ProductApi {
     const { data } = await this.axios({
       method: 'GET',
       url: `/v1/order/${params}/`,
-      params,
+      // params,
     });
     // console.log('order - data : ', data);
     return data;

@@ -194,6 +194,7 @@ export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
 export type OrderParamGetType = {};
 export type OrderStatusParamGetType = {};
+export type getOrderStatusForSuccessPaymentParamGetType = {};
 
 export type putOrderByOrderIdParamPutType = {
   id: string;

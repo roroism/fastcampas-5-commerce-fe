@@ -26,6 +26,7 @@ import {
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
   ProductParamGetType,
+  getOrderStatusForSuccessPaymentParamGetType,
   putOrderByOrderIdParamPutType,
 } from './QueryApi.type';
 
@@ -235,6 +236,16 @@ export class ProductApi {
       // url: `/v1/order/status/?user_id=${params}&page_size=${}&page=${}`,
       url: `/v1/order/status/?user_id=${params}&page=${pageParam}`,
       // headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  getOrderStatusForSuccessPayment = async (
+    params?: getOrderStatusForSuccessPaymentParamGetType,
+  ): Promise<GetOrderStatusDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/order/status/?user_id=${params}&page=1&page_size=50`,
     });
     return data;
   };

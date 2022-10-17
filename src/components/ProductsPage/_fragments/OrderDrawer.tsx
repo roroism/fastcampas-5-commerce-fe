@@ -1,4 +1,6 @@
+import Router, { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import {
   Box,
@@ -28,6 +30,7 @@ import {
   useGetMyInfoQuery,
 } from '@apis/reactquery/QueryApi.query';
 import { ProductDetailDTOType } from '@apis/reactquery/QueryApi.type';
+import { orderSliceAction } from '@features/order/orderSlice';
 
 import CartModal from '@components/Modals/_fragments/CartModal';
 
@@ -44,7 +47,9 @@ function OrderDrawer({
   isOpen,
   data,
 }: Omit<OrderDrawerProps, 'children'>) {
+  const router = useRouter();
   const { data: userData } = useGetMyInfoQuery();
+  const dispatch = useDispatch();
   //   {
   //   options: { staleTime: 1800, cacheTime: Infinity },
   // }
@@ -90,15 +95,18 @@ function OrderDrawer({
   }, []);
 
   useEffect(() => {
-    setTotalQuantity(
-      (Number(
-        cartData[0]?.cartitem?.find((item) => item.productId === data?.id)
-          ?.count,
-      ) || 0) + quantity,
-    );
+    // setTotalQuantity(
+    //   (Number(
+    //     cartData[0]?.cartitem?.find((item) => item.productId === data?.id)
+    //       ?.count,
+    //   ) || 0) + quantity,
+    // );
+    setTotalQuantity(quantity);
+    console.log('quantity : ', quantity);
   }, [quantity, cartData, data?.id]);
 
   const handleCartClick = () => {
+    console.log('totalQuantity : ', totalQuantity);
     const hasProductInCartitem = cartData[0]?.cartitem?.find(
       (item) => item.productId === data?.id,
     );
@@ -121,6 +129,38 @@ function OrderDrawer({
 
     setQuantity(1);
     modalOnOpen();
+  };
+
+  const handleOrderClick = () => {
+    const hasProductInCartitem = cartData[0]?.cartitem?.find(
+      (item) => item.productId === data?.id,
+    );
+
+    if (hasProductInCartitem && data?.id) {
+      dispatch(
+        orderSliceAction.productInCart([
+          {
+            id: hasProductInCartitem.id,
+            productId: data?.id,
+            cartId: cartData[0].id,
+            count: totalQuantity,
+          },
+        ]),
+      );
+    } else if (data?.id) {
+      dispatch(
+        orderSliceAction.productInCart([
+          {
+            id: null,
+            productId: data?.id,
+            cartId: cartData[0].id,
+            count: totalQuantity,
+          },
+        ]),
+      );
+    }
+
+    router.push('/order');
   };
 
   return (
@@ -235,7 +275,6 @@ function OrderDrawer({
                 <Box>
                   합계&nbsp;
                   <span style={{ fontWeight: '700' }}>
-                    {/* {priceToString(quantity * product.price)} */}
                     {priceFormat((data?.price || 0) * totalQuantity)}
                   </span>
                   원
@@ -261,7 +300,7 @@ function OrderDrawer({
                   borderRadius="25px"
                   size="sd"
                   py="12px"
-                  // onClick={SendQuery}
+                  onClick={handleOrderClick}
                 >
                   바로구매
                 </Button>

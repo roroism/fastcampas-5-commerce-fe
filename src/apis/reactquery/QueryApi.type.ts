@@ -187,6 +187,7 @@ export type ExampleDTOType = {};
 export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
 export type OrderParamGetType = {};
+export type OrderStatusParamGetType = {};
 
 export type putOrderByOrderIdParamPutType = {
   id: number;
@@ -196,6 +197,13 @@ export type putOrderByOrderIdParamPutType = {
 export type OrderStatusParamPostType = {
   id: number;
   data: FormData;
+};
+
+export type GetOrderStatusDTOType = {
+  count: number;
+  next: string;
+  previous: string;
+  results: OrderStatusDTOType[];
 };
 
 export type ExampleParamPutType = {

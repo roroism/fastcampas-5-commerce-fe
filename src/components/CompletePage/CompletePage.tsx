@@ -57,9 +57,9 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
             flexDirection="column"
             gap="10px"
           >
-            {paymentList.map((product) => (
+            {paymentList.map((product, idx) => (
               <OrderItem
-                key={product.id}
+                key={idx}
                 product={product}
                 paymentStatus={paymentByOrderIdData?.status}
               />

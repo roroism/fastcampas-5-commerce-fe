@@ -144,8 +144,8 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
           orderId: 'fXGzPmxWQFsyY1X67KrjS',
           orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,
           customerName: data.userName,
-          successUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/success`,
-          failUrl: `${process.env.NEXT_PUBLIC_API_DOMAIN}/order/redirect/fail`,
+          successUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/success`,
+          failUrl: `${process.env.NEXT_PUBLIC_PAYMENT_CALLBACK_BASE_DOMAIN}/order/redirect/fail`,
 
           // amount: 15000,
           // orderId: 'fXGzPmxWQFsyY1X67KrjS',

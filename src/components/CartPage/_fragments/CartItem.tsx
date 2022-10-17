@@ -19,7 +19,10 @@ import {
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
 } from '@apis/reactquery/QueryApi.type';
-import { orderSliceAction } from '@features/order/orderSlice';
+import {
+  IvalueInOrderStateType,
+  orderSliceAction,
+} from '@features/order/orderSlice';
 
 import { Dispatch } from '@reduxjs/toolkit';
 import { UseMutateFunction, useQueryClient } from '@tanstack/react-query';
@@ -37,6 +40,7 @@ interface CartItemProps extends ChakraProps {
   >;
   mutatingDelete: UseMutateFunction<boolean, any, string, unknown>;
   checkUseState: [CartItemDTOType[], Dispatch];
+  // checkUseState: [IvalueInOrderStateType[], Dispatch];
   isLoadingCartData: boolean;
 }
 

@@ -1,11 +1,12 @@
 import { Box, ChakraProps, Flex, Image, Text } from '@chakra-ui/react';
 
 import { PaymentStatus } from '@apis/reactquery/QueryApi.type';
+import { IpaymentListInOrderStateType } from '@features/order/orderSlice';
 
 import { PaymentProductType } from '../types';
 
 interface OrderItemProps extends ChakraProps {
-  product: PaymentProductType;
+  product: IpaymentListInOrderStateType;
   paymentCompleted?: boolean;
   paymentStatus?: PaymentStatus;
 }

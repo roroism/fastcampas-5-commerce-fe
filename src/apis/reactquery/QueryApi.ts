@@ -9,6 +9,7 @@ import {
   ExampleDTOType,
   ExampleParamPatchType,
   ExampleParamPutType,
+  GetOrderStatusDTOType,
   IOrderForm,
   MyInfoDTOType,
   MyInfoParamGetType,
@@ -18,6 +19,7 @@ import {
   OrderDTOType,
   OrderParamGetType,
   OrderStatusDTOType,
+  OrderStatusParamGetType,
   OrderStatusParamPostType,
   ProductDTOType,
   ProductDetailDTOType,
@@ -192,7 +194,7 @@ export class ProductApi {
       url: `/v1/order/${params}/`,
       params,
     });
-    console.log('order - data : ', data);
+    // console.log('order - data : ', data);
     return data;
   };
 
@@ -221,6 +223,21 @@ export class ProductApi {
     });
     return data;
   };
+
+  getOrderStatus = async (
+    pageParam: string,
+    params?: OrderStatusParamGetType,
+  ): Promise<GetOrderStatusDTOType> => {
+    // postOrder = async (body: IOrderForm): Promise<OrderDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      // url: `/v1/order/status/?user_id=${params}&page_size=${}&page=${}`,
+      url: `/v1/order/status/?user_id=${params}&page=${pageParam}`,
+      // headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
   // patchProductInCartItem = async (
   //   req: ProductInCartItemParamPatchType,
   // ): Promise<ProductInCartItemDTOType> => {

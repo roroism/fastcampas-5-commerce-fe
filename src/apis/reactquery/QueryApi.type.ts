@@ -196,7 +196,7 @@ export type OrderParamGetType = {};
 export type OrderStatusParamGetType = {};
 
 export type putOrderByOrderIdParamPutType = {
-  id: number;
+  id: string;
   data: FormData;
 };
 

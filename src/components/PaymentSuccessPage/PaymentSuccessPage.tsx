@@ -25,79 +25,87 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
   //   variables: userData?.id?.toString(),
   // });
 
-  const { data: paymentByOrderIdData } = useGetOrderByOrderIdQuery({
-    variables: orderId,
-  });
+  // const { data: paymentByOrderIdData } = useGetOrderByOrderIdQuery({
+  //   variables: orderId,
+  // });
 
   useEffect(() => {
-    console.log('paymentByOrderIdData : ', paymentByOrderIdData);
-    console.log(
-      'Number(amount) === paymentByOrderIdData.amount : ',
-      Number(amount) === paymentByOrderIdData?.amount,
-    );
-    if (
-      orderId &&
-      paymentKey &&
-      amount &&
-      typeof orderId === 'string' &&
-      typeof amount === 'string' &&
-      typeof paymentKey === 'string'
-    ) {
+    console.log('orderId : ', orderId);
+    productApi.getOrderByOrderId(orderId).then((res) => {
+      console.log(res);
+      const paymentByOrderIdData = res;
+
+      console.log('paymentByOrderIdData : ', paymentByOrderIdData);
+      console.log(
+        'Number(amount) === paymentByOrderIdData.amount : ',
+        Number(amount) === paymentByOrderIdData?.amount,
+      );
+
       if (
-        paymentByOrderIdData &&
-        Number(amount) === paymentByOrderIdData.amount
+        orderId &&
+        paymentKey &&
+        amount &&
+        typeof orderId === 'string' &&
+        typeof amount === 'string' &&
+        typeof paymentKey === 'string'
       ) {
-        const form = new FormData();
-        form.append('price', amount);
-        form.append('paymentKey', paymentKey);
-        form.append('method', paymentByOrderIdData?.method as string);
-        form.append('userName', paymentByOrderIdData?.userName as string);
-        form.append('userPhone', paymentByOrderIdData?.userPhone as string);
-        form.append(
-          'userAddrPost',
-          paymentByOrderIdData?.userAddrPost as string,
-        ); // 주소
-        form.append(
-          'userAddrDetail',
-          paymentByOrderIdData?.userAddrDetail as string,
-        ); // 주소
-        form.append('shipName', paymentByOrderIdData?.shipName as string); // 배송받을사람
-        form.append('shipPhone', paymentByOrderIdData?.shipPhone as string); // 배송연락처
-        form.append(
-          'shipAddrPost',
-          paymentByOrderIdData?.shipAddrPost as string,
-        ); // 배송지주소
-        form.append(
-          'shipAddrDetail',
-          paymentByOrderIdData?.shipAddrDetail as string,
-        ); // 배송지주소
-        form.append(
-          'orderMessage',
-          paymentByOrderIdData?.orderMessage as string,
-        ); // 배송요청사항
+        if (
+          paymentByOrderIdData
+          // &&
+          // Number(amount) === paymentByOrderIdData.amount
+        ) {
+          const form = new FormData();
+          form.append('price', amount);
+          form.append('paymentKey', paymentKey);
+          form.append('method', paymentByOrderIdData?.method as string);
+          form.append('userName', paymentByOrderIdData?.userName as string);
+          form.append('userPhone', paymentByOrderIdData?.userPhone as string);
+          form.append(
+            'userAddrPost',
+            paymentByOrderIdData?.userAddrPost as string,
+          ); // 주소
+          form.append(
+            'userAddrDetail',
+            paymentByOrderIdData?.userAddrDetail as string,
+          ); // 주소
+          form.append('shipName', paymentByOrderIdData?.shipName as string); // 배송받을사람
+          form.append('shipPhone', paymentByOrderIdData?.shipPhone as string); // 배송연락처
+          form.append(
+            'shipAddrPost',
+            paymentByOrderIdData?.shipAddrPost as string,
+          ); // 배송지주소
+          form.append(
+            'shipAddrDetail',
+            paymentByOrderIdData?.shipAddrDetail as string,
+          ); // 배송지주소
+          form.append(
+            'orderMessage',
+            paymentByOrderIdData?.orderMessage as string,
+          ); // 배송요청사항
 
-        const paymentResult = async () =>
-          await productApi.putOrderByOrderId({
-            id: Number(orderId),
-            data: form,
+          productApi
+            .putOrderByOrderId({
+              id: orderId,
+              data: form,
+            })
+            .then((res) => {
+              console.log('putOrderByOrderId res : ', res);
+            });
+
+          // const PaymentAuthorizationCall = async () => {
+          //   const PaymentAuthorizationStatus = await axios.post(
+          //     'https://api.tosspayments.com/v1/payments/confirm',
+          //   );
+          // };
+
+          router.replace({
+            pathname: `/order/complete`,
+            query: { orderId: orderId },
           });
-        paymentResult();
-
-        console.log('paymentResult : ', paymentResult);
-
-        // const PaymentAuthorizationCall = async () => {
-        //   const PaymentAuthorizationStatus = await axios.post(
-        //     'https://api.tosspayments.com/v1/payments/confirm',
-        //   );
-        // };
-
-        router.replace({
-          pathname: `/order/complete`,
-          query: { orderId: orderId },
-        });
+        }
       }
-    }
-  }, [paymentByOrderIdData]);
+    });
+  }, [orderId]);
 
   return (
     <>

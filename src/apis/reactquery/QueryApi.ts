@@ -115,7 +115,7 @@ export class ProductApi {
     const { data } = await this.axios({
       method: 'GET',
       url: `/v1/cart/?user_id=${params}`,
-      params,
+      // params,
     });
     console.log('getCart - data : ', data);
     return data;
@@ -212,13 +212,14 @@ export class ProductApi {
   };
 
   postOrderStatus = async (
-    body: OrderStatusParamPostType,
+    // body: OrderStatusParamPostType,
+    body: FormData,
   ): Promise<OrderStatusDTOType> => {
     // postOrder = async (body: IOrderForm): Promise<OrderDTOType> => {
     const { data } = await this.axios({
       method: 'POST',
-      url: `/v1/order/status/${body.id}`,
-      data: body.data,
+      url: `/v1/order/status/`,
+      data: body,
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return data;

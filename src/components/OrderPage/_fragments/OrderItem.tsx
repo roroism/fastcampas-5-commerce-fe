@@ -1,10 +1,21 @@
 import { Box, ChakraProps, Flex, Image, Text } from '@chakra-ui/react';
 
+import { PaymentStatus } from '@apis/reactquery/QueryApi.type';
+
+import { PaymentProductType } from '../types';
+
 interface OrderItemProps extends ChakraProps {
+  product: PaymentProductType;
   paymentCompleted?: boolean;
+  paymentStatus?: PaymentStatus;
 }
 
-const OrderItem = ({ paymentCompleted, ...basisProps }: OrderItemProps) => {
+const OrderItem = ({
+  product,
+  paymentStatus,
+  ...basisProps
+}: OrderItemProps) => {
+  // console.log('OrderItem product : ', product);
   return (
     <Box
       as="li"
@@ -15,10 +26,7 @@ const OrderItem = ({ paymentCompleted, ...basisProps }: OrderItemProps) => {
     >
       <Flex gap="10px" justifyContent="space-between">
         <Box w="60px" h="60px" backgroundColor="primary.500">
-          <Image
-            w="100
-          %"
-          />
+          <Image w="100%" src={product.photo} alt={`${product.name} 이미지`} />
         </Box>
         <Flex
           flexDirection="column"
@@ -27,19 +35,19 @@ const OrderItem = ({ paymentCompleted, ...basisProps }: OrderItemProps) => {
           justifyContent="center"
         >
           <Box as="strong" fontWeight="700">
-            샴푸 & 바디
+            {product.name}
           </Box>
           <Box as="span" color="gray.700">
-            샴푸 & 바디 | 120ml
+            {product.name} | {product.capacity}ml
           </Box>
           <Box as="strong" color="primary.500">
-            27,000원 / 1개
+            {product.price} / {product.count}
           </Box>
         </Flex>
-        {paymentCompleted && (
+        {paymentStatus && (
           <Flex alignItems="center">
             <Text fontWeight="700" fontSize="0.75rem" color="primary.500">
-              결제완료
+              {paymentStatus === PaymentStatus.DONE ? '결제완료' : '기타사항'}
             </Text>
           </Flex>
         )}

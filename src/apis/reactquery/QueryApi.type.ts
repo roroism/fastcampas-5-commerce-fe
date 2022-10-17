@@ -79,6 +79,67 @@ export type ProductInCartItemDTOType = {
   count: number;
 };
 
+export enum PaymentStatus {
+  READY = 'READY',
+  IN_PROGRESS = 'IN_PROGRESS',
+  WAITING_FOR_DEPOSIT = 'WAITING_FOR_DEPOSIT',
+  DONE = 'DONE',
+  CANCELED = 'CANCELED',
+  PARTIAL_CANCELED = 'PARTIAL_CANCELED',
+  ABORTED = 'ABORTED',
+  EXPIRED = 'EXPIRED',
+}
+
+export type OrderDTOType = {
+  id: number;
+  userId: number;
+  price: number;
+  shippingPrice: number;
+  amount: number;
+  method: string;
+  status: PaymentStatus;
+  userName: string;
+  userPhone: string;
+  userAddr: string;
+  shipName: string;
+  shipPhone: string;
+  shipAddr: string;
+  orderMessage: string;
+  created: Date;
+};
+
+export type IOrderForm = {
+  userId: number;
+  price: number;
+  paymentKey?: string | null;
+  method: 'CARD';
+  userName: string;
+  userPhone: string;
+  userAddr: string;
+  shipName: string;
+  shipPhone: string;
+  shipAddr: string;
+  orderMessage: string;
+};
+
+export type OrderByOrderIdDTOType = {
+  id: number;
+  price: number;
+  userId: number;
+  shippingPrice: number;
+  amount: number;
+  method: string;
+  status: PaymentStatus;
+  userName: string;
+  userPhone: string;
+  userAddr: string;
+  shipName: string;
+  shipPhone: string;
+  shipAddr: string;
+  orderMessage: string;
+  created: Date;
+};
+
 // export type CartDTOType = [
 //   {
 //     cartitem: Array<Icartitem>;
@@ -86,6 +147,24 @@ export type ProductInCartItemDTOType = {
 //     userId: number;
 //   },
 // ];
+
+export enum ShippingStatus {
+  PAID = 'PAID',
+  WAIT = 'WAIT',
+  INPROGRESS = 'INPROGRESS',
+  DONE = 'DONE',
+  CANCELED = 'CANCELED',
+}
+
+export type OrderStatusDTOType = {
+  id: number;
+  orderId: string;
+  productId: number;
+  count: number;
+  shippingStatus: ShippingStatus;
+  created: string;
+};
+
 export type CartParamGetType = {};
 
 export type CartParamPostType = {};
@@ -97,6 +176,8 @@ export type ProductInCartItemParamPutType = {
   data: FormData;
 };
 
+export type OrderByOrderIdParamGetType = {};
+
 // export type ProductInCartItemParamPatchType = {
 //   id: number;
 //   data: FormData;
@@ -105,6 +186,18 @@ export type ProductInCartItemParamPutType = {
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
+export type OrderParamGetType = {};
+
+export type putOrderByOrderIdParamPutType = {
+  id: number;
+  data: FormData;
+};
+
+export type OrderStatusParamPostType = {
+  id: number;
+  data: FormData;
+};
+
 export type ExampleParamPutType = {
   id: string;
   data: ProductDTOType;

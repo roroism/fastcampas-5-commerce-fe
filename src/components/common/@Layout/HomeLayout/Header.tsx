@@ -5,6 +5,7 @@ import {
   Button,
   Container,
   Flex,
+  Image,
   Link,
   VisuallyHidden,
   useDisclosure,
@@ -57,7 +58,8 @@ const Header = () => {
             <VisuallyHidden as="h3">장바구니</VisuallyHidden>
             <NextLink href="/cart" passHref>
               <Link>
-                <CartIcon w="24px" h="24px" _hover={{ cursor: 'pointer' }} />
+                <Image src="/icons/svg/cart.svg" alt="cart" mt="-5px" />
+                {/* <CartIcon w="24px" h="24px" /> */}
               </Link>
             </NextLink>
           </Box>

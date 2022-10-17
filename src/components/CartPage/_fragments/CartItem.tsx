@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import {
   Box,
@@ -7,6 +7,7 @@ import {
   Flex,
   Image,
   Input,
+  Skeleton,
   VisuallyHidden,
 } from '@chakra-ui/react';
 
@@ -18,7 +19,9 @@ import {
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
 } from '@apis/reactquery/QueryApi.type';
+import { orderSliceAction } from '@features/order/orderSlice';
 
+import { Dispatch } from '@reduxjs/toolkit';
 import { UseMutateFunction, useQueryClient } from '@tanstack/react-query';
 
 import priceFormat from 'hooks/priceFormat';
@@ -32,29 +35,100 @@ interface CartItemProps extends ChakraProps {
     ProductInCartItemParamPutType,
     unknown
   >;
+  mutatingDelete: UseMutateFunction<boolean, any, string, unknown>;
+  checkUseState: [CartItemDTOType[], Dispatch];
+  isLoadingCartData: boolean;
 }
 
 const CartItem = ({
   productData,
   cartData,
   mutatingCount,
+  mutatingDelete,
+  checkUseState: [checkItems, dispatch],
+  isLoadingCartData,
   ...basisProps
 }: CartItemProps) => {
+  const checkBoxRef = useRef<HTMLInputElement>(null);
+
   const handleDecQuantity = () => {
     if ((cartData?.count || 1) > 1) {
       const form = new FormData();
       form.append('count', String((cartData?.count || 2) - 1));
-
       mutatingCount({ id: cartData?.id as number, data: form });
+      // dispatch(
+      //   orderSliceAction.editCountProductInCart({
+      //     id: cartData?.id,
+      //     count: (cartData?.count || 2) - 1,
+      //   }),
+      // );
+
+      if (checkBoxRef.current?.checked) {
+        dispatch(
+          orderSliceAction.editCountProductInCart({
+            id: cartData?.id,
+            count: (cartData?.count || 2) - 1,
+          }),
+        );
+      }
     }
   };
 
   const handleIncQuantity = () => {
     const form = new FormData();
     form.append('count', String((cartData?.count || 1) + 1));
-
     mutatingCount({ id: cartData?.id as number, data: form });
+    // dispatch(
+    //   orderSliceAction.editCountProductInCart({
+    //     id: cartData?.id,
+    //     count: (cartData?.count || 1) + 1,
+    //   }),
+    // );
+
+    if (checkBoxRef.current?.checked) {
+      dispatch(
+        orderSliceAction.editCountProductInCart({
+          id: cartData?.id,
+          count: (cartData?.count || 1) + 1,
+        }),
+      );
+    }
   };
+
+  const handleDeleteCartitem = () => {
+    mutatingDelete(String(cartData?.id));
+    dispatch(orderSliceAction.deleteProductInCart(cartData?.id));
+  };
+
+  // 체크박스 단일 선택
+  const handleSingleCheck = (checked: boolean) => {
+    if (checked) {
+      // 단일 선택 시 체크된 아이템을 배열에 추가
+      // setCheckItems((prev: Array<CartItemDTOType>) => [...prev, cartData]);
+      dispatch(orderSliceAction.addProductInCart(cartData));
+
+      dispatch(
+        orderSliceAction.editCountProductInCart({
+          id: cartData?.id,
+          count: cartData?.count,
+        }),
+      );
+    } else {
+      // 단일 선택 해제 시 체크된 아이템을 제외한 배열 (필터)
+      dispatch(orderSliceAction.deleteProductInCart(cartData?.id));
+    }
+  };
+
+  // useEffect(() => {
+  //   if (checkItems.some((item: CartItemDTOType) => item.id === cartData?.id)) {
+  //     dispatch(
+  //       orderSliceAction.editCountProductInCart({
+  //         id: cartData?.id,
+  //         count: cartData?.count,
+  //       }),
+  //     );
+  //   }
+  // }, [checkItems]);
 
   return (
     <Box
@@ -76,19 +150,29 @@ const CartItem = ({
             colorScheme="primary"
             w="20px"
             h="20px"
-            // onChange={onChange}
-            // isChecked={item?.checked}
-
-            // onChange={(e) => handleSingleCheck(e.target.checked, data.id)}
+            ref={checkBoxRef}
+            onChange={(e) => handleSingleCheck(e.target.checked)}
             // 체크된 아이템 배열에 해당 아이템이 있을 경우 선택 활성화, 아닐 시 해제
-            // checked={checkItems.includes(data.id) ? true : false} />
+            isChecked={
+              checkItems.some(
+                (item: CartItemDTOType) => item.id === cartData?.id,
+              )
+                ? true
+                : false
+            }
           ></Checkbox>
         </Box>
         <Flex flexDirection="column" justifyContent="flex-start" flexGrow={1}>
           <Flex>
-            <Box w="90px" h="90px" backgroundColor="#f9f9f9" mr="10px">
-              <Image w="100%"></Image>
-            </Box>
+            <Skeleton isLoaded={!isLoadingCartData} mr="10px">
+              <Box w="90px" h="90px" backgroundColor="#f9f9f9" mr="10px">
+                <Image
+                  w="100%"
+                  src={productData?.photo}
+                  alt={`${productData?.name} 이미지`}
+                ></Image>
+              </Box>
+            </Skeleton>
             <Flex
               flexDirection="column"
               overflow="hidden"
@@ -118,7 +202,7 @@ const CartItem = ({
               right="16px"
               w="20px"
               h="20px"
-              //onClick={deleteCart}
+              onClick={handleDeleteCartitem}
             >
               <Box
                 position="relative"
@@ -238,14 +322,17 @@ const CartItem = ({
                 ></Box>
               </Flex>
               <Flex alignSelf="center" as="strong" color="gray.600">
-                {productData?.price}원
+                {priceFormat(productData?.price)}원
               </Flex>
             </Flex>
           </Flex>
           <Flex mt="15px" justifyContent="space-between">
             <Flex alignItems="center">배송비 무료</Flex>
             <Box as="strong" fontSize="1.25rem">
-              {(productData?.price || 100000) * (cartData?.count || 1)}원
+              {priceFormat(
+                (productData?.price || 100000) * (cartData?.count || 1),
+              )}
+              원
             </Box>
           </Flex>
         </Flex>

@@ -14,7 +14,11 @@ import {
 } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
-import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
+import productApi from '@apis/reactquery/QueryApi';
+import {
+  useGetCartQuery,
+  useGetMyInfoQuery,
+} from '@apis/reactquery/QueryApi.query';
 
 import StarRating from '@components/common/StarRating/StarRating';
 
@@ -23,12 +27,30 @@ import { getToken } from '@utils/localStorage/token';
 interface MainPageProps extends ChakraProps {}
 
 function MainPage({ ...basisProps }: MainPageProps) {
-  const { data } = useGetMyInfoQuery({
-    options: { staleTime: 1800, cacheTime: Infinity },
-  });
-  console.log('main page data : ', data);
-  const router = useRouter();
+  const { data: userData } = useGetMyInfoQuery();
+  //   {
+  //   options: { staleTime: 1800, cacheTime: Infinity },
+  // }
+  // console.log('main page data : ', userData);
 
+  const { data: cartData = [] } = useGetCartQuery({
+    variables: userData?.id,
+    options: {
+      enabled: !!userData,
+      onSuccess: (data) => {
+        if (data.length === 0) {
+          // 장바구니 x 상품 x
+          const form = new FormData();
+          form.append('userId', String(userData?.id));
+          productApi.postCart(form);
+          console.log('MainPage 장바구니 생성!!!!! : ', cartData);
+          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+        }
+      },
+    },
+  });
+
+  const router = useRouter();
   useEffect(() => {
     const token = getToken();
     if (!token?.access) router.replace('/login');

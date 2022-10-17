@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
 import {
@@ -10,19 +10,27 @@ import {
   Icon,
   Image,
   Input,
+  Radio,
+  RadioGroup,
   Text,
   UnorderedList,
   VStack,
 } from '@chakra-ui/react';
 
+import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
+
 import { LAYOUT } from '@constants/layout';
 
 import OrderItem from './_fragments/OrderItem';
-import { FormOrderDataType } from './types';
+import { FormOrderDataType, PaymentProductType } from './types';
 
 interface OrderPageViewProps extends ChakraProps {
   formData: UseFormReturn<FormOrderDataType>;
   onSubmit: any;
+  useOrderPostcode: any;
+  useShippingPostcode: any;
+  useCheckItems: any;
+  paymentList: PaymentProductType[];
 }
 
 function OrderPageView({
@@ -32,272 +40,358 @@ function OrderPageView({
     setValue,
     getValues,
     watch,
+    reset,
     formState: { errors },
   },
+  useOrderPostcode: {
+    handleClick: handleOrderClick,
+    fullAddress: orderFullAddress,
+    zonecode: orderZonecode,
+  },
+  useShippingPostcode: {
+    handleClick: handleShippingClick,
+    fullAddress: shippingFullAddress,
+    zonecode: shippingZonecode,
+  },
+  useCheckItems: checkItems,
+  paymentList,
   onSubmit,
   ...basisProps
 }: OrderPageViewProps) {
+  const [orderInfo, setOrderInfo] = useState<FormOrderDataType>();
+  const [isAgreement, setIsAgreement] = useState<boolean>(false);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const { data: userData } = useGetMyInfoQuery();
+
+  console.log('watch() : ', watch());
+
+  useEffect(() => {
+    const price = paymentList
+      .map((item: PaymentProductType) => item.price * item.count)
+      .reduce((prev: number, cur: number) => prev + cur, 0);
+    setTotalPrice(price);
+    setValue('price', price.toString());
+  }, [paymentList]);
+
+  useEffect(() => {
+    if (userData?.id) setValue('userId', userData?.id?.toString());
+    if (userData?.name) setValue('userName', userData?.name || '');
+    if (userData?.phone)
+      setValue(
+        'userPhone',
+        userData?.phone.replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`) ||
+          '',
+      );
+  }, [userData]);
+
+  useEffect(() => {
+    if (orderFullAddress) {
+      setValue('userAddr', orderFullAddress);
+    }
+  }, [orderFullAddress]);
+
+  useEffect(() => {
+    if (shippingFullAddress) {
+      setValue('shipAddr', shippingFullAddress);
+    }
+  }, [shippingFullAddress]);
+
+  // useEffect(() => {
+  //   if (shippingFullAddress) setValue('shippingAddress', shippingFullAddress);
+  // }, [shippingFullAddress]);
+
+  const matchShippingOrderer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      if (getValues('userName')) setValue('shipName', getValues('userName'));
+      if (getValues('userPhone'))
+        setValue(
+          'shipPhone',
+          getValues('userPhone').replace(
+            /^(\d{2,3})(\d{3,4})(\d{4})$/,
+            `$1-$2-$3`,
+          ),
+        );
+      if (getValues('userAddr')) setValue('shipAddr', getValues('userAddr'));
+      else if (orderFullAddress) setValue('shipAddr', orderFullAddress);
+
+      if (getValues('userAddrDetail'))
+        setValue('shipAddrDetail', getValues('userAddrDetail'));
+      // if (ordererZonecode) setValue('shippingZipcode', ordererZonecode);
+    } else {
+      setValue('shipName', '');
+      setValue('shipPhone', '');
+      setValue('shipAddr', '');
+      setValue('shipAddrDetail', '');
+    }
+  };
+  console.log('OrderPage paymentList ::: ', paymentList);
   return (
     <Box mt={LAYOUT.HEADER.HEIGHT} px="16px" pb="80px">
-      <Box as="form" onSubmit={onSubmit} {...basisProps}>
-        <Text as="h3" fontWeight="700" fontSize="1.25rem">
-          주문결제
-        </Text>
-        <Box mt="80px">
-          <Text as="h4" fontWeight="700">
-            주문상품
+      <Box as="form" onSubmit={onSubmit}>
+        <input type="hidden" {...register('userId')} />
+        <input type="hidden" {...register('price')} />
+        <Box {...basisProps}>
+          <Text as="h3" fontWeight="700" fontSize="1.25rem">
+            주문결제
           </Text>
-          <UnorderedList
-            styleType="none"
-            p={0}
-            m={0}
-            mt="11px"
-            display="flex"
-            flexDirection="column"
-            gap="30px"
-          >
-            <OrderItem />
-          </UnorderedList>
-        </Box>
-
-        <Box mt="46px" borderBottom="1px solid" borderColor="gray.200">
-          <Text as="h4" fontWeight="700">
-            주문자 정보
-          </Text>
-
-          <VStack spacing="50px" w="full" pb="50px" alignItems="flex-start">
-            <Box w="full">
-              <Text {...NameStyle}>이름</Text>
-              <Input
-                name="name"
-                {...InputStyle}
-                // value={orderer?.name}
-                // onChange={onChange}
-              />
-            </Box>
-            <Box w="full">
-              <Text {...NameStyle}>핸드폰 번호</Text>
-              <Input
-                {...InputStyle}
-                name="phone"
-                // value={orderer?.phone}
-                // onChange={onChange}
-              />
-            </Box>
-            <Box w="full">
-              <Text {...NameStyle}>주소</Text>
-              <Flex justify="space-between">
-                <Input
-                  {...InputStyle}
-                  w="249px"
-                  name="address"
-                  // onClick={}
-                  // value={ordererFullAddress ? ordererFullAddress : ''}
-                />
-                <Button
-                  colorScheme="primary"
-                  w="84px"
-                  h="40px"
-                  borderRadius="5px"
-                  py="11px"
-                  // onClick={}
-                >
-                  우편번호 검색
-                </Button>
-              </Flex>
-              <Input
-                {...InputStyle}
-                w="full"
-                mt="10px"
-                name="addressDetail"
-                // value={orderer?.addressDetail}
-                // onChange={onChange}
-              />
-            </Box>
-          </VStack>
-        </Box>
-
-        <Box mt="50px">
-          <Flex
-            w="full"
-            pt="50px"
-            pb="40px"
-            justify="space-between"
-            alignItems="center"
-          >
+          <Box mt="80px">
             <Text as="h4" fontWeight="700">
-              배송지 정보
+              주문상품
             </Text>
-            <Checkbox
-              size="lg"
-              colorScheme="primary"
-              // onChange={}
+            <UnorderedList
+              styleType="none"
+              p={0}
+              m={0}
+              mt="11px"
+              display="flex"
+              flexDirection="column"
             >
-              <span style={{ color: '#8C919F', fontSize: '1rem' }}>
-                주문자 정보와 동일
-              </span>
-            </Checkbox>
-          </Flex>
+              {paymentList.map((product) => (
+                <OrderItem key={product.id} product={product} />
+              ))}
+            </UnorderedList>
+          </Box>
 
-          <VStack spacing="50px" w="full" alignItems="flex-start">
-            <Box w="full">
-              <Text {...NameStyle}>이름</Text>
-              <Input {...InputStyle} {...register('shippingName')} />
-            </Box>
-            <Box w="full">
-              <Text {...NameStyle}>핸드폰 번호</Text>
-              <Input {...InputStyle} {...register('shippingPhone')} />
-            </Box>
-            <Box w="full">
-              <Text {...NameStyle}>주소</Text>
-              <Flex justify="space-between">
+          <Box mt="46px" borderBottom="1px solid" borderColor="gray.200">
+            <Text as="h4" fontWeight="700" mb="40px">
+              주문자 정보
+            </Text>
+
+            <VStack spacing="50px" w="full" pb="50px" alignItems="flex-start">
+              <Box w="full">
+                <Text {...NameStyle}>이름</Text>
                 <Input
                   {...InputStyle}
-                  w="249px"
-                  // onClick={shippingHandleClick}
-                  value={
-                    getValues('shippingAddress')
-                      ? getValues('shippingAddress')
-                      : ''
-                  }
-                  {...register('shippingAddress')}
+                  // name="name"
+                  // value={orderInfo?.name || ''}
+                  // onChange={onChange}
+                  {...register('userName')}
                 />
-                <Button
-                  colorScheme="primary"
-                  w="84px"
-                  h="40px"
-                  borderRadius="5px"
-                  py="11px"
-                  // onClick={shippingHandleClick}
-                >
-                  우편번호 검색
-                </Button>
-              </Flex>
-              <Input
-                {...InputStyle}
-                w="full"
-                mt="10px"
-                {...register('shippingAddressDetail')}
-              />
-            </Box>
-            <Box w="full">
-              <Text {...NameStyle}>배송요청사항</Text>
-              <Input {...InputStyle} {...register('shippingRequest')} />
-            </Box>
-          </VStack>
-        </Box>
+              </Box>
+              <Box w="full">
+                <Text {...NameStyle}>핸드폰 번호</Text>
+                <Input
+                  {...InputStyle}
+                  // name="phone"
+                  // value={orderInfo?.phone || ''}
+                  // onChange={onChange}
+                  {...register('userPhone')}
+                />
+              </Box>
+              <Box w="full">
+                <Text {...NameStyle}>주소</Text>
+                <Flex justify="space-between">
+                  <Input
+                    {...InputStyle}
+                    w="249px"
+                    // name="address"
+                    onClick={handleOrderClick}
+                    // value={orderFullAddress ? orderFullAddress : ''}
+                    value={orderFullAddress || ''}
+                    // onChange={onChange}
+                    {...register('userAddr')}
+                  />
+                  <Button
+                    colorScheme="primary"
+                    w="84px"
+                    h="40px"
+                    borderRadius="5px"
+                    py="11px"
+                    onClick={handleOrderClick}
+                  >
+                    우편번호 검색
+                  </Button>
+                </Flex>
+                <Input
+                  {...InputStyle}
+                  w="full"
+                  mt="10px"
+                  // name="addressDetail"
+                  // value={orderInfo?.addressDetail || ''}
+                  // onChange={onChange}
+                  {...register('userAddrDetail')}
+                />
+              </Box>
+            </VStack>
+          </Box>
 
-        <Box
-          mt="50px"
-          pt="40px"
-          borderTop="1px solid"
-          borderBottom="1px solid"
-          borderColor="gray.200"
-        >
-          <Text as="h4" fontWeight="700">
-            결제수단
-          </Text>
-
-          <UnorderedList
-            styleType="none"
-            p={0}
-            m={0}
-            mt="10px"
-            display="flex"
-            flexDirection="column"
-            gap="10px"
-          >
-            <Box as="li" borderTop="1px solid" borderColor="gray.200" py="30px">
+          <Box mt="50px">
+            <Flex
+              w="full"
+              pt="50px"
+              pb="40px"
+              justify="space-between"
+              alignItems="center"
+            >
+              <Text as="h4" fontWeight="700">
+                배송지 정보
+              </Text>
               <Checkbox
                 size="lg"
                 colorScheme="primary"
-                // onChange={checkPayMethod}
+                onChange={matchShippingOrderer}
               >
-                <Flex ml="17px" gap="17px">
-                  <Image src="/icons/svg/order/pay.svg" />
-                  <Box fontSize="1rem">신용카드결제</Box>
-                </Flex>
+                <span style={{ color: '#8C919F', fontSize: '1rem' }}>
+                  주문자 정보와 동일
+                </span>
               </Checkbox>
-            </Box>
-            <Box as="li" borderTop="1px solid" borderColor="gray.200" py="30px">
-              <Checkbox
-                size="lg"
-                // colorScheme="primary"
-                icon={<CheckBoxCustomIcon />}
-                // onChange={checkPayMethod}
-                defaultChecked
+            </Flex>
+
+            <VStack spacing="50px" w="full" alignItems="flex-start">
+              <Box w="full">
+                <Text {...NameStyle}>이름</Text>
+                <Input {...InputStyle} {...register('shipName')} />
+              </Box>
+              <Box w="full">
+                <Text {...NameStyle}>핸드폰 번호</Text>
+                <Input {...InputStyle} {...register('shipPhone')} />
+              </Box>
+              <Box w="full">
+                <Text {...NameStyle}>주소</Text>
+                <Flex justify="space-between">
+                  <Input
+                    {...InputStyle}
+                    w="249px"
+                    onClick={handleShippingClick}
+                    value={getValues('shipAddr') ? getValues('shipAddr') : ''}
+                    {...register('shipAddr')}
+                  />
+                  <Button
+                    colorScheme="primary"
+                    w="84px"
+                    h="40px"
+                    borderRadius="5px"
+                    py="11px"
+                    onClick={handleShippingClick}
+                  >
+                    우편번호 검색
+                  </Button>
+                </Flex>
+                <Input
+                  {...InputStyle}
+                  w="full"
+                  mt="10px"
+                  {...register('shipAddrDetail')}
+                />
+              </Box>
+              <Box w="full">
+                <Text {...NameStyle}>배송요청사항</Text>
+                <Input {...InputStyle} {...register('orderMessage')} />
+              </Box>
+            </VStack>
+          </Box>
+
+          <Box
+            mt="50px"
+            pt="40px"
+            borderTop="1px solid"
+            borderBottom="1px solid"
+            borderColor="gray.200"
+          >
+            <Text as="h4" fontWeight="700">
+              결제수단
+            </Text>
+
+            <UnorderedList
+              styleType="none"
+              p={0}
+              m={0}
+              mt="10px"
+              display="flex"
+              flexDirection="column"
+              gap="10px"
+            >
+              <Box
+                as="li"
+                borderTop="1px solid"
+                borderColor="gray.200"
+                py="30px"
               >
-                <Flex ml="17px" gap="17px">
-                  <Image src="/icons/svg/order/pay.svg" />
-                  <Box fontSize="1rem">신용카드결제</Box>
-                </Flex>
-              </Checkbox>
-            </Box>
-          </UnorderedList>
+                <Checkbox
+                  size="lg"
+                  // colorScheme="primary"
+                  icon={<CheckBoxCustomIcon />}
+                  // onChange={checkPayMethod}
+                  {...register('method')}
+                  defaultChecked
+                  value="CARD"
+                >
+                  <Flex ml="17px" gap="17px">
+                    <Image src="/icons/svg/order/pay.svg" />
+                    <Box fontSize="1rem">신용카드결제</Box>
+                  </Flex>
+                </Checkbox>
+              </Box>
+            </UnorderedList>
+          </Box>
         </Box>
-      </Box>
 
-      <Box px="16px" pt="20px" mt="10px">
-        <Text as="h4" fontWeight="700">
-          최종 결제금액
-        </Text>
+        <Box px="16px" pt="20px" mt="10px">
+          <Text as="h4" fontWeight="700">
+            최종 결제금액
+          </Text>
 
-        <Flex
-          flexDirection="column"
-          pb="20px"
-          borderBottom="1px solid"
-          borderColor="gray.200"
-          gap="10px"
-          mt="40px"
-        >
-          <Flex justifyContent="space-between" color="gray.600">
-            <Box>총 상품금액</Box>
-            <Box textAlign="right">108,000&nbsp;원</Box>
-          </Flex>
-          <Flex justifyContent="space-between" color="gray.600">
-            <Box>총 배송비</Box>
-            <Box textAlign="right">0&nbsp;원</Box>
-          </Flex>
-        </Flex>
-        <Box pb="20px">
-          <Flex justifyContent="space-between" pt="20px">
-            <Box>결제금액</Box>
-            <Box as="strong" textAlign="right" color="primary.500">
-              108,000&nbsp;원
-            </Box>
-          </Flex>
-        </Box>
-        <Flex
-          gap="10px"
-          w="full"
-          py="20px"
-          alignItems="center"
-          borderTop="1px solid"
-          borderColor="gray.200"
-        >
-          <Checkbox
-            size="lg"
-            colorScheme="primary"
-            // onChange={agreementHandler}
+          <Flex
+            flexDirection="column"
+            pb="20px"
+            borderBottom="1px solid"
+            borderColor="gray.200"
+            gap="10px"
+            mt="40px"
           >
-            <Box as="span" color="gray.600" fontSize="1rem">
-              개인정보 수집 이용 동의&#40;필수&#41;
-            </Box>
-          </Checkbox>
-        </Flex>
-        <Box>
-          <Button
-            mt="20px"
-            fontWeight="700"
-            w="100%"
-            h="50px"
-            borderRadius="25px"
-            backgroundColor="primary.500"
-            color="white"
-            fontSize="1rem"
+            <Flex justifyContent="space-between" color="gray.600">
+              <Box>총 상품금액</Box>
+              <Box textAlign="right">{totalPrice}&nbsp;원</Box>
+            </Flex>
+            <Flex justifyContent="space-between" color="gray.600">
+              <Box>총 배송비</Box>
+              <Box textAlign="right">0&nbsp;원</Box>
+            </Flex>
+          </Flex>
+          <Box pb="20px">
+            <Flex justifyContent="space-between" pt="20px">
+              <Box>결제금액</Box>
+              <Box as="strong" textAlign="right" color="primary.500">
+                {totalPrice}&nbsp;원
+              </Box>
+            </Flex>
+          </Box>
+          <Flex
+            gap="10px"
+            w="full"
+            py="20px"
+            alignItems="center"
+            borderTop="1px solid"
+            borderColor="gray.200"
           >
-            결제하기
-          </Button>
+            <Checkbox
+              size="lg"
+              colorScheme="primary"
+              onChange={(e) => {
+                setIsAgreement(e.target.checked);
+              }}
+            >
+              <Box as="span" color="gray.600" fontSize="1rem">
+                개인정보 수집 이용 동의&#40;필수&#41;
+              </Box>
+            </Checkbox>
+          </Flex>
+          <Box>
+            <Button
+              mt="20px"
+              fontWeight="700"
+              w="100%"
+              h="50px"
+              borderRadius="25px"
+              variant="solid"
+              colorScheme="primary"
+              fontSize="1rem"
+              type="submit"
+              disabled={!isAgreement ? true : false}
+            >
+              결제하기
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

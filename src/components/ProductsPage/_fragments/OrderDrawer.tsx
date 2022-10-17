@@ -44,9 +44,10 @@ function OrderDrawer({
   isOpen,
   data,
 }: Omit<OrderDrawerProps, 'children'>) {
-  const { data: userData } = useGetMyInfoQuery({
-    options: { staleTime: 1800, cacheTime: Infinity },
-  });
+  const { data: userData } = useGetMyInfoQuery();
+  //   {
+  //   options: { staleTime: 1800, cacheTime: Infinity },
+  // }
   const queryClient = useQueryClient();
   console.log('queryClient : ', queryClient);
   // const userData = queryClient.getQueryData(MYINFO_API_QUERY_KEY.GET());
@@ -55,7 +56,7 @@ function OrderDrawer({
     variables: userData?.id,
     options: { enabled: !!userData },
   });
-  console.log('cartData : ', cartData);
+  console.log('OrderDrawer cartData : ', cartData);
   const [quantity, setQuantity] = useState<number>(1);
   const [totalQuantity, setTotalQuantity] = useState<number>(1);
   const { mutate: mutatingCart } = usePostCartItemMutation(data?.id || 0, {
@@ -118,6 +119,7 @@ function OrderDrawer({
       mutatingCount({ id: hasProductInCartitem.id, data: form });
     }
 
+    setQuantity(1);
     modalOnOpen();
   };
 

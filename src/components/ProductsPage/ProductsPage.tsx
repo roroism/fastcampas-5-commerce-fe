@@ -10,7 +10,12 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react';
 
-import { useGetProductListQuery } from '@apis/reactquery/QueryApi.query';
+import productApi from '@apis/reactquery/QueryApi';
+import {
+  useGetCartQuery,
+  useGetMyInfoQuery,
+  useGetProductListQuery,
+} from '@apis/reactquery/QueryApi.query';
 
 import ProductItem from './_fragments/ProductItem';
 
@@ -49,7 +54,32 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
     }
   }, [isShow]);
 
-  console.log('data : ', data);
+  const { data: userData } = useGetMyInfoQuery();
+  //   {
+  //   options: { staleTime: 1800, cacheTime: Infinity },
+  // }
+  const { data: cartData = [] } = useGetCartQuery({
+    variables: userData?.id,
+    options: {
+      enabled: !!userData,
+      onSuccess: (data) => {
+        if (data.length === 0) {
+          // 장바구니 x 상품 x
+          const form = new FormData();
+          form.append('userId', String(userData?.id));
+          productApi.postCart(form);
+          console.log('장바구니 생성!!!!!');
+          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+        } else if (data[0].cartitem.length === 0) {
+          // 장바구니 o 상품 x
+          // 장바구니가 비어있습니다 페이지 출력. useState에 flag추가하여 조건부 렌더링 필요.
+        } else {
+          // 장바구니 o 상품 o
+          // product 마다 이름 가져오기.
+        }
+      },
+    },
+  });
 
   return (
     <Box {...basisProps} px="16px" pt="120px" pb="80px">

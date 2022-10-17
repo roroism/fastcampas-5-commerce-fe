@@ -48,7 +48,7 @@ export const CART_ITEM_API_MUTATION_KEY = {
   // PUT: (req?: ExampleParamPutType) => ['example-put', req],
   PUT: (req?: MyInfoParamPatchType) => ['cart-item-put', req],
   PATCH: (req?: MyInfoParamPatchType) => ['cart-item-patch', req],
-  // DELETE: (id?: string) => ['example-delete', id],
+  DELETE: (id?: string) => ['cart-item-delete', id],
 };
 
 export const usePostCartItemMutation = (
@@ -68,6 +68,36 @@ export const usePutProductInCartItemMutation = (
   params?: MutationHookParams<typeof productApi.putProductInCartItem>,
 ) => {
   return useMutation(productApi.putProductInCartItem, {
+    ...params?.options,
+  });
+};
+
+export const useDeleteCartItemMutation = (
+  params?: MutationHookParams<typeof productApi.deleteCartItem>,
+) => {
+  return useMutation(productApi.deleteCartItem, {
+    ...params?.options,
+  });
+};
+
+export const ORDER_API_MUTATION_KEY = {};
+
+export const usePostOrderMutation = (
+  params?: MutationHookParams<typeof productApi.postOrder>,
+) => {
+  return useMutation(productApi.postOrder, {
+    ...params?.options,
+  });
+};
+
+export const ORDER_STATUS_API_MUTATION_KEY = {
+  POST: (param?: CartItemParamPostType) => ['order-status-post', param],
+};
+
+export const usePostOrderStatusMutation = (
+  params?: MutationHookParams<typeof productApi.postOrderStatus>,
+) => {
+  return useMutation(productApi.postOrderStatus, {
     ...params?.options,
   });
 };

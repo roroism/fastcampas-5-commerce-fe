@@ -36,7 +36,7 @@ export function useGetProductListQuery(
       productApi.getProductList(pageParam, params?.variables),
     {
       getNextPageParam: (lastPage, allPages) => {
-        console.log('lastPage.cursor : ', lastPage.cursor);
+        // console.log('lastPage.cursor : ', lastPage.cursor);
         return lastPage.cursor;
       },
     },
@@ -69,7 +69,7 @@ export function useGetProductByIdQueries(
   productIdList?: Array<string> | undefined,
 ) {
   // const queryKey = PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables);
-  console.log('useGetProductByIdQueries params ::: ', params);
+  // console.log('useGetProductByIdQueries params ::: ', params);
   const queryKeyList: any[] = [];
 
   const queryList =
@@ -183,6 +183,7 @@ export function useGetOrderByOrderIdQuery(
   const queryKey = ORDER_BY_ORDERID_API_QUERY_KEY.GET(
     params?.variables as string,
   );
+  // console.log('useGetOrderByOrderIdQuery params : ', params);
   const query = useQuery(
     queryKey,
     () => productApi.getOrderByOrderId(params?.variables),

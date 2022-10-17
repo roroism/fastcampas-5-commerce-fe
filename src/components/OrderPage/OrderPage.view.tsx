@@ -25,6 +25,8 @@ import { LAYOUT } from '@constants/layout';
 import OrderItem from './_fragments/OrderItem';
 import { FormOrderDataType, PaymentMethod, PaymentProductType } from './types';
 
+import convenienceInputPhoneNumber from 'hooks/convenienceInputPhoneNumber';
+
 interface OrderPageViewProps extends ChakraProps {
   formData: UseFormReturn<FormOrderDataType>;
   onSubmit: any;
@@ -177,7 +179,13 @@ function OrderPageView({
                   // name="phone"
                   // value={orderInfo?.phone || ''}
                   // onChange={onChange}
-                  {...register('userPhone')}
+                  {...register('userPhone', {
+                    onChange: (e) =>
+                      setValue(
+                        'userPhone',
+                        convenienceInputPhoneNumber(e.target.value),
+                      ),
+                  })}
                 />
               </Box>
               <Box w="full">
@@ -246,7 +254,16 @@ function OrderPageView({
               </Box>
               <Box w="full">
                 <Text {...NameStyle}>핸드폰 번호</Text>
-                <Input {...InputStyle} {...register('shipPhone')} />
+                <Input
+                  {...InputStyle}
+                  {...register('shipPhone', {
+                    onChange: (e) =>
+                      setValue(
+                        'shipPhone',
+                        convenienceInputPhoneNumber(e.target.value),
+                      ),
+                  })}
+                />
               </Box>
               <Box w="full">
                 <Text {...NameStyle}>주소</Text>

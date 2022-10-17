@@ -28,6 +28,8 @@ import instance from '@apis/_axios/instance';
 import JoinInput from './_fragments/JoinInput';
 import { FormDataType } from './types';
 
+import convenienceInputPhoneNumber from 'hooks/convenienceInputPhoneNumber';
+
 interface JoinPageViewProp extends ChakraProps {
   formData: UseFormReturn<FormDataType>;
   onSubmit: any;
@@ -217,7 +219,17 @@ const JoinPageView = ({
           </JoinInput>
 
           <JoinInput label="휴대폰 번호" errorText={errors.phone?.message}>
-            <Input {...register('phone')} autoComplete="off" {...InputStyle} />
+            <Input
+              {...register('phone', {
+                onChange: (e) =>
+                  setValue(
+                    'phone',
+                    convenienceInputPhoneNumber(e.target.value),
+                  ),
+              })}
+              autoComplete="off"
+              {...InputStyle}
+            />
           </JoinInput>
 
           <JoinInput label="이메일 주소" errorText={errors.email?.message}>

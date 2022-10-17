@@ -36,6 +36,8 @@ import { getToken } from '@utils/localStorage/token';
 
 import { FormEditDataType } from './types';
 
+import convenienceInputPhoneNumber from 'hooks/convenienceInputPhoneNumber';
+
 interface EditPageViewProp extends ChakraProps {
   formData: UseFormReturn<FormEditDataType>;
   onSubmit: any;
@@ -81,31 +83,6 @@ const EditPageView = ({
     if (myInfo?.age) setValue('age', myInfo?.age);
     if (myInfo?.profile) setPreview(myInfo?.profile);
     setValue('profile', myInfo?.profile || '');
-    // const getImg = async () => {
-    //   const upload = await axios
-    //     .get(
-    //       `${myInfo?.profile}`,
-    //       // { file: file },
-    //       // file,
-    //       // form,
-    //       {
-    //         baseURL: '',
-    //         // headers: {
-    //         //   'Content-Type': file.type,
-    //         // },
-    //       },
-    //     )
-    //     .then((res) => {
-    //       console.log('getImg : ', res);
-    //       console.log('getImg upload : ', upload);
-    //       // if (myInfo?.profile) setPreview(myInfo?.profile);
-    //       setValue('profile', myInfo?.profile);
-    //     })
-    //     .catch((err) => {
-    //       console.log('getImg : ', err);
-    //     });
-    // };
-    // getImg();
   }, [myInfo]);
 
   const handleAvatar = (e: React.MouseEvent) => {
@@ -262,7 +239,13 @@ const EditPageView = ({
 
             <JoinInput label="휴대폰 번호" errorText={errors.phone?.message}>
               <Input
-                {...register('phone')}
+                {...register('phone', {
+                  onChange: (e) =>
+                    setValue(
+                      'phone',
+                      convenienceInputPhoneNumber(e.target.value),
+                    ),
+                })}
                 autoComplete="off"
                 {...InputStyle}
               />

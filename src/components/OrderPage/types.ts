@@ -1,15 +1,19 @@
+export enum PaymentMethod {
+  CARD = 'CARD',
+}
+
 export type FormOrderDataType = {
   userId: string;
   userName: string;
   userPhone: string;
-  userAddr: string;
+  userAddrPost: string;
   userAddrDetail: string;
   shipName: string;
   shipPhone: string;
-  shipAddr: string;
+  shipAddrPost: string;
   shipAddrDetail: string;
   orderMessage: string;
-  method: 'CARD';
+  method: PaymentMethod;
   price: string;
 };
 
@@ -23,11 +27,3 @@ export type PaymentProductType = {
   photo: string;
   price: number;
 };
-
-// export type OrderType = {
-//   name?: string;
-//   phone?: string;
-//   address?: string;
-//   addressDetail?: string;
-//   shippingRequest?: string;
-// };

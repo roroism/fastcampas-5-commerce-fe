@@ -1,6 +1,6 @@
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   Box,
@@ -9,13 +9,25 @@ import {
   Flex,
   HStack,
   Link,
+  Skeleton,
   Text,
   UnorderedList,
   VStack,
   VisuallyHidden,
 } from '@chakra-ui/react';
 
-import { useGetOrderByOrderIdQuery } from '@apis/reactquery/QueryApi.query';
+import {
+  useGetMyInfoQuery,
+  useGetOrderByOrderIdQuery,
+  useGetProductByIdQueries,
+  useGetProductByIdQueries2,
+  useGetSuccessPaymentProductsQuery,
+} from '@apis/reactquery/QueryApi.query';
+import {
+  GetOrderStatusDTOType,
+  OrderStatusDTOType,
+  ShippingStatus,
+} from '@apis/reactquery/QueryApi.type';
 import useAppStore from '@features/useAppStore';
 
 import OrderItem from '@components/OrderPage/_fragments/OrderItem';
@@ -24,15 +36,103 @@ import { LAYOUT } from '@constants/layout';
 
 import priceFormat from 'hooks/priceFormat';
 
+interface IorderHistoryProduct {
+  id: number;
+  orderId: string;
+  productId: number;
+  count: number;
+  shippingStatus: ShippingStatus;
+  created: string;
+  name?: string;
+  capacity?: number;
+  price?: number;
+  photo?: string;
+  shippingPrice?: number;
+}
+
 interface CompletePageProps extends ChakraProps {}
 
 function CompletePage({ ...basisProps }: CompletePageProps) {
   const router = useRouter();
+  const [orderList, setOrderList] = useState<IorderHistoryProduct[]>([]);
   const { orderId } = router.query;
-  const { data: paymentByOrderIdData } = useGetOrderByOrderIdQuery({
-    variables: orderId,
+  const { data: userData } = useGetMyInfoQuery();
+  const { data: paymentByOrderIdData, isLoading: isOrderLoading } =
+    useGetOrderByOrderIdQuery({
+      variables: orderId,
+      options: {
+        enabled: !!orderId,
+      },
+    });
+  const { data: paymentProduct } = useGetSuccessPaymentProductsQuery({
+    //status
+    variables: userData?.id,
+    options: {
+      enabled: !!paymentByOrderIdData && !!userData,
+      // onSuccess: (data: IorderHistoryProduct[]) => {
+      //   console.log('data : ', data);
+      //   setOrderList(data);
+      // },
+      // select: ({ results }: GetOrderStatusDTOType) => {
+      //   console.log(
+      //     'results.filter ; ',
+      //     results.filter(
+      //       (item: OrderStatusDTOType) => item.orderId === orderId,
+      //     ),
+      //   );
+      //   return results.filter(
+      //     (item: OrderStatusDTOType) => item.orderId === orderId,
+      //   );
+      // },
+      onSuccess: ({ results }: GetOrderStatusDTOType) => {
+        const result = results.filter(
+          (item: OrderStatusDTOType) => item.orderId === orderId,
+        );
+        console.log('onSuccess :: ', result);
+        setOrderList(result);
+      },
+    },
   });
-  const { paymentList } = useAppStore((state) => state.ORDER);
+
+  const { query: productData } = useGetProductByIdQueries2(
+    {
+      // options: { enabled: !!productIdList },
+      options: {
+        enabled: !!paymentProduct,
+        // suspense: true,
+        onSuccess: (data) => {
+          console.log('cart data : ', data);
+          console.log('orderList before onSuccess : ', orderList);
+
+          const targetIndex = orderList?.findIndex(
+            (item) => item.productId === data.id && !('name' in item),
+          );
+          const oldOrder = orderList[targetIndex];
+          const newOrder = {
+            ...oldOrder,
+            name: data.name,
+            capacity: data.capacity,
+            price: data.price,
+            photo: data.photo,
+          };
+          setOrderList((prev) => [
+            ...prev.slice(0, targetIndex),
+            newOrder,
+            ...prev.slice(targetIndex + 1),
+          ]);
+        },
+      },
+      variables: '',
+    },
+    orderList?.map((item) => ({
+      productId: item?.productId?.toString(),
+      id: item?.id?.toString(),
+    })),
+    // orderList?.map((item) => item?.productId?.toString()),
+  );
+
+  // const { paymentList } = useAppStore((state) => state.ORDER);
+  console.log('orderList : ', orderList);
 
   return (
     <Box mt={LAYOUT.HEADER.HEIGHT} {...basisProps} bgColor="gray.100">
@@ -43,11 +143,16 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
         </Text>
 
         <Box mt="80px">
-          <Text fontWeight="700" fontSize="12px">
-            [2021-04-01]
-            {paymentByOrderIdData?.created}
-            {/* store.newsList[i].pub_date.replace("T", " ").split("+")[0]; */}
-          </Text>
+          <Skeleton
+            isLoaded={!isOrderLoading}
+            fadeDuration={1}
+            startColor="white"
+            endColor="white"
+          >
+            <Text fontWeight="700" fontSize="12px">
+              [{paymentByOrderIdData?.created.toString().split('T')[0]}]
+            </Text>
+          </Skeleton>
           <UnorderedList
             styleType="none"
             p={0}
@@ -57,13 +162,20 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
             flexDirection="column"
             gap="10px"
           >
-            {paymentList.map((product, idx) => (
-              <OrderItem
-                key={idx}
-                product={product}
-                paymentStatus={paymentByOrderIdData?.status}
-              />
-            ))}
+            <Skeleton
+              isLoaded={!productData.some((result) => result.isLoading)}
+              fadeDuration={1.5}
+              startColor="white"
+              endColor="white"
+            >
+              {orderList?.map((product, idx) => (
+                <OrderItem
+                  key={idx}
+                  product={product}
+                  shippingStatus={product.shippingStatus}
+                />
+              ))}
+            </Skeleton>
           </UnorderedList>
         </Box>
       </Box>
@@ -92,7 +204,10 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
             <Box w="92px">핸드폰 번호</Box>
             {/* <Box color="gray.700">{order?.shippingPhone}</Box> */}
             <Box as="p" color="gray.700">
-              {paymentByOrderIdData?.shipPhone}
+              {paymentByOrderIdData?.shipPhone.replace(
+                /^(\d{2,3})(\d{3,4})(\d{4})$/,
+                `$1-$2-$3`,
+              )}
             </Box>
           </HStack>
           <HStack spacing="10px" w="full">
@@ -105,8 +220,8 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
           <HStack spacing="10px" w="full" alignItems="flex-start">
             <Box w="92px">주소</Box>
             <Box as="p" w="214px" color="gray.700" overflow="hidden">
-              서울특별시 마포구 성산동 123-3 성산빌딩 B동 302호
-              {paymentByOrderIdData?.shipAddr}
+              {paymentByOrderIdData?.shipAddrPost}&nbsp;
+              {paymentByOrderIdData?.shipAddrDetail}
             </Box>
           </HStack>
           <HStack spacing="10px" w="full">

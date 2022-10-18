@@ -60,7 +60,7 @@ function EditPage({ ...basisProps }: EditPageProps) {
     // );
     if (data.profile && data.profile !== '') {
       console.log('if data.profile : ', data.profile);
-      form.append('profile', data.profile);
+      form.append('profilePath', data.profile);
     }
     // form.append('profile', 'a');
     form.append('gender', data.gender as string);

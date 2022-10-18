@@ -1,3 +1,5 @@
+import { AxiosError } from 'axios';
+
 import { InfiniteQueryHookParams, QueryHookParams } from '@apis/type';
 
 import {
@@ -14,10 +16,12 @@ import {
   GetOrderStatusDTOType,
   MyInfoParamGetType,
   OrderParamGetType,
+  OrderStatusDTOType,
   OrderStatusParamGetType,
   ProductDTOType,
   ProductDetailDTOType,
   ProductParamGetType,
+  getOrderStatusForSuccessPaymentParamGetType,
 } from './QueryApi.type';
 
 export const PRODUCT_API_QUERY_KEY = {
@@ -36,7 +40,7 @@ export function useGetProductListQuery(
       productApi.getProductList(pageParam, params?.variables),
     {
       getNextPageParam: (lastPage, allPages) => {
-        console.log('lastPage.cursor : ', lastPage.cursor);
+        // console.log('lastPage.cursor : ', lastPage.cursor);
         return lastPage.cursor;
       },
     },
@@ -69,7 +73,7 @@ export function useGetProductByIdQueries(
   productIdList?: Array<string> | undefined,
 ) {
   // const queryKey = PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables);
-  console.log('useGetProductByIdQueries params ::: ', params);
+  // console.log('useGetProductByIdQueries params ::: ', params);
   const queryKeyList: any[] = [];
 
   const queryList =
@@ -183,6 +187,7 @@ export function useGetOrderByOrderIdQuery(
   const queryKey = ORDER_BY_ORDERID_API_QUERY_KEY.GET(
     params?.variables as string,
   );
+  // console.log('useGetOrderByOrderIdQuery params : ', params);
   const query = useQuery(
     queryKey,
     () => productApi.getOrderByOrderId(params?.variables),
@@ -237,4 +242,31 @@ export function useGetProductByIdQueries2(
   });
 
   return { query, queryKeyList };
+}
+
+export const SUCCESS_PAYMENT_PRODUCTS_API_QUERY_KEY = {
+  GET: (param: getOrderStatusForSuccessPaymentParamGetType) => [
+    'success-payment-products',
+    param,
+  ],
+};
+
+export function useGetSuccessPaymentProductsQuery(
+  // params: QueryHookParams<typeof productApi.getOrderStatusForSuccessPayment>,
+  params: any,
+) {
+  const queryKey = SUCCESS_PAYMENT_PRODUCTS_API_QUERY_KEY.GET(
+    params?.variables as string,
+  );
+  const query = useQuery<
+    GetOrderStatusDTOType,
+    AxiosError,
+    OrderStatusDTOType[]
+  >(
+    queryKey,
+    () => productApi.getOrderStatusForSuccessPayment(params?.variables),
+    params?.options,
+  );
+
+  return { ...query, queryKey };
 }

@@ -43,8 +43,8 @@ interface CartPageProps extends ChakraProps {}
 function CartPage({ ...basisProps }: CartPageProps) {
   const [productIdList, setProductIdList] = useState<Array<string>>();
   const [totalPrice, setTotalPrice] = useState<string>('');
+  const [checkedPrice, setCheckedPrice] = useState<string>('');
   const [isCartitem, setIsCartitem] = useState<boolean>(true);
-  const allCheckBoxRef = useRef<HTMLInputElement>(null);
   const { data: userData } = useGetMyInfoQuery();
   //   {
   //   options: { staleTime: 1800, cacheTime: Infinity },
@@ -160,30 +160,27 @@ function CartPage({ ...basisProps }: CartPageProps) {
 
   console.log('userData : ', userData);
   console.log('cartData : ', cartData);
-  // useEffect(() => {
-  // const fetchFn = async () => {
-  //   await instance
-  //     .get(`/v1/cart/?user_id=${userData?.id}`)
-  //     .then(async (res) => {
-  //       console.log('cart data 가져옴', res);
-  //       if (res.data.length == 0) {
-  //         const form = new FormData();
-  //         form.append('userId', String(userData?.id));
-  //         await instance
-  //           .post(`/v1/cart/`, form, {
-  //             headers: { 'content-type': 'multipart/form-data' },
-  //           })
-  //           .then((res) => {
-  //             console.log('cart생성 성공 : ', res);
-  //           })
-  //           .catch((err) => {
-  //             console.log('에러 : err', err);
-  //           });
-  //       }
-  //     });
-  // };
-  // fetchFn();
-  // }, [userData]);
+
+  useEffect(() => {
+    setCheckedPrice(
+      (checkItems &&
+        priceFormat(
+          checkItems
+            .map((item) => {
+              const findedProduct = productData.find(
+                (product: any) => product?.data?.id === item.productId,
+              );
+
+              return Number(findedProduct?.data?.price) * item.count;
+            })
+            .reduce(
+              (previousValue, currentValue) => previousValue + currentValue,
+              0,
+            ),
+        )) ||
+        '0',
+    );
+  }, [checkItems]);
 
   return isCartitem ? (
     <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
@@ -255,7 +252,8 @@ function CartPage({ ...basisProps }: CartPageProps) {
         >
           <Flex justifyContent="space-between" color="gray.600">
             <Box>총 상품금액</Box>
-            <Box textAlign="right">{totalPrice}&nbsp;원</Box>
+            {/* <Box textAlign="right">{totalPrice}&nbsp;원</Box> */}
+            <Box textAlign="right">{checkedPrice}&nbsp;원</Box>
           </Flex>
           <Flex justifyContent="space-between" color="gray.600">
             <Box>총 배송비</Box>
@@ -266,7 +264,8 @@ function CartPage({ ...basisProps }: CartPageProps) {
           <Flex justifyContent="space-between" pt="20px">
             <Box>결제금액</Box>
             <Box as="strong" textAlign="right" color="primary.500">
-              {totalPrice}&nbsp;원
+              {/* {totalPrice}&nbsp;원 */}
+              {checkedPrice}&nbsp;원
             </Box>
           </Flex>
         </Box>

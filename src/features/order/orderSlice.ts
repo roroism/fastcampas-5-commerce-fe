@@ -1,21 +1,14 @@
-import {
-  CartItemDTOType,
-  ProductDetailDTOType,
-} from '@apis/reactquery/QueryApi.type';
-
-import { PaymentProductType } from '@components/OrderPage/types';
-
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface IvalueInOrderStateType {
-  id: number | null;
+  id: number | null; // cartitem id
   productId: number;
   cartId: number;
   count: number;
 }
 
 export interface IpaymentListInOrderStateType {
-  id: number | null;
+  id: number | null; // cartitem id
   productId: number;
   cartId: number;
   count: number;
@@ -26,9 +19,7 @@ export interface IpaymentListInOrderStateType {
 }
 
 export interface OrderStateType {
-  // value: CartItemDTOType[];
   value: IvalueInOrderStateType[];
-  // paymentList: PaymentProductType[];
   paymentList: IpaymentListInOrderStateType[];
   status: 'idle' | 'loading' | 'failed';
 }
@@ -70,21 +61,10 @@ export const orderSlice = createSlice({
       const newitem = { ...olditem, count: count };
       state.value[findedIdx] = newitem;
     },
-    // addPaymentProductList: (state, action) => {
-    //   state.paymentList = state.value.map((item) => {
-    //     const findedProduct = action.payload.find(
-    //       (product: any) => product?.data?.id === item.productId,
-    //     );
-    //     return {
-    //       ...item,
-    //       name: findedProduct?.name,
-    //       capacity: findedProduct?.capacity,
-    //       photo: findedProduct?.photo,
-    //       price: findedProduct?.price,
-    //     };
-    //   });
-    // },
+
     addPaymentProduct: (state, action) => {
+      // console.log('addPaymentProduct action payload :: ', action.payload);
+      // action.payload.id = productId
       if (
         state.paymentList.some((item) => item.productId === action.payload.id)
       )

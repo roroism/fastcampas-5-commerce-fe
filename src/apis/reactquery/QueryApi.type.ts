@@ -100,10 +100,12 @@ export type OrderDTOType = {
   status: PaymentStatus;
   userName: string;
   userPhone: string;
-  userAddr: string;
+  userAddrPost: string;
+  userAddrDetail: string;
   shipName: string;
   shipPhone: string;
-  shipAddr: string;
+  shipAddrPost: string;
+  shipAddrDetail: string;
   orderMessage: string;
   created: Date;
 };
@@ -115,10 +117,12 @@ export type IOrderForm = {
   method: 'CARD';
   userName: string;
   userPhone: string;
-  userAddr: string;
+  userAddrPost: string;
+  userAddrDetail: string;
   shipName: string;
   shipPhone: string;
-  shipAddr: string;
+  shipAddrPost: string;
+  shipAddrDetail: string;
   orderMessage: string;
 };
 
@@ -132,10 +136,12 @@ export type OrderByOrderIdDTOType = {
   status: PaymentStatus;
   userName: string;
   userPhone: string;
-  userAddr: string;
+  userAddrPost: string;
+  userAddrDetail: string;
   shipName: string;
   shipPhone: string;
-  shipAddr: string;
+  shipAddrPost: string;
+  shipAddrDetail: string;
   orderMessage: string;
   created: Date;
 };
@@ -188,9 +194,10 @@ export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
 export type OrderParamGetType = {};
 export type OrderStatusParamGetType = {};
+export type getOrderStatusForSuccessPaymentParamGetType = {};
 
 export type putOrderByOrderIdParamPutType = {
-  id: number;
+  id: string;
   data: FormData;
 };
 

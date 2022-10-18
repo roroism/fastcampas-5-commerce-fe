@@ -23,7 +23,9 @@ import { IpaymentListInOrderStateType } from '@features/order/orderSlice';
 import { LAYOUT } from '@constants/layout';
 
 import OrderItem from './_fragments/OrderItem';
-import { FormOrderDataType, PaymentProductType } from './types';
+import { FormOrderDataType, PaymentMethod, PaymentProductType } from './types';
+
+import convenienceInputPhoneNumber from 'hooks/convenienceInputPhoneNumber';
 
 interface OrderPageViewProps extends ChakraProps {
   formData: UseFormReturn<FormOrderDataType>;
@@ -87,13 +89,13 @@ function OrderPageView({
 
   useEffect(() => {
     if (orderFullAddress) {
-      setValue('userAddr', orderFullAddress);
+      setValue('userAddrPost', orderFullAddress);
     }
   }, [orderFullAddress]);
 
   useEffect(() => {
     if (shippingFullAddress) {
-      setValue('shipAddr', shippingFullAddress);
+      setValue('shipAddrPost', shippingFullAddress);
     }
   }, [shippingFullAddress]);
 
@@ -112,8 +114,9 @@ function OrderPageView({
             `$1-$2-$3`,
           ),
         );
-      if (getValues('userAddr')) setValue('shipAddr', getValues('userAddr'));
-      else if (orderFullAddress) setValue('shipAddr', orderFullAddress);
+      if (getValues('userAddrPost'))
+        setValue('shipAddrPost', getValues('userAddrPost'));
+      else if (orderFullAddress) setValue('shipAddrPost', orderFullAddress);
 
       if (getValues('userAddrDetail'))
         setValue('shipAddrDetail', getValues('userAddrDetail'));
@@ -121,7 +124,7 @@ function OrderPageView({
     } else {
       setValue('shipName', '');
       setValue('shipPhone', '');
-      setValue('shipAddr', '');
+      setValue('shipAddrPost', '');
       setValue('shipAddrDetail', '');
     }
   };
@@ -176,7 +179,13 @@ function OrderPageView({
                   // name="phone"
                   // value={orderInfo?.phone || ''}
                   // onChange={onChange}
-                  {...register('userPhone')}
+                  {...register('userPhone', {
+                    onChange: (e) =>
+                      setValue(
+                        'userPhone',
+                        convenienceInputPhoneNumber(e.target.value),
+                      ),
+                  })}
                 />
               </Box>
               <Box w="full">
@@ -190,7 +199,7 @@ function OrderPageView({
                     // value={orderFullAddress ? orderFullAddress : ''}
                     value={orderFullAddress || ''}
                     // onChange={onChange}
-                    {...register('userAddr')}
+                    {...register('userAddrPost')}
                   />
                   <Button
                     colorScheme="primary"
@@ -245,7 +254,16 @@ function OrderPageView({
               </Box>
               <Box w="full">
                 <Text {...NameStyle}>핸드폰 번호</Text>
-                <Input {...InputStyle} {...register('shipPhone')} />
+                <Input
+                  {...InputStyle}
+                  {...register('shipPhone', {
+                    onChange: (e) =>
+                      setValue(
+                        'shipPhone',
+                        convenienceInputPhoneNumber(e.target.value),
+                      ),
+                  })}
+                />
               </Box>
               <Box w="full">
                 <Text {...NameStyle}>주소</Text>
@@ -254,8 +272,10 @@ function OrderPageView({
                     {...InputStyle}
                     w="249px"
                     onClick={handleShippingClick}
-                    value={getValues('shipAddr') ? getValues('shipAddr') : ''}
-                    {...register('shipAddr')}
+                    value={
+                      getValues('shipAddrPost') ? getValues('shipAddrPost') : ''
+                    }
+                    {...register('shipAddrPost')}
                   />
                   <Button
                     colorScheme="primary"
@@ -315,7 +335,7 @@ function OrderPageView({
                   // onChange={checkPayMethod}
                   {...register('method')}
                   defaultChecked
-                  value="CARD"
+                  value={PaymentMethod.CARD}
                 >
                   <Flex ml="17px" gap="17px">
                     <Image src="/icons/svg/order/pay.svg" />

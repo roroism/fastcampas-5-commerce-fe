@@ -22,18 +22,6 @@ import { LAYOUT } from '@constants/layout';
 import { useQuery } from '@tanstack/react-query';
 import { getToken } from '@utils/localStorage/token';
 
-interface IUserInfo {
-  id: number;
-  name: string;
-  nickname: string;
-  phone: string;
-  address: string;
-  email: string;
-  profile: string;
-  gender: 'male' | 'female';
-  age: number;
-}
-
 interface MypagePageProps extends ChakraProps {}
 
 function MypagePage({ ...basisProps }: MypagePageProps) {

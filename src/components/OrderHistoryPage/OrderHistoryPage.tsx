@@ -46,9 +46,6 @@ import OrderItem from '@components/OrderPage/_fragments/OrderItem';
 
 import { LAYOUT } from '@constants/layout';
 
-import PaginationPage from './PaginationPage';
-import CreatedBox from './_fragments/CreatedBox';
-
 export interface IorderHistoryProduct {
   id: number; // product id
   orderId: string;
@@ -479,52 +476,6 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
             {!productData.some((result: any) => result.isLoading) &&
               !orderData.some((result: any) => result.isLoading) &&
               orderListRender()}
-
-            {orderStatusList?.results?.map((item: any, idx) => {
-              <CreatedBox statusInfo={item} />;
-
-              // <Text as="h4" fontWeight="700" fontSize="12px">
-              //   [{item[idx]?.created}]
-              // </Text>;
-
-              // {
-              //   item.map((item2: any) => (
-              //     <Text as="h4" fontWeight="700" fontSize="12px" key={item2.id}>
-              //       {item2.id}
-              //     </Text>
-              //   ));
-              // }
-
-              // <UnorderedList
-              //   key={item?.id}
-              //   styleType="none"
-              //   p={0}
-              //   m={0}
-              //   mt="11px"
-              //   display="flex"
-              //   flexDirection="column"
-              //   gap="10px"
-              // >
-              //   {item.map((item2: OrderStatusDTOType) =>
-              //     productData.map((item3: ProductDetailDTOType) => (
-              //       <Skeleton
-              //         key={`${item3?.id}skeleton`}
-              //         isLoaded={true}
-              //         fadeDuration={1.5}
-              //         startColor="white"
-              //         endColor="white"
-              //       >
-              //         <OrderItem
-              //           key={`${item3?.id}orderitem`}
-              //           product={{ ...item2 }}
-              //           paymentStatus={item.status}
-              //           shippingStatus={item.shippingStatus}
-              //         />
-              //       </Skeleton>
-              //     )),
-              //   )}
-              // </UnorderedList>;
-            })}
           </Box>
         </Box>
       ) : (

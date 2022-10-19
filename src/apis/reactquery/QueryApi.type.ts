@@ -127,7 +127,7 @@ export type IOrderForm = {
 };
 
 export type OrderByOrderIdDTOType = {
-  id: number;
+  id: string;
   price: number;
   userId: number;
   shippingPrice: number;
@@ -155,11 +155,11 @@ export type OrderByOrderIdDTOType = {
 // ];
 
 export enum ShippingStatus {
-  PAID = 'PAID',
-  WAIT = 'WAIT',
-  INPROGRESS = 'INPROGRESS',
-  DONE = 'DONE',
-  CANCELED = 'CANCELED',
+  PAID = 'PAID', // 결제완료
+  WAIT = 'WAIT', // 상품준비
+  INPROGRESS = 'INPROGRESS', // 배송중
+  DONE = 'DONE', // 배송완료
+  CANCELED = 'CANCELED', // 주문취소
 }
 
 export type OrderStatusDTOType = {
@@ -194,6 +194,8 @@ export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
 export type OrderParamGetType = {};
 export type OrderStatusParamGetType = {};
+export type OrderStatusInfinityParamGetType = {};
+export type OrderByOrderIdInfinityParamGetType = {};
 export type getOrderStatusForSuccessPaymentParamGetType = {};
 
 export type putOrderByOrderIdParamPutType = {
@@ -211,6 +213,7 @@ export type GetOrderStatusDTOType = {
   next: string;
   previous: string;
   results: OrderStatusDTOType[];
+  productIdList?: { productId: string; id: string; orderId: string }[];
 };
 
 export type ExampleParamPutType = {

@@ -2,6 +2,8 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
+import { PAGE_SIZE } from '@components/OrderHistoryPage/OrderHistoryPage';
+
 import {
   CartDTOType,
   CartItemDTOType,
@@ -234,7 +236,7 @@ export class ProductApi {
     const { data } = await this.axios({
       method: 'GET',
       // url: `/v1/order/status/?user_id=${params}&page_size=${}&page=${}`,
-      url: `/v1/order/status/?user_id=${params}&page=${pageParam}`,
+      url: `/v1/order/status/?user_id=${params}&page=${pageParam}&page_size=${PAGE_SIZE}`,
       // headers: { 'Content-Type': 'multipart/form-data' },
     });
     return data;

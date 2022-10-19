@@ -6,10 +6,12 @@ export type FormOrderDataType = {
   userId: string;
   userName: string;
   userPhone: string;
+  userAddr: string;
   userAddrPost: string;
   userAddrDetail: string;
   shipName: string;
   shipPhone: string;
+  shipAddr: string;
   shipAddrPost: string;
   shipAddrDetail: string;
   orderMessage: string;

@@ -18,7 +18,7 @@ function LoginPage({ ...basisProps }: LoginPageProps) {
       w="full"
       py="50px"
       bg="primary.500"
-      h="812px"
+      h="100vh"
       justify="space-between"
       {...basisProps}
     >

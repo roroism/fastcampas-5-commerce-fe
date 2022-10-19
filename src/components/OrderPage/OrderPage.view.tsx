@@ -89,15 +89,27 @@ function OrderPageView({
 
   useEffect(() => {
     if (orderFullAddress) {
-      setValue('userAddrPost', orderFullAddress);
+      setValue('userAddr', orderFullAddress);
     }
   }, [orderFullAddress]);
 
   useEffect(() => {
     if (shippingFullAddress) {
-      setValue('shipAddrPost', shippingFullAddress);
+      setValue('shipAddr', shippingFullAddress);
     }
   }, [shippingFullAddress]);
+
+  useEffect(() => {
+    if (orderZonecode) {
+      setValue('userAddrPost', orderZonecode);
+    }
+  }, [orderZonecode]);
+
+  useEffect(() => {
+    if (shippingZonecode) {
+      setValue('shipAddrPost', shippingZonecode);
+    }
+  }, [shippingZonecode]);
 
   // useEffect(() => {
   //   if (shippingFullAddress) setValue('shippingAddress', shippingFullAddress);
@@ -114,26 +126,28 @@ function OrderPageView({
             `$1-$2-$3`,
           ),
         );
-      if (getValues('userAddrPost'))
-        setValue('shipAddrPost', getValues('userAddrPost'));
-      else if (orderFullAddress) setValue('shipAddrPost', orderFullAddress);
+      if (getValues('userAddr')) setValue('shipAddr', getValues('userAddr'));
+      else if (orderFullAddress) setValue('shipAddr', orderFullAddress);
 
       if (getValues('userAddrDetail'))
         setValue('shipAddrDetail', getValues('userAddrDetail'));
-      // if (ordererZonecode) setValue('shippingZipcode', ordererZonecode);
+      if (orderZonecode) setValue('shipAddrPost', orderZonecode);
     } else {
       setValue('shipName', '');
       setValue('shipPhone', '');
-      setValue('shipAddrPost', '');
+      setValue('shipAddr', '');
       setValue('shipAddrDetail', '');
+      setValue('shipAddrPost', '');
     }
   };
-  console.log('OrderPage paymentList ::: ', paymentList);
+  // console.log('OrderPage paymentList ::: ', paymentList);
   return (
     <Box mt={LAYOUT.HEADER.HEIGHT} px="16px" pb="80px">
       <Box as="form" onSubmit={onSubmit}>
         <input type="hidden" {...register('userId')} />
         <input type="hidden" {...register('price')} />
+        <input type="hidden" {...register('userAddrPost')} />
+        <input type="hidden" {...register('shipAddrPost')} />
         <Box {...basisProps}>
           <Text as="h3" fontWeight="700" fontSize="1.25rem">
             주문결제
@@ -199,7 +213,7 @@ function OrderPageView({
                     // value={orderFullAddress ? orderFullAddress : ''}
                     value={orderFullAddress || ''}
                     // onChange={onChange}
-                    {...register('userAddrPost')}
+                    {...register('userAddr')}
                   />
                   <Button
                     colorScheme="primary"
@@ -272,10 +286,8 @@ function OrderPageView({
                     {...InputStyle}
                     w="249px"
                     onClick={handleShippingClick}
-                    value={
-                      getValues('shipAddrPost') ? getValues('shipAddrPost') : ''
-                    }
-                    {...register('shipAddrPost')}
+                    value={getValues('shipAddr') ? getValues('shipAddr') : ''}
+                    {...register('shipAddr')}
                   />
                   <Button
                     colorScheme="primary"

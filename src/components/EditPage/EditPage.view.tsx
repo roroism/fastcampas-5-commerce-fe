@@ -143,8 +143,13 @@ const EditPageView = ({
                 resPresignedUrl,
               );
 
-              setValue('profile', resPresignedUrl.split('?')[0]);
-              setPreview(resPresignedUrl.split('?')[0]);
+              // setValue('profile', resPresignedUrl.split('?')[0]); //잘못된 값
+              setValue(
+                'profile',
+                `media/${resPresignedUrl.split('?')[0].split('/').at(-1)}`,
+              ); //잘못된 값
+              // setValue('profile', file.name);
+              // setPreview(resPresignedUrl.split('?')[0]);
             })
             .catch((err) => {
               console.log('presignedUrl put error : ', err);

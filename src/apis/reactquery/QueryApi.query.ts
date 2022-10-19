@@ -2,6 +2,8 @@ import { AxiosError } from 'axios';
 
 import { InfiniteQueryHookParams, QueryHookParams } from '@apis/type';
 
+import { GetOrderStatusSelectType } from '@components/OrderHistoryPage/OrderHistoryPage';
+
 import {
   UseInfiniteQueryResult,
   UseQueryResult,
@@ -15,8 +17,10 @@ import {
   CartParamGetType,
   GetOrderStatusDTOType,
   MyInfoParamGetType,
+  OrderByOrderIdInfinityParamGetType,
   OrderParamGetType,
   OrderStatusDTOType,
+  OrderStatusInfinityParamGetType,
   OrderStatusParamGetType,
   ProductDTOType,
   ProductDetailDTOType,
@@ -177,7 +181,10 @@ export function useGetOrderQuery(
 
 export const ORDER_BY_ORDERID_API_QUERY_KEY = {
   GET: (param: OrderParamGetType) => ['order-by-orderid', param],
-  // GET_BY_ID: (id?: string) => ['product-by-id', id],
+  GET_INFINITE: (param: OrderByOrderIdInfinityParamGetType) => [
+    'order-by-orderid-infinite',
+    param,
+  ],
 };
 
 export function useGetOrderByOrderIdQuery(
@@ -197,20 +204,67 @@ export function useGetOrderByOrderIdQuery(
   return { ...query, queryKey };
 }
 
+export function useGetOrderByOrderIdQueries(
+  params: QueryHookParams<typeof productApi.getProductById>,
+  productIdList?: Array<string> | undefined,
+) {
+  const queryKeyList: any[] = [];
+
+  const queryList =
+    productIdList?.map((orderId) => {
+      queryKeyList.push(ORDER_BY_ORDERID_API_QUERY_KEY.GET_INFINITE(orderId));
+
+      return {
+        enabled: params.options?.enabled,
+        onSuccess: params.options?.onSuccess,
+        queryKey: ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(orderId),
+        queryFn: () => productApi.getOrderByOrderId(orderId),
+      };
+    }) || [];
+  // console.log('queryKeyList : ', queryKeyList);
+  // const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
+  const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
+    queries: [...queryList],
+  });
+
+  return { query, queryKeyList };
+}
+
 export const ORDER_STATUS_API_QUERY_KEY = {
+  GET_INFINITE: (param: OrderStatusInfinityParamGetType) => [
+    'order-status-infinite',
+    param,
+  ],
   GET: (param: OrderStatusParamGetType) => ['order-status', param],
   GET_BY_ID: (id?: string) => ['order-status-by-id', id],
 };
 
-export function useGetOrderStatusQuery(
+export function useGetOrderStatusInfiniteQuery(
   params: InfiniteQueryHookParams<typeof productApi.getOrderStatus>,
 ) {
   // console.log('params?.variables : ', params?.variables);
-  const queryKey = ORDER_STATUS_API_QUERY_KEY.GET(params?.variables as string);
+  const queryKey = ORDER_STATUS_API_QUERY_KEY.GET_INFINITE(
+    params?.variables as string,
+  );
   const query = useInfiniteQuery(
     queryKey,
-    ({ pageParam = '1' }) =>
+    ({ pageParam = '2' }) =>
       productApi.getOrderStatus(pageParam, params?.variables),
+    params?.options,
+  );
+
+  return { ...query, queryKey };
+}
+
+export function useGetOrderStatusQuery(
+  params: QueryHookParams<typeof productApi.getOrderStatus>,
+  page = '1',
+) {
+  // console.log('params?.variables : ', params?.variables);
+  const queryKey = ORDER_STATUS_API_QUERY_KEY.GET(page as string);
+  const query = useQuery(
+    queryKey,
+    () => productApi.getOrderStatus(page, params?.variables),
     params?.options,
   );
 
@@ -235,9 +289,38 @@ export function useGetProductByIdQueries2(
         queryFn: () => productApi.getProductById(item.productId),
       };
     }) || [];
-  console.log('queryKeyList : ', queryKeyList);
+  // console.log('queryKeyList : ', queryKeyList);
   // const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
   const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
+    queries: [...queryList],
+  });
+
+  return { query, queryKeyList };
+}
+
+export function useGetProductByIdQueries3(
+  params: any,
+  productIdList: Array<{ productId: string; id: string }> | undefined,
+  // productIdList?: Array<string> | undefined,
+) {
+  const queryKeyList: any[] = [];
+  console.log('productIdList :: ', productIdList);
+
+  const queryList =
+    productIdList?.map((item) => {
+      queryKeyList.push(ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(item.id));
+
+      return {
+        enabled: params.options?.enabled,
+        select: params.options?.select,
+        onSuccess: params.options?.onSuccess,
+        queryKey: ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(item.id),
+        queryFn: () => productApi.getProductById(item.productId),
+      };
+    }) || [];
+  // console.log('queryKeyList Queries3 : ', queryKeyList);
+  // const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
+  const query: any = useQueries({
     queries: [...queryList],
   });
 

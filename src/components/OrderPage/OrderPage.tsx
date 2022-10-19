@@ -93,16 +93,16 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     const form = new FormData();
     form.append('userId', data.userId);
     form.append('price', data.price);
-    form.append('paymentKey', '');
+    // form.append('paymentKey', '');
     form.append('method', data.method);
     form.append('userName', data.userName);
     form.append('userPhone', data.userPhone.replace(/-/g, ''));
     form.append('userAddrPost', data.userAddrPost);
-    form.append('userAddrDetail', data.userAddrDetail);
+    form.append('userAddrDetail', `${data.userAddr} ${data.userAddrDetail}`);
     form.append('shipName', data.shipName);
     form.append('shipPhone', data.shipPhone.replace(/-/g, ''));
     form.append('shipAddrPost', data.shipAddrPost);
-    form.append('shipAddrDetail', data.shipAddrDetail);
+    form.append('shipAddrDetail', `${data.shipAddr} ${data.shipAddrDetail}`);
     form.append('orderMessage', data.orderMessage);
     // postOrderMutate(form);
     productApi.postOrder(form).then((res) => {

@@ -37,8 +37,10 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
 
       console.log('paymentByOrderIdData : ', paymentByOrderIdData);
       console.log(
-        'Number(amount) === paymentByOrderIdData.amount : ',
+        '가격 비교 Number(amount), paymentByOrderIdData?.amount : ',
         Number(amount) === paymentByOrderIdData?.amount,
+        Number(amount),
+        paymentByOrderIdData?.amount,
       );
 
       if (
@@ -52,7 +54,7 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
         if (
           paymentByOrderIdData
           // &&
-          // Number(amount) === paymentByOrderIdData.amount
+          // Number(amount) === paymentByOrderIdData.price
         ) {
           const form = new FormData();
           form.append('price', amount);
@@ -90,6 +92,11 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
             })
             .then((res) => {
               console.log('putOrderByOrderId res : ', res);
+
+              router.replace({
+                pathname: `/order/complete`,
+                query: { orderId: orderId },
+              });
             });
 
           // const PaymentAuthorizationCall = async () => {
@@ -97,11 +104,6 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
           //     'https://api.tosspayments.com/v1/payments/confirm',
           //   );
           // };
-
-          router.replace({
-            pathname: `/order/complete`,
-            query: { orderId: orderId },
-          });
         }
       }
     });

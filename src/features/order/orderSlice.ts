@@ -1,3 +1,5 @@
+import { IorderHistoryProduct } from '@components/OrderHistoryPage/OrderHistoryPage';
+
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface IvalueInOrderStateType {

@@ -195,14 +195,12 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
         >
           <HStack spacing="10px" w="full">
             <Box w="92px">이름</Box>
-            {/* <Box color="gray.700">{order?.shippingName}</Box> */}
             <Box as="p" color="gray.700">
               {paymentByOrderIdData?.shipName}
             </Box>
           </HStack>
           <HStack spacing="10px" w="full">
             <Box w="92px">핸드폰 번호</Box>
-            {/* <Box color="gray.700">{order?.shippingPhone}</Box> */}
             <Box as="p" color="gray.700">
               {paymentByOrderIdData?.shipPhone.replace(
                 /^(\d{2,3})(\d{3,4})(\d{4})$/,
@@ -212,9 +210,8 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
           </HStack>
           <HStack spacing="10px" w="full">
             <Box w="92px">우편번호</Box>
-            {/* <Box color="gray.700">{order?.shippingZipcode}</Box> */}
             <Box as="p" color="gray.700">
-              01234
+              {paymentByOrderIdData?.shipAddrPost}
             </Box>
           </HStack>
           <HStack spacing="10px" w="full" alignItems="flex-start">

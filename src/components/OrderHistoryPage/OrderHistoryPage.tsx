@@ -349,9 +349,14 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
 
     orderRenderList2?.results?.forEach((item, idx) => {
       result.push(
-        <Box py="18px" borderTop="1px solid" borderColor="gray.100">
-          <Text as="h4" fontWeight="700" fontSize="12px" key={`${idx}-created`}>
-            [{item[idx]?.created}]
+        <Box
+          py="18px"
+          borderTop="1px solid"
+          borderColor="gray.100"
+          key={`${idx}-created`}
+        >
+          <Text as="h4" fontWeight="700" fontSize="12px">
+            [{item[0]?.created}]
           </Text>
         </Box>,
       );
@@ -386,10 +391,9 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
 
         if (newInfo.shippingStatus === ShippingStatus.PAID) {
           return (
-            <>
+            <Box key={`${item2?.id}orderitem`}>
               <OrderItem
                 htmlTag={'div'}
-                key={`${item2?.id}orderitem`}
                 product={newInfo}
                 // paymentStatus={shippingPriceInfo.status}
                 shippingStatus={item2.shippingStatus}
@@ -410,14 +414,13 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
                   주문취소
                 </Button>
               </Flex>
-            </>
+            </Box>
           );
         } else if (newInfo.shippingStatus === ShippingStatus.DONE) {
           return (
-            <>
+            <Box key={`${item2?.id}orderitem`}>
               <OrderItem
                 htmlTag={'div'}
-                key={`${item2?.id}orderitem`}
                 product={newInfo}
                 // paymentStatus={shippingPriceInfo.status}
                 shippingStatus={item2.shippingStatus}
@@ -438,17 +441,18 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
                   리뷰작성
                 </Button>
               </Flex>
-            </>
+            </Box>
           );
         } else {
           return (
-            <OrderItem
-              htmlTag={'div'}
-              key={`${item2?.id}orderitem`}
-              product={newInfo}
-              // paymentStatus={shippingPriceInfo.status}
-              shippingStatus={item2.shippingStatus}
-            />
+            <Box key={`${item2?.id}orderitem`}>
+              <OrderItem
+                htmlTag={'div'}
+                product={newInfo}
+                // paymentStatus={shippingPriceInfo.status}
+                shippingStatus={item2.shippingStatus}
+              />
+            </Box>
           );
         }
       });

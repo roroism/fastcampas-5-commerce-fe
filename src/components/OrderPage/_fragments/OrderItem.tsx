@@ -90,7 +90,7 @@ const OrderItem = ({
             </Text>
           </Flex>
         )}
-        {shippingStatus && !product?.shippingPrice ? (
+        {shippingStatus && !('shippingPrice' in product) ? (
           <Flex alignItems="center">
             <Text fontWeight="700" fontSize="0.75rem" color="primary.500">
               {shippingStatus === ShippingStatus.PAID
@@ -106,7 +106,7 @@ const OrderItem = ({
                 : '기타사항'}
             </Text>
           </Flex>
-        ) : shippingStatus && product.shippingPrice ? (
+        ) : shippingStatus ? (
           <Flex
             flexDirection="column"
             alignItems="center"
@@ -132,8 +132,9 @@ const OrderItem = ({
                 : '기타사항'}
             </Text>
             <Text fontWeight="400" fontSize="0.75rem">
+              {console.log('product.shippingPrice : ', product.shippingPrice)}
               {product.shippingPrice === 0
-                ? '무료배송'
+                ? `무료배송`
                 : `배송비 ${priceFormat(product.shippingPrice)}원`}
             </Text>
           </Flex>

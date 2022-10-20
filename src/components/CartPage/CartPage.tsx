@@ -9,6 +9,7 @@ import {
   Checkbox,
   Flex,
   Link,
+  Skeleton,
   TagLabel,
   VisuallyHidden,
 } from '@chakra-ui/react';
@@ -111,26 +112,25 @@ function CartPage({ ...basisProps }: CartPageProps) {
     },
   });
 
-  useEffect(() => {
-    setTotalPrice(
-      (cartData &&
-        priceFormat(
-          cartData[0]?.cartitem
-            .map((item) => {
-              const findedProduct = productData.find(
-                (product: any) => product?.data?.id === item.productId,
-              );
-
-              return Number(findedProduct?.data?.price) * item.count;
-            })
-            .reduce(
-              (previousValue, currentValue) => previousValue + currentValue,
-              0,
-            ),
-        )) ||
-        '',
-    );
-  }, [cartData, productData]);
+  // useEffect(() => {
+  // setTotalPrice(
+  //   (cartData &&
+  //     priceFormat(
+  //       cartData[0]?.cartitem
+  //         .map((item) => {
+  //           const findedProduct = productData.find(
+  //             (product: any) => product?.data?.id === item.productId,
+  //           );
+  //           return Number(findedProduct?.data?.price) * item.count;
+  //         })
+  //         .reduce(
+  //           (previousValue, currentValue) => previousValue + currentValue,
+  //           0,
+  //         ),
+  //     )) ||
+  //     '',
+  // );
+  // }, [cartData, productData]);
 
   // const [checkItems, setCheckItems] = useState<CartItemDTOType[]>([]);
   const { value: checkItems } = useAppStore((state) => state.ORDER);
@@ -182,9 +182,22 @@ function CartPage({ ...basisProps }: CartPageProps) {
     );
   }, [checkItems]);
 
+  useEffect(() => {
+    dispatch(orderSliceAction.deleteAllProductInCart());
+  }, []);
+
   return isCartitem ? (
     <Box as="main" {...basisProps} mt={LAYOUT.HEADER.HEIGHT}>
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
+      {/* <Skeleton
+        isLoaded={
+          !productData.some((result: any) => result.isLoading) &&
+          !isLoadingCartData
+        }
+        fadeDuration={1.5}
+        startColor="white"
+        endColor="white"
+      > */}
       <Box>
         <Flex
           justifyContent="space-between"
@@ -233,7 +246,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
                     mutatingCount={mutatingCount}
                     mutatingDelete={mutatingDelete}
                     checkUseState={[checkItems as CartItemDTOType[], dispatch]}
-                    isLoadingCartData={isLoadingCartData}
+                    isLoadingProductData={findedProduct?.isLoading}
                   />
                 );
               })}
@@ -289,6 +302,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
           </NextLink>
         </Box>
       </Box>
+      {/* </Skeleton> */}
     </Box>
   ) : (
     <Box>

@@ -40,7 +40,7 @@ export const FormSchema = yup.object().shape({
   shipAddr: yup.string().required('배송주소는 필수입니다.'),
   shipAddrDetail: yup.string().required('배송주소는 필수입니다.'),
   shipAddrPost: yup.string().required(),
-  orderMessage: yup.string(),
+  orderMessage: yup.string().required(),
   method: yup.string().required(),
 });
 
@@ -49,6 +49,7 @@ const customUseFormForOrder = (options?: UseFormProps<FormOrderDataType>) => {
   return useForm<FormOrderDataType>({
     resolver: yupResolver(FormSchema),
     mode: 'onChange',
+    defaultValues: { orderMessage: '안전한 배송 감사합니다' },
     ...options,
   });
 };

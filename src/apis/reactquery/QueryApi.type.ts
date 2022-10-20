@@ -91,7 +91,7 @@ export enum PaymentStatus {
 }
 
 export type OrderDTOType = {
-  id: number;
+  id: string;
   userId: number;
   price: number;
   shippingPrice: number;

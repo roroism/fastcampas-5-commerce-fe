@@ -41,7 +41,7 @@ interface CartItemProps extends ChakraProps {
   mutatingDelete: UseMutateFunction<boolean, any, string, unknown>;
   checkUseState: [CartItemDTOType[], Dispatch];
   // checkUseState: [IvalueInOrderStateType[], Dispatch];
-  isLoadingCartData: boolean;
+  isLoadingProductData: boolean | undefined;
 }
 
 const CartItem = ({
@@ -50,7 +50,7 @@ const CartItem = ({
   mutatingCount,
   mutatingDelete,
   checkUseState: [checkItems, dispatch],
-  isLoadingCartData,
+  isLoadingProductData,
   ...basisProps
 }: CartItemProps) => {
   const checkBoxRef = useRef<HTMLInputElement>(null);
@@ -168,14 +168,28 @@ const CartItem = ({
         </Box>
         <Flex flexDirection="column" justifyContent="flex-start" flexGrow={1}>
           <Flex>
-            <Skeleton isLoaded={!isLoadingCartData} mr="10px">
-              <Box w="90px" h="90px" backgroundColor="#f9f9f9" mr="10px">
+            <Skeleton
+              isLoaded={!isLoadingProductData}
+              fadeDuration={1.5}
+              startColor="white"
+              endColor="white"
+              mr="10px"
+            >
+              <Flex
+                w="90px"
+                h="90px"
+                backgroundColor="#f9f9f9"
+                mr="10px"
+                justifyContent="center"
+                alignItems="center"
+                color="#fff"
+              >
                 <Image
                   w="100%"
                   src={productData?.photo}
                   alt={`${productData?.name} 이미지`}
                 ></Image>
-              </Box>
+              </Flex>
             </Skeleton>
             <Flex
               flexDirection="column"

@@ -82,7 +82,11 @@ const EditPageView = ({
     if (myInfo?.gender) setValue('gender', myInfo?.gender);
     if (myInfo?.age) setValue('age', myInfo?.age);
     if (myInfo?.profile) setPreview(myInfo?.profile);
-    setValue('profile', myInfo?.profile || '');
+    setValue(
+      'profile',
+      myInfo?.profile?.substring(myInfo?.profile?.lastIndexOf('/')) || '',
+    );
+    // setValue('profile', myInfo?.profile || '');
   }, [myInfo]);
 
   const handleAvatar = (e: React.MouseEvent) => {
@@ -137,7 +141,6 @@ const EditPageView = ({
             )
             .then((res) => {
               console.log('success : s3 file upload res : ', res);
-              console.log('success : s3 file upload upload : ', upload);
               console.log(
                 'success : s3 file upload resPresignedUrl : ',
                 resPresignedUrl,
@@ -147,7 +150,7 @@ const EditPageView = ({
               setValue(
                 'profile',
                 `media/${resPresignedUrl.split('?')[0].split('/').at(-1)}`,
-              ); //잘못된 값
+              );
               // setValue('profile', file.name);
               // setPreview(resPresignedUrl.split('?')[0]);
             })

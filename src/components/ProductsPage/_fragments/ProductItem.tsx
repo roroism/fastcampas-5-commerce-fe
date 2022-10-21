@@ -68,7 +68,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
         </Box>
         <Flex flexDirection="column" ml="30px" pt="30px" pb="20px">
           <Flex>
-            <Box as="strong" fontSize="1rem">
+            <Box as="h3" fontWeight="700" fontSize="1rem">
               {product?.name}
             </Box>
             <Box as="span" paddingLeft="5px" fontSize="1rem" color="gray.700">

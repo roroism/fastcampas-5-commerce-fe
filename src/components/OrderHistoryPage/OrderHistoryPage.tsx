@@ -389,72 +389,16 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
           shippingPrice: shippingPriceInfo?.data?.shippingPrice,
         };
 
-        if (newInfo.shippingStatus === ShippingStatus.PAID) {
-          return (
-            <Box key={`${item2?.id}orderitem`}>
-              <OrderItem
-                htmlTag={'div'}
-                product={newInfo}
-                // paymentStatus={shippingPriceInfo.status}
-                shippingStatus={item2.shippingStatus}
-              />
-              <Flex justifyContent="right">
-                <Button
-                  mt="10px"
-                  mb="20px"
-                  fontWeight="700"
-                  w="140px"
-                  h="40px"
-                  borderRadius="5px"
-                  variant="solid"
-                  colorScheme="primary"
-                  fontSize="0.75rem"
-                  px="45.5px"
-                >
-                  주문취소
-                </Button>
-              </Flex>
-            </Box>
-          );
-        } else if (newInfo.shippingStatus === ShippingStatus.DONE) {
-          return (
-            <Box key={`${item2?.id}orderitem`}>
-              <OrderItem
-                htmlTag={'div'}
-                product={newInfo}
-                // paymentStatus={shippingPriceInfo.status}
-                shippingStatus={item2.shippingStatus}
-              />
-              <Flex justifyContent="right">
-                <Button
-                  mt="10px"
-                  mb="20px"
-                  fontWeight="700"
-                  w="140px"
-                  h="40px"
-                  borderRadius="5px"
-                  variant="outline"
-                  colorScheme="primary"
-                  fontSize="0.75rem"
-                  px="45.5px"
-                >
-                  리뷰작성
-                </Button>
-              </Flex>
-            </Box>
-          );
-        } else {
-          return (
-            <Box key={`${item2?.id}orderitem`}>
-              <OrderItem
-                htmlTag={'div'}
-                product={newInfo}
-                // paymentStatus={shippingPriceInfo.status}
-                shippingStatus={item2.shippingStatus}
-              />
-            </Box>
-          );
-        }
+        return (
+          <Box key={`${item2?.id}orderitem`}>
+            <OrderItem
+              htmlTag={'div'}
+              product={newInfo}
+              // paymentStatus={shippingPriceInfo.status}
+              shippingStatus={item2.shippingStatus}
+            />
+          </Box>
+        );
       });
       result.push(orderitem);
       // result.push(</UnorderedList>);

@@ -22,7 +22,9 @@ import {
   OrderParamGetType,
   OrderStatusDTOType,
   OrderStatusParamGetType,
+  OrderStatusParamPatchType,
   OrderStatusParamPostType,
+  PatchOrderStatusDTOType,
   ProductDTOType,
   ProductDetailDTOType,
   ProductInCartItemDTOType,
@@ -249,6 +251,24 @@ export class ProductApi {
       method: 'GET',
       url: `/v1/order/status/?user_id=${params}&page=1&page_size=50`,
     });
+    return data;
+  };
+
+  patchOrderStatus = async (
+    req: OrderStatusParamPatchType,
+  ): Promise<OrderStatusDTOType> => {
+    console.log('patchOrderStatus req : ', req);
+    const { data } = await this.axios({
+      method: 'PATCH',
+      url: `/v1/order/status/${req.id}/`, //status id
+      data: req.data,
+      // headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    // const { data } = await this.axios.patch(
+    //   `/v1/order/status/${req.orderId}/`,
+    //   req.data,
+    // );
+
     return data;
   };
 

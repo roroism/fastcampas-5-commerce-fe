@@ -156,10 +156,10 @@ export type OrderByOrderIdDTOType = {
 
 export enum ShippingStatus {
   PAID = 'PAID', // 결제완료
-  WAIT = 'WAIT', // 상품준비
+  WAIT = 'WAIT', // 상품준비중
   INPROGRESS = 'INPROGRESS', // 배송중
   DONE = 'DONE', // 배송완료
-  CANCELED = 'CANCELED', // 주문취소
+  CANCELED = 'CANCELED', // 결제취소
 }
 
 export type OrderStatusDTOType = {
@@ -215,6 +215,14 @@ export type GetOrderStatusDTOType = {
   results: OrderStatusDTOType[];
   productIdList?: { productId: string; id: string; orderId: string }[];
 };
+
+export type OrderStatusParamPatchType = {
+  id: string;
+  // data: FormData;
+  data: { shippingStatus: ShippingStatus };
+};
+
+export type PatchOrderStatusDTOType = {};
 
 export type ExampleParamPutType = {
   id: string;

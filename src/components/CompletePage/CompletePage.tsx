@@ -30,9 +30,9 @@ import {
 } from '@apis/reactquery/QueryApi.type';
 import useAppStore from '@features/useAppStore';
 
-import OrderItem from '@components/OrderPage/_fragments/OrderItem';
-
 import { LAYOUT } from '@constants/layout';
+
+import PaymentItem from './_fragments/PaymentItem';
 
 import priceFormat from 'hooks/priceFormat';
 
@@ -64,41 +64,42 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
         enabled: !!orderId,
       },
     });
-  const { data: paymentProduct } = useGetSuccessPaymentProductsQuery({
-    //status
-    variables: userData?.id,
-    options: {
-      enabled: !!paymentByOrderIdData && !!userData,
-      // onSuccess: (data: IorderHistoryProduct[]) => {
-      //   console.log('data : ', data);
-      //   setOrderList(data);
-      // },
-      // select: ({ results }: GetOrderStatusDTOType) => {
-      //   console.log(
-      //     'results.filter ; ',
-      //     results.filter(
-      //       (item: OrderStatusDTOType) => item.orderId === orderId,
-      //     ),
-      //   );
-      //   return results.filter(
-      //     (item: OrderStatusDTOType) => item.orderId === orderId,
-      //   );
-      // },
-      onSuccess: ({ results }: GetOrderStatusDTOType) => {
-        const result = results.filter(
-          (item: OrderStatusDTOType) => item.orderId === orderId,
-        );
-        console.log('onSuccess :: ', result);
-        setOrderList(result);
+  const { data: paymentProduct, isLoading: isPaymentLoading } =
+    useGetSuccessPaymentProductsQuery({
+      //status
+      variables: userData?.id,
+      options: {
+        enabled: !!paymentByOrderIdData && !!userData,
+        // onSuccess: (data: IorderHistoryProduct[]) => {
+        //   console.log('data : ', data);
+        //   setOrderList(data);
+        // },
+        // select: ({ results }: GetOrderStatusDTOType) => {
+        //   console.log(
+        //     'results.filter ; ',
+        //     results.filter(
+        //       (item: OrderStatusDTOType) => item.orderId === orderId,
+        //     ),
+        //   );
+        //   return results.filter(
+        //     (item: OrderStatusDTOType) => item.orderId === orderId,
+        //   );
+        // },
+        onSuccess: ({ results }: GetOrderStatusDTOType) => {
+          const result = results.filter(
+            (item: OrderStatusDTOType) => item.orderId === orderId,
+          );
+          console.log('onSuccess :: ', result);
+          setOrderList(result);
+        },
       },
-    },
-  });
+    });
 
   const { query: productData } = useGetProductByIdQueries2(
     {
       // options: { enabled: !!productIdList },
       options: {
-        enabled: !!paymentProduct,
+        enabled: !!paymentProduct && orderList.length > 0,
         // suspense: true,
         onSuccess: (data) => {
           console.log('cart data : ', data);
@@ -163,13 +164,18 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
             gap="10px"
           >
             <Skeleton
-              isLoaded={!productData.some((result) => result.isLoading)}
-              fadeDuration={1.5}
+              isLoaded={
+                !productData.some(
+                  (result) =>
+                    result.isLoading && !isOrderLoading && !isPaymentLoading,
+                )
+              }
+              fadeDuration={1}
               startColor="white"
               endColor="white"
             >
               {orderList?.map((product, idx) => (
-                <OrderItem
+                <PaymentItem
                   key={idx}
                   product={product}
                   shippingStatus={product.shippingStatus}
@@ -184,50 +190,62 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
         <Text as="h4" fontWeight="700" fontSize="1rem" py="14px">
           배송지 정보
         </Text>
-        <VStack
-          fontWeight="400"
-          fontSize="1rem"
-          spacing="10px"
-          pt="15px"
-          pb="24px"
-          justify="flex-start"
-          w="full"
+
+        <Skeleton
+          isLoaded={
+            !productData.some((result) => result.isLoading) &&
+            !isOrderLoading &&
+            !isPaymentLoading
+          }
+          fadeDuration={1}
+          startColor="white"
+          endColor="white"
         >
-          <HStack spacing="10px" w="full">
-            <Box w="92px">이름</Box>
-            <Box as="p" color="gray.700">
-              {paymentByOrderIdData?.shipName}
-            </Box>
-          </HStack>
-          <HStack spacing="10px" w="full">
-            <Box w="92px">핸드폰 번호</Box>
-            <Box as="p" color="gray.700">
-              {paymentByOrderIdData?.shipPhone.replace(
-                /^(\d{2,3})(\d{3,4})(\d{4})$/,
-                `$1-$2-$3`,
-              )}
-            </Box>
-          </HStack>
-          <HStack spacing="10px" w="full">
-            <Box w="92px">우편번호</Box>
-            <Box as="p" color="gray.700">
-              {paymentByOrderIdData?.shipAddrPost}
-            </Box>
-          </HStack>
-          <HStack spacing="10px" w="full" alignItems="flex-start">
-            <Box w="92px">주소</Box>
-            <Box as="p" w="214px" color="gray.700" overflow="hidden">
-              {paymentByOrderIdData?.shipAddrPost}&nbsp;
-              {paymentByOrderIdData?.shipAddrDetail}
-            </Box>
-          </HStack>
-          <HStack spacing="10px" w="full">
-            <Box w="92px">배송요청사항</Box>
-            <Box as="p" color="gray.700">
-              {paymentByOrderIdData?.orderMessage}
-            </Box>
-          </HStack>
-        </VStack>
+          <VStack
+            fontWeight="400"
+            fontSize="1rem"
+            spacing="10px"
+            pt="15px"
+            pb="24px"
+            justify="flex-start"
+            w="full"
+          >
+            <HStack spacing="10px" w="full">
+              <Box w="92px">이름</Box>
+              <Box as="p" color="gray.700">
+                {paymentByOrderIdData?.shipName}
+              </Box>
+            </HStack>
+            <HStack spacing="10px" w="full">
+              <Box w="92px">핸드폰 번호</Box>
+              <Box as="p" color="gray.700">
+                {paymentByOrderIdData?.shipPhone.replace(
+                  /^(\d{2,3})(\d{3,4})(\d{4})$/,
+                  `$1-$2-$3`,
+                )}
+              </Box>
+            </HStack>
+            <HStack spacing="10px" w="full">
+              <Box w="92px">우편번호</Box>
+              <Box as="p" color="gray.700">
+                {paymentByOrderIdData?.shipAddrPost}
+              </Box>
+            </HStack>
+            <HStack spacing="10px" w="full" alignItems="flex-start">
+              <Box w="92px">주소</Box>
+              <Box as="p" w="214px" color="gray.700" overflow="hidden">
+                {paymentByOrderIdData?.shipAddrPost}&nbsp;
+                {paymentByOrderIdData?.shipAddrDetail}
+              </Box>
+            </HStack>
+            <HStack spacing="10px" w="full">
+              <Box w="92px">배송요청사항</Box>
+              <Box as="p" color="gray.700">
+                {paymentByOrderIdData?.orderMessage}
+              </Box>
+            </HStack>
+          </VStack>
+        </Skeleton>
       </Box>
 
       <Box mt="10px" bgColor="white" px="16px">

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { ChakraProps } from '@chakra-ui/react';
+import { ChakraProps, useDisclosure } from '@chakra-ui/react';
 
 import instance, { setAuthHeader } from '@apis/_axios/instance';
 import { usePatchMyInfoMutation } from '@apis/reactquery/QueryApi.mutation';
@@ -11,10 +11,16 @@ import { setToken } from '@utils/localStorage/token';
 
 import customEditUseForm from './CustomEditUseForm';
 import EditPageView from './EditPage.view';
+import EditSuccessModal from './_fragments/EditSuccessModal';
 
 interface EditPageProps extends ChakraProps {}
 
 function EditPage({ ...basisProps }: EditPageProps) {
+  const {
+    isOpen: EditSuccessIsOpen,
+    onOpen: EditSuccessOnOpen,
+    onClose: EditSuccessOnClose,
+  } = useDisclosure();
   const formData = customEditUseForm();
   const { handleSubmit } = formData;
   const { mutate } = usePatchMyInfoMutation({
@@ -22,6 +28,8 @@ function EditPage({ ...basisProps }: EditPageProps) {
       onSuccess: (res) => {
         // 성공했을때 실행하는 함수
         console.log('mutate success : ', res);
+
+        EditSuccessOnOpen();
       },
       onError: (err) => {
         // 실패했을때 실행하는 함수
@@ -110,7 +118,16 @@ function EditPage({ ...basisProps }: EditPageProps) {
     //   });
   });
 
-  return <EditPageView formData={formData} onSubmit={onSubmit} />;
+  return (
+    <>
+      <EditPageView formData={formData} onSubmit={onSubmit} />
+      <EditSuccessModal
+        title="review write success modal"
+        isOpen={EditSuccessIsOpen}
+        onClose={EditSuccessOnClose}
+      />
+    </>
+  );
 }
 
 export default EditPage;

@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 import { RequestFnReturn } from '@apis/type';
@@ -7,9 +7,10 @@ import { bytesToMB, isOverSize, mbToBytes } from '@utils/file';
 
 export class S3FileUploaderApi {
   axios: AxiosInstance = instance;
-  constructor(axios?: AxiosInstance) {
-    if (axios) this.axios = axios;
-  }
+  axiosOrigin: AxiosInstance = axios;
+  // constructor(axios?: AxiosInstance) {
+  //   if (axios) this.axios = axios;
+  // }
 
   private _createPresignedUrl = async (
     name: string,
@@ -24,7 +25,8 @@ export class S3FileUploaderApi {
 
   private _uploadFileToS3 = async (params: { url: string; file: File }) => {
     const { url, file } = params;
-    await this.axios({
+    console.log('url, file : ', url, file);
+    await this.axiosOrigin({
       method: 'PUT',
       url,
       data: file,

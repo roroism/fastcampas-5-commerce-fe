@@ -1,3 +1,5 @@
+import NextLink from 'next/link';
+
 import {
   As,
   Box,
@@ -5,6 +7,7 @@ import {
   ChakraProps,
   Flex,
   Image,
+  Link,
   Skeleton,
   Text,
   useDisclosure,
@@ -176,20 +179,27 @@ const OrderItem = ({
         </Flex>
       ) : product.shippingStatus === ShippingStatus.DONE ? (
         <Flex justifyContent="right">
-          <Button
-            mt="10px"
-            mb="20px"
-            fontWeight="700"
-            w="140px"
-            h="40px"
-            borderRadius="5px"
-            variant="outline"
-            colorScheme="primary"
-            fontSize="0.75rem"
-            px="45.5px"
+          <NextLink
+            href={`/review/?orderitemid=${product.id}&productid=${product.productId}&count=${product.count}&created=${product.created}`}
+            passHref
           >
-            리뷰작성
-          </Button>
+            <Link>
+              <Button
+                mt="10px"
+                mb="20px"
+                fontWeight="700"
+                w="140px"
+                h="40px"
+                borderRadius="5px"
+                variant="outline"
+                colorScheme="primary"
+                fontSize="0.75rem"
+                px="45.5px"
+              >
+                리뷰작성
+              </Button>
+            </Link>
+          </NextLink>
         </Flex>
       ) : null}
 

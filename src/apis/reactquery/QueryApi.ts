@@ -30,6 +30,8 @@ import {
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
   ProductParamGetType,
+  ReviewDTOType,
+  ReviewParamPostType,
   getOrderStatusForSuccessPaymentParamGetType,
   putOrderByOrderIdParamPutType,
 } from './QueryApi.type';
@@ -269,6 +271,16 @@ export class ProductApi {
     //   req.data,
     // );
 
+    return data;
+  };
+
+  postReview = async (req: ReviewParamPostType): Promise<ReviewDTOType> => {
+    const { data } = await this.axios({
+      method: 'POST',
+      url: `/v1/review/`,
+      data: req,
+      // headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return data;
   };
 

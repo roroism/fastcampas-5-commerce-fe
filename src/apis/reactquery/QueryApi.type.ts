@@ -171,6 +171,21 @@ export type OrderStatusDTOType = {
   created: string;
 };
 
+export type ReviewDTOType = {
+  id: number;
+  userId: number;
+  nickname: string;
+  productId: number;
+  orderItemId: number;
+  rate: number;
+  content: string;
+  reviewimageSet: Array<{
+    reviewId: number;
+    url: string;
+  }>;
+  created: Date;
+};
+
 export type CartParamGetType = {};
 
 export type CartParamPostType = {};
@@ -220,6 +235,15 @@ export type OrderStatusParamPatchType = {
   id: string;
   // data: FormData;
   data: { shippingStatus: ShippingStatus };
+};
+
+export type ReviewParamPostType = {
+  userId: number;
+  productId: number;
+  orderItemId: number;
+  rate: number;
+  content: string;
+  reviewimagePath?: Array<string | undefined> | undefined;
 };
 
 export type PatchOrderStatusDTOType = {};

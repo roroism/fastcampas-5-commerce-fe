@@ -57,7 +57,7 @@ const EditPageView = ({
 }: EditPageViewProp) => {
   const [preview, setPreview] = useState<string>('');
   const avatarRef = useRef<HTMLInputElement>(null);
-  const [img, setImg] = useState(avatarRef.current?.files);
+  // const [img, setImg] = useState(avatarRef.current?.files);
   const { data: myInfo } = useGetMyInfoQuery();
 
   const router = useRouter();
@@ -70,7 +70,7 @@ const EditPageView = ({
   console.log(watch());
 
   useEffect(() => {
-    console.log('출력');
+    // console.log('출력');
     if (myInfo?.name) setValue('name', myInfo?.name);
     if (myInfo?.nickname) setValue('nickname', myInfo?.nickname);
     if (myInfo?.email) setValue('email', myInfo?.email);
@@ -84,7 +84,9 @@ const EditPageView = ({
     if (myInfo?.profile) setPreview(myInfo?.profile);
     setValue(
       'profile',
-      myInfo?.profile?.substring(myInfo?.profile?.lastIndexOf('/')) || '',
+      `media/${
+        myInfo?.profile?.substring(myInfo?.profile?.lastIndexOf('/')) || ''
+      }`,
     );
     // setValue('profile', myInfo?.profile || '');
   }, [myInfo]);
@@ -106,7 +108,7 @@ const EditPageView = ({
       return;
     } else {
       // if (avatarRef.current?.files) {
-      setImg(avatarRef.current?.files);
+      // setImg(avatarRef.current?.files);
       const file = avatarRef.current?.files[0];
       setPreview(URL.createObjectURL(file));
 
@@ -140,7 +142,6 @@ const EditPageView = ({
               },
             )
             .then((res) => {
-              console.log('success : s3 file upload res : ', res);
               console.log(
                 'success : s3 file upload resPresignedUrl : ',
                 resPresignedUrl,
@@ -167,18 +168,9 @@ const EditPageView = ({
   return (
     <>
       <Box {...basisProps} mt="130px">
-        {/* <NextLink href="/mypage/edit" passHref>
-          <Link>
-            <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
-              회원정보수정
-            </Text>
-          </Link>
-        </NextLink> */}
-        <a href="/mypage/edit">
-          <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
-            회원정보수정
-          </Text>
-        </a>
+        <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
+          회원정보수정
+        </Text>
 
         <Box as="form" onSubmit={onSubmit} {...basisProps}>
           <Text as="h3" fontWeight="700">

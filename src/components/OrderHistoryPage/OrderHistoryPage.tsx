@@ -70,6 +70,7 @@ export type GetOrderStatusSelectType = {
 };
 
 export const PAGE_SIZE = 5;
+export const PAGE_NUMBER_SIZE = 5;
 
 interface OrderHistoryPageProps extends ChakraProps {}
 
@@ -303,7 +304,22 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
       result.push(<div key="prevarrow" style={{ width: '9px' }}></div>);
     }
     console.log('queryPage : ', queryPage);
-    for (let i = 0; i < Math.ceil(countAll / PAGE_SIZE); i++) {
+
+    const lastPageNumber = Math.ceil(countAll / PAGE_SIZE);
+    const beginPageNumber: number =
+      Math.floor((Number(queryPage) - 1) / PAGE_NUMBER_SIZE) * PAGE_NUMBER_SIZE;
+    let endPageNumber: number;
+    if (
+      beginPageNumber <= lastPageNumber &&
+      lastPageNumber < beginPageNumber + 5
+    ) {
+      endPageNumber = lastPageNumber;
+    } else {
+      endPageNumber = beginPageNumber + 5;
+    }
+
+    // for (let i = 0; i < Math.ceil(countAll / PAGE_SIZE); i++) {
+    for (let i = beginPageNumber; i < endPageNumber; i++) {
       result.push(
         <div key={i + 1}>
           <NextLink href={`/mypage/history/${i + 1}`} scroll={false} passHref>
@@ -440,7 +456,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
         </Box>
       )}
       <Flex gap="30px" justifyContent="center" my="50px">
-        {pageNumberRendering()}
+        {!isLoadingOrderStatus && pageNumberRendering()}
       </Flex>
     </Box>
   );

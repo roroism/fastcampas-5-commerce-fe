@@ -17,6 +17,7 @@ import {
   CartParamGetType,
   GetOrderStatusDTOType,
   MyInfoParamGetType,
+  MyReviewParamGetType,
   OrderByOrderIdInfinityParamGetType,
   OrderParamGetType,
   OrderStatusDTOType,
@@ -348,6 +349,26 @@ export function useGetSuccessPaymentProductsQuery(
   >(
     queryKey,
     () => productApi.getOrderStatusForSuccessPayment(params?.variables),
+    params?.options,
+  );
+
+  return { ...query, queryKey };
+}
+
+export const MY_REVIEW_API_QUERY_KEY = {
+  GET: (param: MyReviewParamGetType) => ['my-review', param.page],
+};
+
+export function useGetMyReviewQuery(
+  params: QueryHookParams<typeof productApi.getReview>,
+) {
+  // console.log('params?.variables : ', params?.variables);
+  const queryKey = MY_REVIEW_API_QUERY_KEY.GET(
+    params?.variables as MyReviewParamGetType,
+  );
+  const query = useQuery(
+    queryKey,
+    () => productApi.getReview(params?.variables),
     params?.options,
   );
 

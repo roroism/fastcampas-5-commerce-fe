@@ -248,6 +248,33 @@ export type ReviewParamPostType = {
 
 export type PatchOrderStatusDTOType = {};
 
+export type MyReviewParamGetType = {
+  id: number;
+  page: number;
+};
+
+export type myReviewType = {
+  id: number;
+  userId: number;
+  nickname: string;
+  productId: number;
+  orderItemId: number;
+  rate: number;
+  content: string;
+  reviewimageSet: Array<{
+    reviewId: number;
+    url: string;
+  }>;
+  created: string;
+};
+
+export type GetMyReviewDTOType = {
+  count: number;
+  next: string;
+  previous: string;
+  results: Array<myReviewType>;
+};
+
 export type ExampleParamPutType = {
   id: string;
   data: ProductDTOType;

@@ -15,7 +15,6 @@ function StarRating({ starRating = 1, width = '10px' }: StarRatingProps) {
           src="/icons/svg/star_yellow.svg"
           w={width}
           alt={`star ${i}`}
-          _hover={{ cursor: 'pointer' }}
         />,
       );
     }
@@ -26,7 +25,6 @@ function StarRating({ starRating = 1, width = '10px' }: StarRatingProps) {
           src="/icons/svg/star_gray.svg"
           w={width}
           alt={`star ${i}`}
-          _hover={{ cursor: 'pointer' }}
         />,
       );
     }

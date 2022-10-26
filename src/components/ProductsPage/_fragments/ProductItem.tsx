@@ -33,7 +33,7 @@ interface ProductItemProps extends ChakraProps {
     price: number;
     capacity: number;
     thumbnail: string;
-    tags: Array<{ id: number; name: string }>;
+    tag: Array<{ id: number; name: string }>;
     avgRate: number | null;
     reviewCount: number;
   };
@@ -114,7 +114,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
             color="gray.700"
             gap="5px"
           >
-            {product?.tags.map((tag, idx) => (
+            {product?.tag.map((tag, idx) => (
               <ListItem key={idx}># {tag.name}</ListItem>
             ))}
           </UnorderedList>

@@ -28,7 +28,7 @@ interface IProduct {
   price: number;
   capacity: number;
   thumbnail: string;
-  tags: Array<{ id: number; name: string }>;
+  tag: Array<{ id: number; name: string }>;
   avgRate: number | null;
   reviewCount: number;
 }

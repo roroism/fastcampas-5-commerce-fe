@@ -1,27 +1,35 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 
-import { ChakraProps } from '@chakra-ui/react';
+import { ChakraProps, useDisclosure } from '@chakra-ui/react';
 
 import instance, { setAuthHeader } from '@apis/_axios/instance';
 import { usePatchMyInfoMutation } from '@apis/reactquery/QueryApi.mutation';
-import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
+import {
+  MYINFO_API_QUERY_KEY,
+  useGetMyInfoQuery,
+} from '@apis/reactquery/QueryApi.query';
 
+import { useQueryClient } from '@tanstack/react-query';
 import { setToken } from '@utils/localStorage/token';
 
 import customEditUseForm from './CustomEditUseForm';
 import EditPageView from './EditPage.view';
+import EditSuccessModal from './_fragments/EditSuccessModal';
 
 interface EditPageProps extends ChakraProps {}
 
 function EditPage({ ...basisProps }: EditPageProps) {
   const formData = customEditUseForm();
   const { handleSubmit } = formData;
+  const queryClient = useQueryClient();
   const { mutate } = usePatchMyInfoMutation({
     options: {
       onSuccess: (res) => {
         // 성공했을때 실행하는 함수
         console.log('mutate success : ', res);
+        queryClient.invalidateQueries(MYINFO_API_QUERY_KEY.GET());
+        EditSuccessOnOpen();
       },
       onError: (err) => {
         // 실패했을때 실행하는 함수
@@ -29,6 +37,11 @@ function EditPage({ ...basisProps }: EditPageProps) {
       },
     },
   });
+  const {
+    isOpen: EditSuccessIsOpen,
+    onOpen: EditSuccessOnOpen,
+    onClose: EditSuccessOnClose,
+  } = useDisclosure();
 
   const onSubmit = handleSubmit((data) => {
     console.log(
@@ -110,7 +123,16 @@ function EditPage({ ...basisProps }: EditPageProps) {
     //   });
   });
 
-  return <EditPageView formData={formData} onSubmit={onSubmit} />;
+  return (
+    <>
+      <EditPageView formData={formData} onSubmit={onSubmit} />
+      <EditSuccessModal
+        title="review write success modal"
+        isOpen={EditSuccessIsOpen}
+        onClose={EditSuccessOnClose}
+      />
+    </>
+  );
 }
 
 export default EditPage;

@@ -101,7 +101,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
               </NextLink>
             </Box>
             <Box w="33.33%">
-              <NextLink href="/review" passHref>
+              <NextLink href="/review/myreview" passHref>
                 <Link
                   display="flex"
                   flexDirection="column"

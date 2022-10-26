@@ -21,6 +21,7 @@ import {
   Select,
   Text,
   VStack,
+  VisuallyHidden,
   useColorMode,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -56,12 +57,12 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
   const orderingPhotoRef = useRef<HTMLSelectElement>(null);
   const orderInfoButtonRef = useRef<HTMLButtonElement>(null);
 
-  console.log('router.query : ', query.id);
-  console.log('data : ', data);
-  console.log('countRate : ', countRate);
+  // console.log('router.query : ', query.id);
+  // console.log('data : ', data);
+  // console.log('countRate : ', countRate);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log('handleOrderingOnChange : ', data?.reviewList);
+    // console.log('handleOrderingOnChange : ', data?.reviewList);
     e.preventDefault();
     if (!data?.reviewList) {
       return;
@@ -191,12 +192,13 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
   };
 
   return (
-    <Box minH="100vh">
+    <Box minH="100vh" bgColor="gray.100">
+      <VisuallyHidden as="h2">main contents</VisuallyHidden>
       {!isLoading && (
         <>
-          <Box {...basisProps} pt="120px" pb="80px" px="16px">
+          <Box {...basisProps} pt="120px" pb="80px">
             <Box>
-              <Box w="100%" minH="300px" overflow="hidden">
+              <Box w="100%" minH="300px" overflow="hidden" h="300px">
                 <Box>
                   <Image
                     w="100%"
@@ -207,20 +209,28 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                 </Box>
               </Box>
               <Box
+                bgColor="white"
                 mt="20px"
                 borderTopRadius="20px"
                 boxShadow="0px -12px 10px -10px rgba(26, 26, 26, 0.1)"
+                position="relative"
+                _before={{
+                  position: 'absolute',
+                  left: '0',
+                  right: '0',
+                  margin: '0 auto',
+                  top: '10px',
+                  content: '""',
+                  height: '5px',
+                  width: '50px',
+                  bgColor: 'gray.200',
+                  borderRadius: '2.5px',
+                }}
               >
                 <Flex flexDirection="column" ml="16px" pt="30px">
                   <Flex fontSize="1.25rem">
                     <Box as="strong">{data?.name}</Box>
-                    <Box
-                      as="span"
-                      style={{
-                        paddingLeft: '5px',
-                        color: 'gray.600',
-                      }}
-                    >
+                    <Box as="span" color="gray.600" pl="5px">
                       {data?.capacity}ml
                     </Box>
                   </Flex>
@@ -337,6 +347,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                 ref={detailInfoRef}
                 overflow="hidden"
               >
+                <VisuallyHidden as="h3">상세정보</VisuallyHidden>
                 <Box
                   dangerouslySetInnerHTML={{ __html: data?.detail || '' }}
                 ></Box>
@@ -359,6 +370,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                           {...ButtonStyle}
                           _expanded={{ border: '1px solid black' }}
                           border="1px solid black"
+                          bgColor="white"
                         >
                           {isExpanded ? (
                             <Box as="span" fontWeight="700" flex="1">
@@ -416,7 +428,8 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
               </Accordion>
             </Box>
 
-            <Box px="16px">
+            <Box px="16px" bgColor="white">
+              <VisuallyHidden as="h3">리뷰</VisuallyHidden>
               <HStack pt="51px" pb="30px" justify="space-between">
                 <Box ref={reviewRef} fontWeight="700">
                   리뷰&nbsp;
@@ -458,7 +471,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                 </HStack>
               </HStack>
               <Flex justify="space-between" alignItems="center" pb="21px">
-                <HStack spacing={0}>
+                <HStack spacing="0" w="50%">
                   <Box
                     fontWeight="700"
                     bg="primary.500"
@@ -474,8 +487,15 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                     starRating={Number(data?.avgRate?.toFixed())}
                   ></StarRating>
                 </HStack>
-                <Box w="1px" h="70px" bg="gray.200"></Box>
-                <VStack spacing={0} alignItems="center">
+                {/* <Box w="1px" h="70px" bg="gray.200"></Box> */}
+                <VStack
+                  spacing="0"
+                  alignItems="center"
+                  w="50%"
+                  boxSizing="border-box"
+                  borderLeft="1px solid"
+                  borderColor="gray.200"
+                >
                   <HStack spacing="23px">
                     {data?.reviewList &&
                       countRate &&
@@ -491,7 +511,8 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                   </HStack>
                   <Box w="150px" h="1px" bg="gray.200"></Box>
                   <HStack
-                    fontWeight="0.75rem"
+                    fontSize="0.75rem"
+                    fontWeight="400"
                     spacing="15px"
                     mt="4px"
                     color="gray.600"

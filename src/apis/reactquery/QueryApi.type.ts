@@ -32,6 +32,13 @@ export type ProductDetailDTOType = {
   reviewCount: number;
 };
 
+export type ReviewReplyDTOType = {
+  id: number; // reply id
+  replyUserNickname: string;
+  content: string;
+  created: Date;
+};
+
 export type MyInfoDTOType = {
   id?: number;
   name: string;

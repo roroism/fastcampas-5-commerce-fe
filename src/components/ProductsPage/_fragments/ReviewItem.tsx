@@ -19,6 +19,7 @@ export interface Ireview {
   rate: number;
   reviewimageSet: Array<{ reviewId: number; url: string }>;
   userId: number;
+  reviewreplySet?: [];
   orderItemId?: number;
   productId?: number;
 }

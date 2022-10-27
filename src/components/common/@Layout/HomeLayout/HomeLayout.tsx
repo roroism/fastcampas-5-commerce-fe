@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container, ContainerProps } from '@chakra-ui/react';
+import { Box, Container, ContainerProps, Flex } from '@chakra-ui/react';
 
 import { LAYOUT } from '@constants/layout';
 
@@ -21,9 +21,13 @@ const HomeLayout = ({
   content,
 }: HomeLayoutProps) => {
   return (
-    <>
+    <Flex minH="100vh" flexDirection="column">
       {header}
       <Container
+        flexGrow="1"
+        display="flex"
+        flexDirection="column"
+        as="main"
         pt={LAYOUT.HEADER.HEIGHT}
         w={{ base: '375px' }}
         {...containerProps}
@@ -32,7 +36,7 @@ const HomeLayout = ({
         {content}
       </Container>
       {footer}
-    </>
+    </Flex>
   );
 };
 

@@ -7,6 +7,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import { myReviewType } from '@apis/reactquery/QueryApi.type';
+
 import StarRating from '@components/common/StarRating/StarRating';
 
 export interface Ireview {
@@ -17,10 +19,14 @@ export interface Ireview {
   rate: number;
   reviewimageSet: Array<{ reviewId: number; url: string }>;
   userId: number;
+  reviewreplySet?: [];
+  orderItemId?: number;
+  productId?: number;
 }
 
 interface ReviewItemProps extends ChakraProps {
   review?: Ireview;
+  // myReview?: myReviewType;
 }
 
 function ReviewItem({ review }: ReviewItemProps) {
@@ -52,7 +58,13 @@ function ReviewItem({ review }: ReviewItemProps) {
         >
           {review?.content}
         </Box>
-        <HStack spacing="10px" w="full" justify="flex-start" pt="9px">
+        <HStack
+          spacing="10px"
+          w="full"
+          justify="flex-start"
+          pt="9px"
+          color="transparent"
+        >
           {review?.reviewimageSet.map((photo, idx) => (
             <Image
               key={idx}
@@ -60,6 +72,7 @@ function ReviewItem({ review }: ReviewItemProps) {
               w="80px"
               h="80px"
               src={photo.url}
+              alt={`리뷰이미지${idx}`}
             ></Image>
           ))}
         </HStack>

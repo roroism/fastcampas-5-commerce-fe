@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
+import { MY_REVIEW_PAGE_SIZE } from '@components/MyReviewPage/MyReviewPage';
 import { PAGE_SIZE } from '@components/OrderHistoryPage/OrderHistoryPage';
 
 import {
@@ -11,11 +12,13 @@ import {
   ExampleDTOType,
   ExampleParamPatchType,
   ExampleParamPutType,
+  GetMyReviewDTOType,
   GetOrderStatusDTOType,
   IOrderForm,
   MyInfoDTOType,
   MyInfoParamGetType,
   MyInfoParamPatchType,
+  MyReviewParamGetType,
   OrderByOrderIdDTOType,
   OrderByOrderIdParamGetType,
   OrderDTOType,
@@ -280,6 +283,16 @@ export class ProductApi {
       url: `/v1/review/`,
       data: req,
       // headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data;
+  };
+
+  getReview = async (
+    params?: MyReviewParamGetType,
+  ): Promise<GetMyReviewDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/review/?user_id=${params?.id}&page=${params?.page}&page_size=${MY_REVIEW_PAGE_SIZE}`,
     });
     return data;
   };

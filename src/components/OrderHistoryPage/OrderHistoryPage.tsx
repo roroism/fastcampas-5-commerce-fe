@@ -428,7 +428,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
   }, [orderStatusList]);
 
   return (
-    <Box mt={LAYOUT.HEADER.HEIGHT} {...basisProps}>
+    <Box mt={LAYOUT.HEADER.HEIGHT} {...basisProps} minH="100vh">
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Text as="h3" fontWeight="700" fontSize="1.25rem" px="16px">
         주문내역
@@ -443,7 +443,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
           </Box>
         </Box>
       ) : (
-        <Box {...basisProps} h="53vh">
+        <Box {...basisProps}>
           <Flex w="full" h="full" justify="center" alignItems="center">
             <Spinner
               thickness="4px"

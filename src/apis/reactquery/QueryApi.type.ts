@@ -32,6 +32,13 @@ export type ProductDetailDTOType = {
   reviewCount: number;
 };
 
+export type ReviewReplyDTOType = {
+  id: number; // reply id
+  replyUserNickname: string;
+  content: string;
+  created: Date;
+};
+
 export type MyInfoDTOType = {
   id?: number;
   name: string;
@@ -247,6 +254,33 @@ export type ReviewParamPostType = {
 };
 
 export type PatchOrderStatusDTOType = {};
+
+export type MyReviewParamGetType = {
+  id: number;
+  page: number;
+};
+
+export type myReviewType = {
+  id: number;
+  userId: number;
+  nickname: string;
+  productId: number;
+  orderItemId: number;
+  rate: number;
+  content: string;
+  reviewimageSet: Array<{
+    reviewId: number;
+    url: string;
+  }>;
+  created: string;
+};
+
+export type GetMyReviewDTOType = {
+  count: number;
+  next: string;
+  previous: string;
+  results: Array<myReviewType>;
+};
 
 export type ExampleParamPutType = {
   id: string;

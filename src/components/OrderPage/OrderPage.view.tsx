@@ -15,6 +15,7 @@ import {
   Text,
   UnorderedList,
   VStack,
+  VisuallyHidden,
 } from '@chakra-ui/react';
 
 import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
@@ -143,6 +144,7 @@ function OrderPageView({
   // console.log('OrderPage paymentList ::: ', paymentList);
   return (
     <Box mt={LAYOUT.HEADER.HEIGHT} px="16px" pb="80px">
+      <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Box as="form" onSubmit={onSubmit}>
         <input type="hidden" {...register('userId')} />
         <input type="hidden" {...register('price')} />

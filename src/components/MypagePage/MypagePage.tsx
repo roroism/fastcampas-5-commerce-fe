@@ -47,6 +47,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
         {...basisProps}
         bgColor="gray.100"
         pb="30px"
+        flexGrow="1"
       >
         <VisuallyHidden as="h2">main contents</VisuallyHidden>
 

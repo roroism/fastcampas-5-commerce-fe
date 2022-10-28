@@ -7,7 +7,10 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { myReviewType } from '@apis/reactquery/QueryApi.type';
+import {
+  ReviewReplySetType,
+  myReviewType,
+} from '@apis/reactquery/QueryApi.type';
 
 import StarRating from '@components/common/StarRating/StarRating';
 
@@ -19,13 +22,7 @@ export interface Ireview {
   rate: number;
   reviewimageSet: Array<{ reviewId: number; url: string }>;
   userId: number;
-  reviewreplySet?: Array<{
-    id: number;
-    reviewId: number;
-    replyUserNickname: string;
-    content: string;
-    created: Date;
-  }>;
+  reviewreplySet?: Array<ReviewReplySetType>;
   orderItemId?: number;
   productId?: number;
 }

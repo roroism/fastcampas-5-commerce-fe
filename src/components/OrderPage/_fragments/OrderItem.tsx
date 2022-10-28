@@ -24,7 +24,7 @@ import { PaymentProductType } from '../types';
 import priceFormat from 'hooks/priceFormat';
 
 export interface IOrderItem {
-  id: number | null; // cartitem id
+  id: number | null; // cartitem id or order status id
   productId: number;
   cartId?: number;
   count: number;

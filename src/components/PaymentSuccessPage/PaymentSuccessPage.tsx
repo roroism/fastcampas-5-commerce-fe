@@ -156,6 +156,7 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
             'userAddrPost',
             paymentByOrderIdData?.userAddrPost as string,
           ); // 주소
+          form.append('userAddr', paymentByOrderIdData?.userAddr as string); // 주소
           form.append(
             'userAddrDetail',
             paymentByOrderIdData?.userAddrDetail as string,
@@ -166,6 +167,7 @@ function PaymentSuccessPage({ ...basisProps }: PaymentSuccessPageProps) {
             'shipAddrPost',
             paymentByOrderIdData?.shipAddrPost as string,
           ); // 배송지주소
+          form.append('shipAddr', paymentByOrderIdData?.shipAddr as string); // 배송지주소
           form.append(
             'shipAddrDetail',
             paymentByOrderIdData?.shipAddrDetail as string,

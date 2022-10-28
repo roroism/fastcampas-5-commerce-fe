@@ -119,10 +119,12 @@ export type OrderDTOType = {
   userName: string;
   userPhone: string;
   userAddrPost: string;
+  userAddr: string;
   userAddrDetail: string;
   shipName: string;
   shipPhone: string;
   shipAddrPost: string;
+  shipAddr: string;
   shipAddrDetail: string;
   orderMessage: string;
   created: Date;
@@ -155,10 +157,12 @@ export type OrderByOrderIdDTOType = {
   userName: string;
   userPhone: string;
   userAddrPost: string;
+  userAddr: string;
   userAddrDetail: string;
   shipName: string;
   shipPhone: string;
   shipAddrPost: string;
+  shipAddr: string;
   shipAddrDetail: string;
   orderMessage: string;
   created: Date;
@@ -291,6 +295,43 @@ export type GetMyReviewDTOType = {
   next: string;
   previous: string;
   results: Array<myReviewType>;
+};
+
+export type ProductTagReviewParamGetType = {
+  tagId: number;
+};
+
+export type ReviewReplySetType = {
+  id: number;
+  reviewId: number;
+  replyUserNickname: string;
+  content: string;
+  created: Date;
+};
+
+export type ProductTagReviewType = {
+  id: number;
+  userId: number;
+  nickname: string;
+  rate: number;
+  content: string;
+  reviewimageSet: Array<{
+    id: number;
+    reviewId: number;
+    url: string;
+  }>;
+  created: string;
+  reviewreplySet: Array<ReviewReplySetType>;
+};
+
+export type GetProductTagReviewDTOType = {
+  count?: number;
+  isNext?: boolean;
+  results: Array<{
+    id: number;
+    name: string;
+    reviewList: Array<ProductTagReviewType>;
+  }>; // id: product id
 };
 
 export type ExampleParamPutType = {

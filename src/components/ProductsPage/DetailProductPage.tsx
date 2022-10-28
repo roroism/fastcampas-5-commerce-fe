@@ -203,7 +203,6 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                   <Image
                     w="100%"
                     src={data?.photo}
-                    // src="/images/product/sampleImg.png"
                     // backgroundColor="yellow"
                   />
                 </Box>
@@ -442,7 +441,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                   <Select
                     fontWeight="700"
                     fontSize="0.75rem"
-                    w="115px"
+                    w="86px"
                     h="30px"
                     bg="gray.200"
                     borderRadius="5px"
@@ -457,7 +456,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                   <Select
                     fontWeight="700"
                     fontSize="0.75rem"
-                    w="100px"
+                    w="97px"
                     h="30px"
                     bg="gray.200"
                     borderRadius="5px"

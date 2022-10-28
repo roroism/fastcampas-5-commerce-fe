@@ -19,7 +19,13 @@ export interface Ireview {
   rate: number;
   reviewimageSet: Array<{ reviewId: number; url: string }>;
   userId: number;
-  reviewreplySet?: [];
+  reviewreplySet?: Array<{
+    id: number;
+    reviewId: number;
+    replyUserNickname: string;
+    content: string;
+    created: Date;
+  }>;
   orderItemId?: number;
   productId?: number;
 }
@@ -77,28 +83,42 @@ function ReviewItem({ review }: ReviewItemProps) {
           ))}
         </HStack>
       </VStack>
-      {/* {review.reply && (
-        <Flex w="full" pt="6px" pb="30px">
-          <Box pr="9px">
-            <Image src="/icons/svg/review/reply.svg" />
-          </Box>
-          <VStack spacing={0}>
-            <Flex w="full" justify="space-between">
-              <Box fontWeight="700" fontSize="0.75rem">인코스런 관리자</Box>
+      {review?.reviewreplySet &&
+        review?.reviewreplySet?.length > 0 &&
+        review?.reviewreplySet.map((reply) => (
+          <>
+            <Flex w="full" pt="6px" pb="30px">
+              <Box pr="9px" pt="4px" w="29px">
+                <Image src="/icons/svg/review/reply.svg" alt="admin icon" />
+              </Box>
+              <VStack spacing={0}>
+                <Flex w="full" justify="space-between">
+                  <Box fontWeight="700" fontSize="0.75rem">
+                    {reply?.replyUserNickname}
+                  </Box>
+                </Flex>
+                <Box
+                  color="gray.600"
+                  fontWeight="400"
+                  fontSize="0.75rem"
+                  w="full"
+                >
+                  {reply?.created.toString().split('T')[0].replace(/-/g, '.')}
+                </Box>
+                <Box
+                  as="p"
+                  fontSize="1rem"
+                  fontWeight="400"
+                  lineHeight="1.5em"
+                  w="full"
+                  pt="20px"
+                >
+                  {reply?.content}
+                </Box>
+              </VStack>
             </Flex>
-            <Box color="gray.600"
-          fontWeight="400"
-          fontSize="0.75rem" w="full">
-              {yearReply}.{monthReply}.{dateReply}
-            </Box>
-            <Box fontSize="1rem"
-          fontWeight="400"
-          lineHeight="1.5em"w="full" pt="20px">
-              {review.reply.content}
-            </Box>
-          </VStack>
-        </Flex>
-      )} */}
+          </>
+        ))}
       <Box w="full" borderBottom="1px solid #F2F3F4"></Box>
     </>
   );

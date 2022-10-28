@@ -2,6 +2,7 @@ import { AxiosInstance } from 'axios';
 
 import instance from '@apis/_axios/instance';
 
+import { TAG_LIMIT, TAG_OFFSET } from '@components/MainPage/MainPage';
 import { MY_REVIEW_PAGE_SIZE } from '@components/MyReviewPage/MyReviewPage';
 import { PAGE_SIZE } from '@components/OrderHistoryPage/OrderHistoryPage';
 
@@ -14,6 +15,7 @@ import {
   ExampleParamPutType,
   GetMyReviewDTOType,
   GetOrderStatusDTOType,
+  GetProductTagReviewDTOType,
   IOrderForm,
   MyInfoDTOType,
   MyInfoParamGetType,
@@ -33,6 +35,7 @@ import {
   ProductInCartItemDTOType,
   ProductInCartItemParamPutType,
   ProductParamGetType,
+  ProductTagReviewParamGetType,
   ReviewDTOType,
   ReviewParamPostType,
   getOrderStatusForSuccessPaymentParamGetType,
@@ -293,6 +296,16 @@ export class ProductApi {
     const { data } = await this.axios({
       method: 'GET',
       url: `/v1/review/?user_id=${params?.id}&page=${params?.page}&page_size=${MY_REVIEW_PAGE_SIZE}`,
+    });
+    return data;
+  };
+
+  getProductTagReview = async (
+    params?: ProductTagReviewParamGetType,
+  ): Promise<GetProductTagReviewDTOType> => {
+    const { data } = await this.axios({
+      method: 'GET',
+      url: `/v1/product/tag/?tag_id=${params?.tagId}&offset=${TAG_OFFSET}&limit=${TAG_LIMIT}`,
     });
     return data;
   };

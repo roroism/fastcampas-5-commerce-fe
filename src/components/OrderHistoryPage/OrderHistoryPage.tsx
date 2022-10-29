@@ -435,29 +435,35 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
       </Text>
       {!productData.some((result: any) => result.isLoading) &&
       !orderData.some((result: any) => result.isLoading) ? (
-        <Box bgColor="white" px="16px" minH="53vh">
-          <Box mt="80px">
-            {!productData.some((result: any) => result.isLoading) &&
-              !orderData.some((result: any) => result.isLoading) &&
-              orderListRender()}
+        <>
+          <Box bgColor="white" px="16px" minH="53vh">
+            <Box mt="80px">
+              {!productData.some((result: any) => result.isLoading) &&
+                !orderData.some((result: any) => result.isLoading) &&
+                orderListRender()}
+            </Box>
           </Box>
-        </Box>
-      ) : (
-        <Box {...basisProps}>
-          <Flex w="full" h="full" justify="center" alignItems="center">
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="primary.500"
-              size="xl"
-            />
+          <Flex gap="30px" justifyContent="center" my="50px">
+            {!isLoadingOrderStatus && pageNumberRendering()}
           </Flex>
-        </Box>
+        </>
+      ) : (
+        <Flex
+          w="full"
+          minH="100vh"
+          h="full"
+          justify="center"
+          alignItems="center"
+        >
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="primary.500"
+            size="xl"
+          />
+        </Flex>
       )}
-      <Flex gap="30px" justifyContent="center" my="50px">
-        {!isLoadingOrderStatus && pageNumberRendering()}
-      </Flex>
     </Box>
   );
 }

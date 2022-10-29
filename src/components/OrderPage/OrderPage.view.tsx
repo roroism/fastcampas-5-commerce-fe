@@ -27,6 +27,7 @@ import OrderItem from './_fragments/OrderItem';
 import { FormOrderDataType, PaymentMethod, PaymentProductType } from './types';
 
 import convenienceInputPhoneNumber from 'hooks/convenienceInputPhoneNumber';
+import priceFormat from 'hooks/priceFormat';
 
 interface OrderPageViewProps extends ChakraProps {
   formData: UseFormReturn<FormOrderDataType>;
@@ -62,9 +63,9 @@ function OrderPageView({
   onSubmit,
   ...basisProps
 }: OrderPageViewProps) {
-  const [orderInfo, setOrderInfo] = useState<FormOrderDataType>();
   const [isAgreement, setIsAgreement] = useState<boolean>(false);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [shippingPrice, setShippingPrice] = useState<number>(0);
+  const [orderPrice, setOrderPrice] = useState<number>(0);
   const { data: userData } = useGetMyInfoQuery();
 
   console.log('watch() : ', watch());
@@ -73,7 +74,14 @@ function OrderPageView({
     const price = paymentList
       .map((item: IpaymentListInOrderStateType) => item.price * item.count)
       .reduce((prev: number, cur: number) => prev + cur, 0);
-    setTotalPrice(price);
+    setOrderPrice(price);
+    if (price >= 30000 || !price) {
+      setShippingPrice(0);
+      // setValue('price', price.toString());
+    } else {
+      setShippingPrice(3000);
+      // setValue('price', (price + 3000).toString());
+    }
     setValue('price', price.toString());
   }, [paymentList]);
 
@@ -376,18 +384,18 @@ function OrderPageView({
           >
             <Flex justifyContent="space-between" color="gray.600">
               <Box>총 상품금액</Box>
-              <Box textAlign="right">{totalPrice}&nbsp;원</Box>
+              <Box textAlign="right">{priceFormat(orderPrice)}&nbsp;원</Box>
             </Flex>
             <Flex justifyContent="space-between" color="gray.600">
               <Box>총 배송비</Box>
-              <Box textAlign="right">0&nbsp;원</Box>
+              <Box textAlign="right">{priceFormat(shippingPrice)}&nbsp;원</Box>
             </Flex>
           </Flex>
           <Box pb="20px">
             <Flex justifyContent="space-between" pt="20px">
               <Box>결제금액</Box>
               <Box as="strong" textAlign="right" color="primary.500">
-                {totalPrice}&nbsp;원
+                {priceFormat(orderPrice + shippingPrice)}&nbsp;원
               </Box>
             </Flex>
           </Box>

@@ -43,8 +43,8 @@ interface CartPageProps extends ChakraProps {}
 
 function CartPage({ ...basisProps }: CartPageProps) {
   const [productIdList, setProductIdList] = useState<Array<string>>();
-  const [totalPrice, setTotalPrice] = useState<string>('');
-  const [checkedPrice, setCheckedPrice] = useState<string>('');
+  const [shippingPrice, setShippingPrice] = useState<number>(0);
+  const [checkedPrice, setCheckedPrice] = useState<number>(0);
   const [isCartitem, setIsCartitem] = useState<boolean>(true);
   const { data: userData } = useGetMyInfoQuery();
   //   {
@@ -162,24 +162,47 @@ function CartPage({ ...basisProps }: CartPageProps) {
   console.log('cartData : ', cartData);
 
   useEffect(() => {
-    setCheckedPrice(
-      (checkItems &&
-        priceFormat(
-          checkItems
-            .map((item) => {
-              const findedProduct = productData.find(
-                (product: any) => product?.data?.id === item.productId,
-              );
+    let checkedPrice = 0;
+    if (checkItems) {
+      checkedPrice = checkItems
+        .map((item) => {
+          const findedProduct = productData.find(
+            (product: any) => product?.data?.id === item.productId,
+          );
 
-              return Number(findedProduct?.data?.price) * item.count;
-            })
-            .reduce(
-              (previousValue, currentValue) => previousValue + currentValue,
-              0,
-            ),
-        )) ||
-        '0',
-    );
+          return Number(findedProduct?.data?.price) * item.count;
+        })
+        .reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          0,
+        );
+    }
+
+    setCheckedPrice(checkedPrice);
+    if (checkedPrice >= 30000 || checkItems.length === 0) {
+      setShippingPrice(0);
+    } else {
+      setShippingPrice(3000);
+    }
+
+    // setCheckedPrice(
+    //   (checkItems &&
+    //     priceFormat(
+    //       checkItems
+    //         .map((item) => {
+    //           const findedProduct = productData.find(
+    //             (product: any) => product?.data?.id === item.productId,
+    //           );
+
+    //           return Number(findedProduct?.data?.price) * item.count;
+    //         })
+    //         .reduce(
+    //           (previousValue, currentValue) => previousValue + currentValue,
+    //           0,
+    //         ),
+    //     )) ||
+    //     '0',
+    // );
   }, [checkItems]);
 
   useEffect(() => {
@@ -266,11 +289,11 @@ function CartPage({ ...basisProps }: CartPageProps) {
           <Flex justifyContent="space-between" color="gray.600">
             <Box>총 상품금액</Box>
             {/* <Box textAlign="right">{totalPrice}&nbsp;원</Box> */}
-            <Box textAlign="right">{checkedPrice}&nbsp;원</Box>
+            <Box textAlign="right">{priceFormat(checkedPrice)}&nbsp;원</Box>
           </Flex>
           <Flex justifyContent="space-between" color="gray.600">
             <Box>총 배송비</Box>
-            <Box textAlign="right">0&nbsp;원</Box>
+            <Box textAlign="right">{priceFormat(shippingPrice)}&nbsp;원</Box>
           </Flex>
         </Flex>
         <Box>
@@ -278,7 +301,7 @@ function CartPage({ ...basisProps }: CartPageProps) {
             <Box>결제금액</Box>
             <Box as="strong" textAlign="right" color="primary.500">
               {/* {totalPrice}&nbsp;원 */}
-              {checkedPrice}&nbsp;원
+              {priceFormat(checkedPrice + shippingPrice)}&nbsp;원
             </Box>
           </Flex>
         </Box>

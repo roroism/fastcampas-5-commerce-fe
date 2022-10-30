@@ -54,14 +54,14 @@ function OrderDrawer({
   //   options: { staleTime: 1800, cacheTime: Infinity },
   // }
   const queryClient = useQueryClient();
-  console.log('queryClient : ', queryClient);
+  // console.log('queryClient : ', queryClient);
   // const userData = queryClient.getQueryData(MYINFO_API_QUERY_KEY.GET());
-  console.log('userData : ', userData);
+  // console.log('userData : ', userData);
   const { data: cartData = [] } = useGetCartQuery({
     variables: userData?.id,
     options: { enabled: !!userData },
   });
-  console.log('OrderDrawer cartData : ', cartData);
+  // console.log('OrderDrawer cartData : ', cartData);
   const [quantity, setQuantity] = useState<number>(1);
   const [totalQuantity, setTotalQuantity] = useState<number>(1);
   const { mutate: mutatingCart } = usePostCartItemMutation(data?.id || 0, {
@@ -102,11 +102,11 @@ function OrderDrawer({
     //   ) || 0) + quantity,
     // );
     setTotalQuantity(quantity);
-    console.log('quantity : ', quantity);
+    // console.log('quantity : ', quantity);
   }, [quantity, cartData, data?.id]);
 
   const handleCartClick = () => {
-    console.log('totalQuantity : ', totalQuantity);
+    // console.log('totalQuantity : ', totalQuantity);
     const hasProductInCartitem = cartData[0]?.cartitem?.find(
       (item) => item.productId === data?.id,
     );

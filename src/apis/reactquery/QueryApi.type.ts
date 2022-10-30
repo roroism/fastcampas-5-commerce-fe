@@ -2,6 +2,17 @@ import { Ireview } from '@components/ProductsPage/_fragments/ReviewItem';
 
 export type gender = 'male' | 'female';
 
+export enum Tag {
+  올인원 = '올인원', // id: 1
+  클렌저 = '클렌저', // id: 2
+  마일드 = '마일드', // id: 3
+  오일 = '오일', // id: 4
+  로션 = '로션', // id: 5
+  크림 = '크림', // id: 6
+  파우더로션 = '파우더로션', // id: 7
+  바스앤샴푸 = '바스앤샴푸', // id: 8
+}
+
 export type ProductDTOType = {
   // next: 'string';
   // previous: 'string';
@@ -13,7 +24,7 @@ export type ProductDTOType = {
     price: number;
     capacity: number;
     thumbnail: string;
-    tag: Array<{ id: number; name: string }>;
+    tag: Array<{ id: number; name: Tag }>;
     avgRate: number | null;
     reviewCount: number;
   }>;
@@ -108,10 +119,12 @@ export type OrderDTOType = {
   userName: string;
   userPhone: string;
   userAddrPost: string;
+  userAddr: string;
   userAddrDetail: string;
   shipName: string;
   shipPhone: string;
   shipAddrPost: string;
+  shipAddr: string;
   shipAddrDetail: string;
   orderMessage: string;
   created: Date;
@@ -144,10 +157,12 @@ export type OrderByOrderIdDTOType = {
   userName: string;
   userPhone: string;
   userAddrPost: string;
+  userAddr: string;
   userAddrDetail: string;
   shipName: string;
   shipPhone: string;
   shipAddrPost: string;
+  shipAddr: string;
   shipAddrDetail: string;
   orderMessage: string;
   created: Date;
@@ -280,6 +295,43 @@ export type GetMyReviewDTOType = {
   next: string;
   previous: string;
   results: Array<myReviewType>;
+};
+
+export type ProductTagReviewParamGetType = {
+  tagId: number;
+};
+
+export type ReviewReplySetType = {
+  id: number;
+  reviewId: number;
+  replyUserNickname: string;
+  content: string;
+  created: Date;
+};
+
+export type ProductTagReviewType = {
+  id: number;
+  userId: number;
+  nickname: string;
+  rate: number;
+  content: string;
+  reviewimageSet: Array<{
+    id: number;
+    reviewId: number;
+    url: string;
+  }>;
+  created: string;
+  reviewreplySet: Array<ReviewReplySetType>;
+};
+
+export type GetProductTagReviewDTOType = {
+  count?: number;
+  isNext?: boolean;
+  results: Array<{
+    id: number;
+    name: string;
+    reviewList: Array<ProductTagReviewType>;
+  }>; // id: product id
 };
 
 export type ExampleParamPutType = {

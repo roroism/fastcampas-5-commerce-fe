@@ -1,4 +1,5 @@
-import React from 'react';
+import Router from 'next/router';
+import React, { useEffect, useRef } from 'react';
 
 import {
   Box,
@@ -33,9 +34,12 @@ interface IProduct {
   reviewCount: number;
 }
 
+const cachedScrollPositions: number[][] = [];
+
 interface ProductsPageProps extends ChakraProps {}
 
 function ProductsPage({ ...basisProps }: ProductsPageProps) {
+  const boxRef = useRef<HTMLDivElement>(null);
   const { ref, isShow } = useScrollIsShow<HTMLDivElement>(1);
   const {
     data,
@@ -81,8 +85,40 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
     },
   });
 
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'auto';
+      let shouldScrollRestore: { x: number; y: number } | null;
+
+      Router.events.on('routeChangeStart', () => {
+        cachedScrollPositions.push([window.scrollX, window.scrollY]);
+      });
+
+      Router.events.on('routeChangeComplete', () => {
+        if (shouldScrollRestore) {
+          const { x, y } = shouldScrollRestore;
+          window.scrollTo(x, y);
+          shouldScrollRestore = null;
+        }
+        window.history.scrollRestoration = 'auto';
+      });
+
+      Router.beforePopState(() => {
+        if (cachedScrollPositions.length > 0) {
+          const [x, y]: [number, number] = cachedScrollPositions.pop() as [
+            number,
+            number,
+          ];
+          shouldScrollRestore = { x, y };
+        }
+        window.history.scrollRestoration = 'manual';
+        return true;
+      });
+    }
+  }, []);
+
   return (
-    <Box {...basisProps} px="16px" pt="120px" pb="80px">
+    <Box {...basisProps} px="16px" pt="120px" pb="80px" ref={boxRef}>
       <VisuallyHidden as="h2">Product list</VisuallyHidden>
       <UnorderedList
         styleType="none"

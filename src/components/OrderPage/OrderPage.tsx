@@ -97,12 +97,14 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     form.append('method', data.method);
     form.append('userName', data.userName);
     form.append('userPhone', data.userPhone.replace(/-/g, ''));
+    form.append('userAddr', data.userAddr);
     form.append('userAddrPost', data.userAddrPost);
-    form.append('userAddrDetail', `${data.userAddr} ${data.userAddrDetail}`);
+    form.append('userAddrDetail', data.userAddrDetail);
     form.append('shipName', data.shipName);
     form.append('shipPhone', data.shipPhone.replace(/-/g, ''));
+    form.append('shipAddr', data.shipAddr);
     form.append('shipAddrPost', data.shipAddrPost);
-    form.append('shipAddrDetail', `${data.shipAddr} ${data.shipAddrDetail}`);
+    form.append('shipAddrDetail', data.shipAddrDetail);
     form.append('orderMessage', data.orderMessage);
     // postOrderMutate(form);
     productApi.postOrder(form).then((res) => {
@@ -120,7 +122,7 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
 
       if (res) {
         console.log('paymentList ::: ', paymentList);
-        console.log('data.userId ::: ', data.userId);
+        // console.log('data.userId ::: ', data.userId);
         paymentList.forEach((item) => {
           const statusForm = new FormData();
           statusForm.append('orderId', res.id.toString());
@@ -157,7 +159,8 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
           tossPayments.requestPayment('카드', {
             // 결제 수단 파라미터
             // 결제 정보 파라미터
-            amount: Number(data.price),
+            // amount: Number(data.price), // 잘못된 값
+            amount: res.amount,
             orderId: res.id.toString(),
             // orderId: 'fXGzPmxWQFsyY1X67KrjS',
             orderName: `${paymentList[0].name} 외 ${paymentList.length}건`,

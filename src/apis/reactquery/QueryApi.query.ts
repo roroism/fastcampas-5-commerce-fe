@@ -26,6 +26,7 @@ import {
   ProductDTOType,
   ProductDetailDTOType,
   ProductParamGetType,
+  ProductTagReviewParamGetType,
   getOrderStatusForSuccessPaymentParamGetType,
 } from './QueryApi.type';
 
@@ -369,6 +370,29 @@ export function useGetMyReviewQuery(
   const query = useQuery(
     queryKey,
     () => productApi.getReview(params?.variables),
+    params?.options,
+  );
+
+  return { ...query, queryKey };
+}
+
+export const PRODUCT_TAG_REVIEW_API_QUERY_KEY = {
+  GET: (param: ProductTagReviewParamGetType) => [
+    'product-tag-review',
+    param.tagId,
+  ],
+};
+
+export function useGetProductTagReviewQuery(
+  params: QueryHookParams<typeof productApi.getProductTagReview>,
+) {
+  // console.log('params?.variables : ', params?.variables);
+  const queryKey = PRODUCT_TAG_REVIEW_API_QUERY_KEY.GET(
+    params?.variables as ProductTagReviewParamGetType,
+  );
+  const query = useQuery(
+    queryKey,
+    () => productApi.getProductTagReview(params?.variables),
     params?.options,
   );
 

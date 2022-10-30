@@ -1,5 +1,6 @@
+import { GetStaticProps } from 'next';
 import router, { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -9,6 +10,11 @@ import {
   HStack,
   Image,
   Link,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   VStack,
   VisuallyHidden,
 } from '@chakra-ui/react';
@@ -24,10 +30,32 @@ import StarRating from '@components/common/StarRating/StarRating';
 
 import { getToken } from '@utils/localStorage/token';
 
-interface MainPageProps extends ChakraProps {}
+import ReviewByTag from './_fragments/ReviewByTag';
 
-function MainPage({ ...basisProps }: MainPageProps) {
+export const TAG_LIMIT = 7;
+export const TAG_OFFSET = 2;
+
+export interface IMainReview {
+  tagId: number;
+  nickname: string;
+  rate: number;
+  content: string;
+  created: string;
+  reviewimageSet?: Array<{
+    id?: number;
+    reviewId?: number;
+    url: string;
+  }>;
+}
+
+interface MainPageProps extends ChakraProps {
+  mainReviews: Array<IMainReview>;
+}
+
+function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
+  const [tagId, setTagId] = useState<number>(0);
   const { data: userData } = useGetMyInfoQuery();
+  // console.log('mainReviews : ', mainReviews);
   //   {
   //   options: { staleTime: 1800, cacheTime: Infinity },
   // }
@@ -57,8 +85,13 @@ function MainPage({ ...basisProps }: MainPageProps) {
     else setAuthHeader(token?.access);
   }, []);
 
+  const handleTabClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { tabNumber } = e.currentTarget.dataset;
+    console.log('e.currentTarget.data : ', tabNumber);
+  };
+
   return (
-    <Box as="main" {...basisProps} overflow="hidden">
+    <Box as="main" {...basisProps}>
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Box
         bgImage="./images/main/bg_main.png"
@@ -558,7 +591,7 @@ function MainPage({ ...basisProps }: MainPageProps) {
       </Box>
 
       <Flex
-        w="full"
+        w="100%"
         h="876px"
         flexDir="column"
         alignItems="center"
@@ -575,14 +608,56 @@ function MainPage({ ...basisProps }: MainPageProps) {
           <br />
           고객님의 솔직한 리뷰
         </Box>
-        <HStack
+        <Flex
+          w="100%"
           pt="50px"
-          spacing="10px"
+          gap="10px"
           pl="16px"
           ml={0}
           alignSelf="flex-start"
+          overflowX="scroll"
+          css={
+            {
+              // '&::-webkit-scrollbar': {
+              //   width: '4px',
+              // },
+              // '&::-webkit-scrollbar-track': {
+              //   width: '6px',
+              // },
+              // '&::-webkit-scrollbar-thumb': {
+              //   // background: 'black',
+              //   // borderRadius: '24px',
+              // },
+              // '&::-webkit-scrollbar': {
+              //   // width: '10px' /* 세로축 스크롤 바 길이 */,
+              //   height: '2px' /* 가로축 스크롤 바 길이 */,
+              // },
+              // '&::-webkit-scrollbar-button:start': {
+              //   backgroundColor: 'white' /* Top, Left 방향의 이동버튼 */,
+              // },
+              // '&::-webkit-scrollbar-button:end': {
+              //   backgroundColor: 'white' /* Bottom, Right 방향의 이동버튼 */,
+              // },
+              // '&::-webkit-scrollbar-track-piece': {
+              //   backgroundColor: 'white' /*스크롤 바 배경 색상*/,
+              // },
+              // '&::-webkit-scrollbar-thumb': {
+              //   borderRadius: '8px',
+              //   backgroundColor: 'gray' /*스크롤 바 색상*/,
+              // },
+            }
+          }
         >
-          <Button size="sm" w="53px" colorScheme="primary" borderRadius="15px">
+          <Button
+            size="sm"
+            w="53px"
+            colorScheme="primary"
+            borderRadius="15px"
+            flexShrink="0"
+            fontSize="0.75rem"
+            data-tab-number="0"
+            onClick={handleTabClick}
+          >
             전체
           </Button>
           <Button
@@ -592,6 +667,10 @@ function MainPage({ ...basisProps }: MainPageProps) {
             bg="gray.200"
             fontWeight={400}
             borderRadius="15px"
+            flexShrink="0"
+            fontSize="0.75rem"
+            data-tab-number="1"
+            onClick={handleTabClick}
           >
             바스 & 샴푸
           </Button>
@@ -601,6 +680,10 @@ function MainPage({ ...basisProps }: MainPageProps) {
             bg="gray.200"
             fontWeight={400}
             borderRadius="15px"
+            flexShrink="0"
+            fontSize="0.75rem"
+            data-tab-number="2"
+            onClick={handleTabClick}
           >
             오일
           </Button>
@@ -610,6 +693,10 @@ function MainPage({ ...basisProps }: MainPageProps) {
             bg="gray.200"
             fontWeight={400}
             borderRadius="15px"
+            flexShrink="0"
+            fontSize="0.75rem"
+            data-tab-number="3"
+            onClick={handleTabClick}
           >
             로션
           </Button>
@@ -619,19 +706,41 @@ function MainPage({ ...basisProps }: MainPageProps) {
             bg="gray.200"
             fontWeight={400}
             borderRadius="15px"
+            flexShrink="0"
+            fontSize="0.75rem"
+            data-tab-number="4"
+            onClick={handleTabClick}
           >
             크림
           </Button>
-          <Button size="sm" bg="gray.200" fontWeight={400} borderRadius="15px">
+          <Button
+            size="sm"
+            bg="gray.200"
+            fontWeight={400}
+            borderRadius="15px"
+            flexShrink="0"
+            fontSize="0.75rem"
+            data-tab-number="5"
+            onClick={handleTabClick}
+          >
             파우더 로션
           </Button>
-        </HStack>
-        <HStack pt="70px" pl="16px" spacing="10px" alignSelf="flex-start">
+        </Flex>
+
+        <HStack
+          pt="70px"
+          pl="16px"
+          spacing="10px"
+          alignSelf="flex-start"
+          w="100%"
+          overflowX="scroll"
+        >
           <Box
             w="325px"
             h="464px"
             borderRadius="20px"
             boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
+            flexShrink="0"
           >
             <VStack spacing={0} pt="23px" pb="30px" px="20px" w="full">
               <Flex w="full" justify="space-between">
@@ -687,6 +796,7 @@ function MainPage({ ...basisProps }: MainPageProps) {
             h="464px"
             borderRadius="20px"
             boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
+            flexShrink="0"
           >
             <VStack spacing={0} pt="23px" pb="30px" px="20px" w="full">
               <Flex w="full" justify="space-between">
@@ -742,6 +852,48 @@ function MainPage({ ...basisProps }: MainPageProps) {
           <Image src="./icons/svg/main/info.svg" alt="info" />
         </Box>
       </Flex>
+
+      {/* <Box>
+        <Tabs variant="soft-rounded" colorScheme="green">
+          <TabList>
+            <Tab
+              onClick={() => {
+                setTagId(1);
+              }}
+            >
+              Tab 1
+            </Tab>
+            <Tab
+              onClick={() => {
+                setTagId(2);
+              }}
+            >
+              Tab 2
+            </Tab>
+            <Tab
+              onClick={() => {
+                setTagId(3);
+              }}
+            >
+              Tab 3
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <p>one!</p>
+              <ReviewByTag tagId={1} />
+            </TabPanel>
+            <TabPanel>
+              <p>two!</p>
+              <ReviewByTag tagId={2} />
+            </TabPanel>
+            <TabPanel>
+              <p>three!</p>
+              <ReviewByTag tagId={3} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </Box> */}
 
       <Box bgGradient="linear(to-r, #FF710B, #FFAB2E)" position="relative">
         <VStack w="100%" alignItems="center">

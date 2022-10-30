@@ -234,7 +234,7 @@ function CompletePage({ ...basisProps }: CompletePageProps) {
             <HStack spacing="10px" w="full" alignItems="flex-start">
               <Box w="92px">주소</Box>
               <Box as="p" w="214px" color="gray.700" overflow="hidden">
-                {paymentByOrderIdData?.shipAddrPost}&nbsp;
+                {paymentByOrderIdData?.shipAddr}&nbsp;
                 {paymentByOrderIdData?.shipAddrDetail}
               </Box>
             </HStack>

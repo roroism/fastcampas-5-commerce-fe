@@ -84,7 +84,7 @@ function ReviewItem({ review }: ReviewItemProps) {
         review?.reviewreplySet?.length > 0 &&
         review?.reviewreplySet.map((reply) => (
           <>
-            <Flex w="full" pt="6px" pb="30px">
+            <Flex w="full" pt="6px" pb="30px" key={reply.id}>
               <Box pr="9px" pt="4px" w="29px">
                 <Image src="/icons/svg/review/reply.svg" alt="admin icon" />
               </Box>

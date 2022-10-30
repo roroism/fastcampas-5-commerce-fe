@@ -1,4 +1,7 @@
 module.exports = {
+  // experimental: {
+  //   scrollRestoration: true,
+  // },
   poweredByHeader: false,
   eslint: {
     ignoreDuringBuilds: true,

@@ -17,6 +17,7 @@ import {
   Tabs,
   VStack,
   VisuallyHidden,
+  keyframes,
 } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
@@ -87,7 +88,8 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
 
   const handleTabClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { tabNumber } = e.currentTarget.dataset;
-    console.log('e.currentTarget.data : ', tabNumber);
+    // console.log('e.currentTarget.data : ', tabNumber);
+    setTagId(Number(tabNumber));
   };
 
   return (
@@ -651,7 +653,9 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           <Button
             size="sm"
             w="53px"
-            colorScheme="primary"
+            colorScheme={tagId === 0 ? 'primary' : undefined}
+            bg={tagId === 0 ? undefined : 'gray.200'}
+            fontWeight={tagId === 0 ? undefined : '400'}
             borderRadius="15px"
             flexShrink="0"
             fontSize="0.75rem"
@@ -664,8 +668,9 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
             size="sm"
             px="20px"
             w="83px"
-            bg="gray.200"
-            fontWeight={400}
+            colorScheme={tagId === 1 ? 'primary' : undefined}
+            bg={tagId === 1 ? undefined : 'gray.200'}
+            fontWeight={tagId === 1 ? undefined : '400'}
             borderRadius="15px"
             flexShrink="0"
             fontSize="0.75rem"
@@ -677,8 +682,9 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           <Button
             size="sm"
             w="53px"
-            bg="gray.200"
-            fontWeight={400}
+            colorScheme={tagId === 2 ? 'primary' : undefined}
+            bg={tagId === 2 ? undefined : 'gray.200'}
+            fontWeight={tagId === 2 ? undefined : '400'}
             borderRadius="15px"
             flexShrink="0"
             fontSize="0.75rem"
@@ -690,8 +696,9 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           <Button
             size="sm"
             w="53px"
-            bg="gray.200"
-            fontWeight={400}
+            colorScheme={tagId === 3 ? 'primary' : undefined}
+            bg={tagId === 3 ? undefined : 'gray.200'}
+            fontWeight={tagId === 3 ? undefined : '400'}
             borderRadius="15px"
             flexShrink="0"
             fontSize="0.75rem"
@@ -703,8 +710,9 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           <Button
             size="sm"
             w="53px"
-            bg="gray.200"
-            fontWeight={400}
+            colorScheme={tagId === 4 ? 'primary' : undefined}
+            bg={tagId === 4 ? undefined : 'gray.200'}
+            fontWeight={tagId === 4 ? undefined : '400'}
             borderRadius="15px"
             flexShrink="0"
             fontSize="0.75rem"
@@ -715,8 +723,9 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           </Button>
           <Button
             size="sm"
-            bg="gray.200"
-            fontWeight={400}
+            colorScheme={tagId === 5 ? 'primary' : undefined}
+            bg={tagId === 5 ? undefined : 'gray.200'}
+            fontWeight={tagId === 5 ? undefined : '400'}
             borderRadius="15px"
             flexShrink="0"
             fontSize="0.75rem"
@@ -734,119 +743,18 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           alignSelf="flex-start"
           w="100%"
           overflowX="scroll"
+          opacity="0"
+          animation={`${fadeIn} 1s forwards`}
         >
-          <Box
-            w="325px"
-            h="464px"
-            borderRadius="20px"
-            boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
-            flexShrink="0"
-          >
-            <VStack spacing={0} pt="23px" pb="30px" px="20px" w="full">
-              <Flex w="full" justify="space-between">
-                <Box as="strong" {...ReviewrStyle}>
-                  incourse.run
-                </Box>
-                <StarRating starRating={4} width="7.5px" />
-              </Flex>
-              <Box as="span" {...ReviewDateStyle} w="full">
-                2021.03.29
-              </Box>
-              <Box as="p" {...ReviewContentStyle} w="full" pt="30px">
-                순해서 아이피부에도 자극없이 사용할 수 있어요! 아이 뿐 만아니라
-                온 가족이 사용할 수 있는 화장품이라고 추천받았어요. 처음엔
-                반신반의하는 마음으로 사용하기 시작했는데 지금은 모든 단계에서
-                인코스런 제품을 사용하고있어요! 아토피로 고생했던 우리 아이
-                피부도 지금은 거의 완치단계입니다 . 아이 엄마들에게 추천드려요!
-              </Box>
-              <Box pt="20px" w="full" borderBottom="1px solid #EAECF0"></Box>
-              <HStack spacing="10px" w="full" justify="flex-start" pt="20px">
-                {/* {review.photos.map((photo) => (
-                  <Image
-                    key={photo.id}
-                    borderRadius="5px"
-                    w="80px"
-                    h="80px"
-                    src={photo.img}
-                  ></Image>
-                ))} */}
-                <Image
-                  src="images/review/review1.png"
-                  w="80px"
-                  h="80px"
-                  alt="review image"
-                />
-                <Image
-                  src="images/review/review2.png"
-                  w="80px"
-                  h="80px"
-                  alt="review image"
-                />
-                <Image
-                  src="images/review/review3.png"
-                  w="80px"
-                  h="80px"
-                  alt="review image"
-                />
-              </HStack>
-            </VStack>
-          </Box>
-          <Box
-            w="325px"
-            h="464px"
-            borderRadius="20px"
-            boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
-            flexShrink="0"
-          >
-            <VStack spacing={0} pt="23px" pb="30px" px="20px" w="full">
-              <Flex w="full" justify="space-between">
-                <Box as="strong" {...ReviewrStyle}>
-                  incourse.run
-                </Box>
-                <StarRating starRating={4} width="7.5px" />
-              </Flex>
-              <Box as="span" {...ReviewDateStyle} w="full">
-                2021.03.29
-              </Box>
-              <Box as="p" {...ReviewContentStyle} w="full" pt="30px">
-                순해서 아이피부에도 자극없이 사용할 수 있어요! 아이 뿐 만아니라
-                온 가족이 사용할 수 있는 화장품이라고 추천받았어요. 처음엔
-                반신반의하는 마음으로 사용하기 시작했는데 지금은 모든 단계에서
-                인코스런 제품을 사용하고있어요! 아토피로 고생했던 우리 아이
-                피부도 지금은 거의 완치단계입니다 . 아이 엄마들에게 추천드려요!
-              </Box>
-              <Box pt="20px" w="full" borderBottom="1px solid #EAECF0"></Box>
-              <HStack spacing="10px" w="full" justify="flex-start" pt="20px">
-                {/* {review.photos.map((photo) => (
-              <Image
-                key={photo.id}
-                borderRadius="5px"
-                w="80px"
-                h="80px"
-                src={photo.img}
-              ></Image>
-            ))} */}
-                <Image
-                  src="images/review/review1.png"
-                  w="80px"
-                  h="80px"
-                  alt="review image"
-                />
-                <Image
-                  src="images/review/review2.png"
-                  w="80px"
-                  h="80px"
-                  alt="review image"
-                />
-                <Image
-                  src="images/review/review3.png"
-                  w="80px"
-                  h="80px"
-                  alt="review image"
-                />
-              </HStack>
-            </VStack>
-          </Box>
+          {mainReviews
+            // .filter((item) => item.tagId === tagId)
+            .map((mainReview, idx) => (
+              <ReviewByTag
+                key={`reviewId${mainReview.tagId}Idx${idx}`}
+                tabNumber={tagId}
+                mainReview={mainReview}
+              />
+            ))}
         </HStack>
         <Box pos="absolute" bottom="20px" right="6px" w="60px" h="60px">
           <Image src="./icons/svg/main/info.svg" alt="info" />
@@ -1051,3 +959,12 @@ const MoreInfoSubText = {
   lineHeight: '28px',
   color: 'white',
 };
+
+const fadeIn = keyframes`
+from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;

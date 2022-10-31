@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import {
   Box,
   ChakraProps,
@@ -5,6 +7,7 @@ import {
   HStack,
   Image,
   VStack,
+  keyframes,
 } from '@chakra-ui/react';
 
 import { useGetProductTagReviewQuery } from '@apis/reactquery/QueryApi.query';
@@ -14,18 +17,48 @@ import StarRating from '@components/common/StarRating/StarRating';
 import { IMainReview } from '../MainPage';
 
 interface ReviewByTagProps extends ChakraProps {
+  tabNumber: number;
   mainReview: IMainReview;
 }
 
-const ReviewByTag = ({ mainReview, ...basisProps }: ReviewByTagProps) => {
-  // const { data: TagReviewList } = useGetProductTagReviewQuery({
-  //   variables: { tagId: tagId },
-  // });
+const ReviewByTag = ({
+  tabNumber,
+  mainReview,
+  ...basisProps
+}: ReviewByTagProps) => {
+  // console.log('tabNumber === mainReview.tagId : ', tabNumber, mainReview.tagId);
+  // const [activeClass, setActiveClass] = useState<string>('');
 
-  // console.log(`TagReviewList ${tagId} : `, TagReviewList);
+  // useEffect(() => {
+  //   const activeClass =
+  //     tabNumber === 0
+  //       ? 'active'
+  //       : tabNumber === mainReview.tagId
+  //       ? 'active'
+  //       : '';
+  //   console.log('activeClass : ', activeClass);
+  //   setActiveClass(activeClass);
+  // }, [tabNumber]);
 
   return (
-    <Box {...basisProps}>
+    <Box
+      {...basisProps}
+      // className={activeClass}
+      className={
+        tabNumber === 0
+          ? 'active'
+          : tabNumber === mainReview.tagId
+          ? 'active'
+          : ''
+      }
+      display="none"
+      opacity="0"
+      animation={`${fadeIn} 1s forwards`}
+      transition="opacity 1s"
+      css={{
+        '&.active': { display: 'block' },
+      }}
+    >
       <Box
         w="325px"
         h="464px"
@@ -43,7 +76,14 @@ const ReviewByTag = ({ mainReview, ...basisProps }: ReviewByTagProps) => {
           <Box as="span" {...ReviewDateStyle} w="full">
             {mainReview?.created}
           </Box>
-          <Box as="p" {...ReviewContentStyle} w="full" pt="30px">
+          <Box
+            as="p"
+            {...ReviewContentStyle}
+            w="full"
+            pt="30px"
+            minH="237px"
+            pb="15px"
+          >
             {mainReview?.content}
           </Box>
           <HStack
@@ -57,7 +97,7 @@ const ReviewByTag = ({ mainReview, ...basisProps }: ReviewByTagProps) => {
               mainReview?.reviewimageSet?.length > 0 &&
               mainReview?.reviewimageSet?.map((item, idx) => (
                 <Image
-                  key={idx}
+                  key={`image${idx}`}
                   src={item?.url}
                   w="80px"
                   h="80px"
@@ -108,3 +148,12 @@ const ReviewContentStyle = {
   fontSize: '1rem',
   lineHeight: '1.5em',
 };
+
+const fadeIn = keyframes`
+from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+`;

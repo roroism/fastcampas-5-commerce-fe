@@ -19,6 +19,7 @@ import {
   MyInfoParamGetType,
   MyReviewParamGetType,
   OrderByOrderIdInfinityParamGetType,
+  OrderByOrderIdParamGetType,
   OrderParamGetType,
   OrderStatusDTOType,
   OrderStatusInfinityParamGetType,
@@ -163,7 +164,7 @@ export function useGetCartQuery(
 }
 
 export const ORDER_API_QUERY_KEY = {
-  GET: (param: OrderParamGetType) => ['order', param],
+  GET: (param: OrderParamGetType) => ['order', param.offset],
   // GET_BY_ID: (id?: string) => ['product-by-id', id],
 };
 
@@ -171,7 +172,9 @@ export function useGetOrderQuery(
   params: QueryHookParams<typeof productApi.getOrder>,
 ) {
   // console.log('params?.variables : ', params?.variables);
-  const queryKey = ORDER_API_QUERY_KEY.GET(params?.variables as string);
+  const queryKey = ORDER_API_QUERY_KEY.GET(
+    params?.variables as OrderParamGetType,
+  );
   const query = useQuery(
     queryKey,
     () => productApi.getOrder(params?.variables),
@@ -182,7 +185,7 @@ export function useGetOrderQuery(
 }
 
 export const ORDER_BY_ORDERID_API_QUERY_KEY = {
-  GET: (param: OrderParamGetType) => ['order-by-orderid', param],
+  GET: (param: OrderByOrderIdParamGetType) => ['order-by-orderid', param],
   GET_INFINITE: (param: OrderByOrderIdInfinityParamGetType) => [
     'order-by-orderid-infinite',
     param,

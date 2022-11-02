@@ -127,7 +127,14 @@ export type OrderDTOType = {
   shipAddr: string;
   shipAddrDetail: string;
   orderMessage: string;
+  shippingStatus?: ShippingStatus;
   created: Date;
+};
+
+export type GetOrderDTOType = {
+  count: number;
+  isNext: boolean;
+  results: Array<OrderDTOType>;
 };
 
 export type IOrderForm = {
@@ -229,7 +236,10 @@ export type OrderByOrderIdParamGetType = {};
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};
 export type MyInfoParamGetType = {};
-export type OrderParamGetType = {};
+export type OrderParamGetType = {
+  userId: string;
+  offset: number;
+};
 export type OrderStatusParamGetType = {};
 export type OrderStatusInfinityParamGetType = {};
 export type OrderByOrderIdInfinityParamGetType = {};

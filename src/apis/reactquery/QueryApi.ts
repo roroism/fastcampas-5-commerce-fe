@@ -4,6 +4,7 @@ import instance from '@apis/_axios/instance';
 
 import { TAG_LIMIT, TAG_OFFSET } from '@components/MainPage/MainPage';
 import { MY_REVIEW_PAGE_SIZE } from '@components/MyReviewPage/MyReviewPage';
+import { PAGE_SIZE_LIMIT } from '@components/OrderHistory2Page/OrderHistory2Page';
 import { PAGE_SIZE } from '@components/OrderHistoryPage/OrderHistoryPage';
 
 import {
@@ -14,6 +15,7 @@ import {
   ExampleParamPatchType,
   ExampleParamPutType,
   GetMyReviewDTOType,
+  GetOrderDTOType,
   GetOrderStatusDTOType,
   GetProductTagReviewDTOType,
   IOrderForm,
@@ -189,10 +191,10 @@ export class ProductApi {
     return data;
   };
 
-  getOrder = async (params?: OrderParamGetType): Promise<OrderDTOType[]> => {
+  getOrder = async (params?: OrderParamGetType): Promise<GetOrderDTOType> => {
     const { data } = await this.axios({
       method: 'GET',
-      url: `/v1/order/?user_id=${params}`,
+      url: `/v1/order/?user_id=${params?.userId}&limit=${PAGE_SIZE_LIMIT}&offset=${params?.offset}`,
       // params,
     });
     console.log('order - data : ', data);

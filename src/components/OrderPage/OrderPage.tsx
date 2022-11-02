@@ -57,18 +57,18 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
   const dispatch = useDispatch();
   console.log('checkItems ::: ', checkItems);
   // const [paymentItems, setPaymentItems] = useState([]);
-  // const { query: productData } = useGetProductByIdQueries(
-  //   {
-  //     options: {
-  //       onSuccess: (data) => {
-  //         console.log('useGetProductByIdQueries data : ', data);
-  //         dispatch(orderSliceAction.addPaymentProduct(data));
-  //       },
-  //     },
-  //     variables: '',
-  //   },
-  //   checkItems.map((item) => item.productId.toString()),
-  // );
+  const { query: productData } = useGetProductByIdQueries(
+    {
+      options: {
+        onSuccess: (data) => {
+          console.log('useGetProductByIdQueries data : ', data);
+          dispatch(orderSliceAction.addPaymentProduct(data));
+        },
+      },
+      variables: '',
+    },
+    checkItems.map((item) => item.productId.toString()),
+  );
 
   useEffect(() => {
     return () => {
@@ -86,6 +86,12 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     form.append('userId', data.userId);
     form.append('price', data.price);
     // form.append('paymentKey', '');
+    let shippingPrice = 0;
+    if (Number(data.price) < 30000) {
+      shippingPrice = 3000;
+    }
+    form.append('shippingPrice', shippingPrice.toString());
+    form.append('amount', (Number(data.price) + shippingPrice).toString());
     form.append('method', data.method);
     form.append('userName', data.userName);
     form.append('userPhone', data.userPhone.replace(/-/g, ''));

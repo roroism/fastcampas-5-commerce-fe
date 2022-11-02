@@ -129,12 +129,15 @@ function OrderCancelModal({
               justifyContent="center"
             >
               <Box
+                as="p"
                 fontWeight="700"
                 textAlign="center"
                 alignItems="center"
                 mt="31px"
+                lineHeight="1.5em"
               >
                 주문취소 하시겠습니까?
+                {/* &#40;* 같이 주문한 다른 상품들도 취소됩니다. &#41; */}
               </Box>
             </ModalBody>
 

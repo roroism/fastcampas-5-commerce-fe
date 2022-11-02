@@ -48,27 +48,27 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
   // });
   // const { mutate: postOrderStatusMutate } = usePostOrderStatusMutation();
 
-  const { data: orderIdData } = useGetOrderQuery({
-    variables: userData?.id?.toString(),
-  });
-  console.log('orderIdData :: ', orderIdData);
+  // const { data: orderIdData } = useGetOrderQuery({
+  //   variables: userData?.id?.toString(),
+  // });
+  // console.log('orderIdData :: ', orderIdData);
   const { value: checkItems } = useAppStore((state) => state.ORDER);
   const { paymentList: paymentList } = useAppStore((state) => state.ORDER);
   const dispatch = useDispatch();
   console.log('checkItems ::: ', checkItems);
-  const [paymentItems, setPaymentItems] = useState([]);
-  const { query: productData } = useGetProductByIdQueries(
-    {
-      options: {
-        onSuccess: (data) => {
-          console.log('useGetProductByIdQueries data : ', data);
-          dispatch(orderSliceAction.addPaymentProduct(data));
-        },
-      },
-      variables: '',
-    },
-    checkItems.map((item) => item.productId.toString()),
-  );
+  // const [paymentItems, setPaymentItems] = useState([]);
+  // const { query: productData } = useGetProductByIdQueries(
+  //   {
+  //     options: {
+  //       onSuccess: (data) => {
+  //         console.log('useGetProductByIdQueries data : ', data);
+  //         dispatch(orderSliceAction.addPaymentProduct(data));
+  //       },
+  //     },
+  //     variables: '',
+  //   },
+  //   checkItems.map((item) => item.productId.toString()),
+  // );
 
   useEffect(() => {
     return () => {
@@ -76,16 +76,8 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     };
   }, []);
 
-  // console.log('productData :::::::::::::::: ', productData);
-  // console.log(
-  //   'checkItems.map((item) => item.productId.toString()), :::::::::: ',
-  //   checkItems.map((item) => item.productId.toString()),
-  // );
-
   const searchPostcode1 = usePostcode();
-
   const searchPostcode2 = usePostcode();
-  console.log('paymentList ::: ', paymentList);
 
   const onSubmit = handleSubmit((data) => {
     console.log('submit success ::: ', data);
@@ -179,7 +171,6 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
       onSubmit={onSubmit}
       useOrderPostcode={searchPostcode1}
       useShippingPostcode={searchPostcode2}
-      useCheckItems={paymentItems}
       paymentList={paymentList}
     />
   );

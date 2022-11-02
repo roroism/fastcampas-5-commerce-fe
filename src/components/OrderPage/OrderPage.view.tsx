@@ -34,7 +34,6 @@ interface OrderPageViewProps extends ChakraProps {
   onSubmit: any;
   useOrderPostcode: any;
   useShippingPostcode: any;
-  useCheckItems: any;
   paymentList: IpaymentListInOrderStateType[];
 }
 
@@ -58,7 +57,6 @@ function OrderPageView({
     fullAddress: shippingFullAddress,
     zonecode: shippingZonecode,
   },
-  useCheckItems: checkItems,
   paymentList,
   onSubmit,
   ...basisProps

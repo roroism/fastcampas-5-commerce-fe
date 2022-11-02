@@ -11,7 +11,6 @@ function HistoryPage() {
         <title>fastcampas-5-commerce-fe | OrderHistory</title>
       </Head>
       <HomeLayout content={<OrderHistoryPage />} />
-      {/* <OrderHistoryPage page={'page'}></OrderHistoryPage>; */}
     </>
   );
 }

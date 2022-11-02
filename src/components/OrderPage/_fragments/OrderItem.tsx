@@ -114,7 +114,7 @@ const OrderItem = ({
                 {shippingStatus === ShippingStatus.PAID
                   ? '결제완료'
                   : shippingStatus === ShippingStatus.WAIT
-                  ? '상품준비중'
+                  ? '상품준비'
                   : shippingStatus === ShippingStatus.INPROGRESS
                   ? '배송중'
                   : shippingStatus === ShippingStatus.DONE
@@ -140,7 +140,7 @@ const OrderItem = ({
                 {shippingStatus === ShippingStatus.PAID
                   ? '결제완료'
                   : shippingStatus === ShippingStatus.WAIT
-                  ? '상품준비중'
+                  ? '상품준비'
                   : shippingStatus === ShippingStatus.INPROGRESS
                   ? '배송중'
                   : shippingStatus === ShippingStatus.DONE

@@ -54,6 +54,7 @@ interface MainPageProps extends ChakraProps {
 }
 
 function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
+  const router = useRouter();
   const [tagId, setTagId] = useState<number>(0);
   const { data: userData } = useGetMyInfoQuery();
   // console.log('mainReviews : ', mainReviews);
@@ -79,12 +80,11 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
     },
   });
 
-  const router = useRouter();
   useEffect(() => {
     const token = getToken();
     if (!token?.access) router.replace('/login');
     else setAuthHeader(token?.access);
-  }, []);
+  }, [router]);
 
   const handleTabClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const { tabNumber } = e.currentTarget.dataset;

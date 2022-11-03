@@ -449,7 +449,7 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
                   <Select
                     fontWeight="700"
                     fontSize="0.75rem"
-                    w="86px"
+                    w="114px"
                     h="30px"
                     bg="gray.200"
                     borderRadius="5px"

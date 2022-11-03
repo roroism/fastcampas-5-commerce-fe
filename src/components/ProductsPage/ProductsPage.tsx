@@ -119,23 +119,26 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
 
   return (
     <Box {...basisProps} px="16px" pt="120px" pb="80px" ref={boxRef}>
-      <VisuallyHidden as="h2">Product list</VisuallyHidden>
-      <UnorderedList
-        styleType="none"
-        p={0}
-        m={0}
-        display="flex"
-        flexDirection="column"
-        gap="30px"
-      >
-        {data?.pages.map((item) => {
-          const products: IProduct[] = item.results;
+      <VisuallyHidden as="h2">main contents</VisuallyHidden>
+      <Box>
+        <VisuallyHidden as="h3">Product list</VisuallyHidden>
+        <UnorderedList
+          styleType="none"
+          p={0}
+          m={0}
+          display="flex"
+          flexDirection="column"
+          gap="30px"
+        >
+          {data?.pages.map((item) => {
+            const products: IProduct[] = item.results;
 
-          return products.map((product) => {
-            return <ProductItem key={product.id} product={product} />;
-          });
-        })}
-      </UnorderedList>
+            return products.map((product) => {
+              return <ProductItem key={product.id} product={product} />;
+            });
+          })}
+        </UnorderedList>
+      </Box>
       {isFetching ? (
         <Box>
           <Box {...basisProps} h="100%">

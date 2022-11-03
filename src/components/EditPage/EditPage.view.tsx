@@ -22,6 +22,7 @@ import {
   Select,
   Text,
   VStack,
+  VisuallyHidden,
   VisuallyHiddenInput,
 } from '@chakra-ui/react';
 
@@ -168,187 +169,194 @@ const EditPageView = ({
   return (
     <>
       <Box {...basisProps} mt="130px">
-        <Text as="h2" fontWeight="700" fontSize="1.625rem" mb="60px">
-          회원정보수정
-        </Text>
-
-        <Box as="form" onSubmit={onSubmit} {...basisProps}>
-          <Text as="h3" fontWeight="700">
-            회원정보입력
+        <VisuallyHidden as="h2">main contents</VisuallyHidden>
+        <Box>
+          <Text as="h3" fontWeight="700" fontSize="1.625rem" mb="60px">
+            회원정보수정
           </Text>
 
-          <Flex py="40px" justifyContent="center">
-            <Avatar w="70px" h="70px" src={preview}>
-              <AvatarBadge
-                boxSize="20px"
-                bg="primary.500"
-                borderWidth="0"
-                position="absolute"
-                right="5px"
-                bottom="5px"
-                _hover={{ cursor: 'pointer' }}
-                onClick={handleAvatar}
-                _before={{
-                  content: '""',
-                  display: 'block',
-                  width: '1.5px',
-                  height: '10px',
-                  borderRadius: '2px',
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                }}
-                _after={{
-                  content: '""',
-                  display: 'block',
-                  width: '10px',
-                  height: '1.5px',
-                  borderRadius: '2px',
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                }}
-              />
-            </Avatar>
-            <Input
-              display="none"
-              type="file"
-              accept="image/*"
-              ref={avatarRef}
-              onChange={handleAvatarOnChange}
-            ></Input>
-            <input
-              type="hidden"
-              // ref={register}
-              // name="profile"
-              // value={presignedUrl}
-              {...register('profile')}
-            />
-          </Flex>
-
-          <Flex flexDirection="column" gap="50px">
-            <JoinInput label="이름" errorText={errors.name?.message}>
-              <Input {...register('name')} autoComplete="off" {...InputStyle} />
-            </JoinInput>
-
-            <JoinInput label="닉네임" errorText={errors.nickname?.message}>
-              <Input
-                {...register('nickname')}
-                autoComplete="off"
-                {...InputStyle}
-              />
-            </JoinInput>
-
-            <JoinInput label="휴대폰 번호" errorText={errors.phone?.message}>
-              <Input
-                {...register('phone', {
-                  onChange: (e) =>
-                    setValue(
-                      'phone',
-                      convenienceInputPhoneNumber(e.target.value),
-                    ),
-                })}
-                autoComplete="off"
-                {...InputStyle}
-              />
-            </JoinInput>
-
-            <JoinInput label="이메일 주소" errorText={errors.email?.message}>
-              <Input
-                {...register('email')}
-                autoComplete="off"
-                {...InputStyle}
-              />
-            </JoinInput>
-          </Flex>
-
-          <Box>
-            <Text as="h3" fontWeight="700" mb="40px" mt="80px">
-              추가정보입력(선택)
+          <Box as="form" onSubmit={onSubmit} {...basisProps}>
+            <Text as="h4" fontWeight="700">
+              회원정보입력
             </Text>
 
-            <FormControl>
-              <FormLabel fontSize="12px" color="primary.500" fontWeight="700">
-                성별
-              </FormLabel>
-              <Select
-                variant="flushed"
-                borderBottom="2px solid #CBCED6"
-                _focus={{ borderBottom: '2px solid #FF710B' }}
-                fontSize="16px"
-                placeholder="성별을 선택하세요"
-                _placeholder={{ color: 'gray.400' }}
-                {...register('gender')}
-              >
-                {/* <option value="남성" selected={getValues('gender') === '남성'}> */}
-                <option value="male">남</option>
-                {/* <option value="여성" selected={getValues('gender') === '여성'}> */}
-                <option value="female">여</option>
-              </Select>
-            </FormControl>
+            <Flex py="40px" justifyContent="center">
+              <Avatar w="70px" h="70px" src={preview}>
+                <AvatarBadge
+                  boxSize="20px"
+                  bg="primary.500"
+                  borderWidth="0"
+                  position="absolute"
+                  right="5px"
+                  bottom="5px"
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={handleAvatar}
+                  _before={{
+                    content: '""',
+                    display: 'block',
+                    width: '1.5px',
+                    height: '10px',
+                    borderRadius: '2px',
+                    backgroundColor: 'white',
+                    position: 'absolute',
+                  }}
+                  _after={{
+                    content: '""',
+                    display: 'block',
+                    width: '10px',
+                    height: '1.5px',
+                    borderRadius: '2px',
+                    backgroundColor: 'white',
+                    position: 'absolute',
+                  }}
+                />
+              </Avatar>
+              <Input
+                display="none"
+                type="file"
+                accept="image/*"
+                ref={avatarRef}
+                onChange={handleAvatarOnChange}
+              ></Input>
+              <input
+                type="hidden"
+                // ref={register}
+                // name="profile"
+                // value={presignedUrl}
+                {...register('profile')}
+              />
+            </Flex>
 
-            <FormControl mt="50px">
-              <FormLabel fontSize="12px" color="primary.500" fontWeight="700">
-                연령대
-              </FormLabel>
-              <Select
-                variant="flushed"
-                borderBottom="2px solid #CBCED6"
-                _focus={{ borderBottom: '2px solid #FF710B' }}
-                fontSize="16px"
-                placeholder="연령대를 선택하세요"
-                _selected={{ color: '#1A1A1A' }}
-                {...register('age')}
-              >
-                {/* <option value="10대" selected={getValues('ageRange') === '10대'}> */}
-                <option value="10">10대</option>
-                {/* <option value="20대" selected={getValues('ageRange') === '20대'}> */}
-                <option value="20">20대</option>
-                {/* <option value="30대" selected={getValues('ageRange') === '30대'}> */}
-                <option value="30">30대</option>
-                {/* <option value="40대" selected={getValues('ageRange') === '40대'}> */}
-                <option value="40">40대</option>
-                {/* <option
-                  value="50대 이상"
-                  selected={getValues('ageRange') === '50대 이상'}
-                > */}
-                <option value="50">50대</option>
-                <option value="60">60대</option>
-              </Select>
-            </FormControl>
-          </Box>
+            <Flex flexDirection="column" gap="50px">
+              <JoinInput label="이름" errorText={errors.name?.message}>
+                <Input
+                  {...register('name')}
+                  autoComplete="off"
+                  {...InputStyle}
+                />
+              </JoinInput>
 
-          <Flex gap="13px" pt="50px" pb="30px" px="16px" bgColor="white">
-            <Box w="calc(50% - 6.5px)">
-              <NextLink href="/mypage" passHref replace>
-                <Link>
-                  <Button
-                    variant="outline"
-                    fontWeight="700"
-                    colorScheme="primary"
-                    w="full"
-                    h="50px"
-                    borderRadius="25px"
-                    fontSize="1rem"
-                    // onClick={onOpen}
-                  >
-                    취소
-                  </Button>
-                </Link>
-              </NextLink>
+              <JoinInput label="닉네임" errorText={errors.nickname?.message}>
+                <Input
+                  {...register('nickname')}
+                  autoComplete="off"
+                  {...InputStyle}
+                />
+              </JoinInput>
+
+              <JoinInput label="휴대폰 번호" errorText={errors.phone?.message}>
+                <Input
+                  {...register('phone', {
+                    onChange: (e) =>
+                      setValue(
+                        'phone',
+                        convenienceInputPhoneNumber(e.target.value),
+                      ),
+                  })}
+                  autoComplete="off"
+                  {...InputStyle}
+                />
+              </JoinInput>
+
+              <JoinInput label="이메일 주소" errorText={errors.email?.message}>
+                <Input
+                  {...register('email')}
+                  autoComplete="off"
+                  {...InputStyle}
+                />
+              </JoinInput>
+            </Flex>
+
+            <Box>
+              <Text as="h4" fontWeight="700" mb="40px" mt="80px">
+                추가정보입력(선택)
+              </Text>
+
+              <FormControl>
+                <FormLabel fontSize="12px" color="primary.500" fontWeight="700">
+                  성별
+                </FormLabel>
+                <Select
+                  variant="flushed"
+                  borderBottom="2px solid #CBCED6"
+                  _focus={{ borderBottom: '2px solid #FF710B' }}
+                  fontSize="16px"
+                  placeholder="성별을 선택하세요"
+                  _placeholder={{ color: 'gray.400' }}
+                  {...register('gender')}
+                >
+                  {/* <option value="남성" selected={getValues('gender') === '남성'}> */}
+                  <option value="male">남</option>
+                  {/* <option value="여성" selected={getValues('gender') === '여성'}> */}
+                  <option value="female">여</option>
+                </Select>
+              </FormControl>
+
+              <FormControl mt="50px">
+                <FormLabel fontSize="12px" color="primary.500" fontWeight="700">
+                  연령대
+                </FormLabel>
+                <Select
+                  variant="flushed"
+                  borderBottom="2px solid #CBCED6"
+                  _focus={{ borderBottom: '2px solid #FF710B' }}
+                  fontSize="16px"
+                  placeholder="연령대를 선택하세요"
+                  _selected={{ color: '#1A1A1A' }}
+                  {...register('age')}
+                >
+                  {/* <option value="10대" selected={getValues('ageRange') === '10대'}> */}
+                  <option value="10">10대</option>
+                  {/* <option value="20대" selected={getValues('ageRange') === '20대'}> */}
+                  <option value="20">20대</option>
+                  {/* <option value="30대" selected={getValues('ageRange') === '30대'}> */}
+                  <option value="30">30대</option>
+                  {/* <option value="40대" selected={getValues('ageRange') === '40대'}> */}
+                  <option value="40">40대</option>
+                  {/* <option
+                    value="50대 이상"
+                    selected={getValues('ageRange') === '50대 이상'}
+                  > */}
+                  <option value="50">50대</option>
+                  <option value="60">60대</option>
+                </Select>
+              </FormControl>
             </Box>
 
-            <Button
-              variant="solid"
-              fontWeight="700"
-              colorScheme="primary"
-              w="50%"
-              h="50px"
-              borderRadius="25px"
-              fontSize="1rem"
-              type="submit"
-            >
-              저장
-            </Button>
-          </Flex>
+            <Flex gap="13px" pt="50px" pb="30px" px="16px" bgColor="white">
+              <Box w="calc(50% - 6.5px)">
+                <NextLink href="/mypage" passHref replace>
+                  <Link>
+                    <Button
+                      variant="outline"
+                      fontWeight="700"
+                      colorScheme="primary"
+                      w="full"
+                      h="50px"
+                      borderRadius="25px"
+                      fontSize="1rem"
+                      // onClick={onOpen}
+                    >
+                      취소
+                    </Button>
+                  </Link>
+                </NextLink>
+              </Box>
+
+              <Button
+                variant="solid"
+                fontWeight="700"
+                colorScheme="primary"
+                w="50%"
+                h="50px"
+                borderRadius="25px"
+                fontSize="1rem"
+                type="submit"
+              >
+                저장
+              </Button>
+            </Flex>
+          </Box>
         </Box>
       </Box>
     </>

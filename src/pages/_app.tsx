@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: any) {
       <ToggleColorModeButton />
       <VisuallyHidden as="h1">incourse run commerce</VisuallyHidden>
       <Component {...pageProps} />
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </ThemeProvider>
   );
 }

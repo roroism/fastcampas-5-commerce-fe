@@ -311,6 +311,11 @@ export type ProductTagReviewParamGetType = {
   tagId: number;
 };
 
+export type OrderParamPatchType = {
+  orderId: string;
+  data: { shippingStatus: ShippingStatus };
+};
+
 export type ReviewReplySetType = {
   id: number;
   reviewId: number;

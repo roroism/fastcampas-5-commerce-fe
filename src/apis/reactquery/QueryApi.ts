@@ -27,6 +27,7 @@ import {
   OrderByOrderIdParamGetType,
   OrderDTOType,
   OrderParamGetType,
+  OrderParamPatchType,
   OrderStatusDTOType,
   OrderStatusParamGetType,
   OrderStatusParamPatchType,
@@ -198,6 +199,16 @@ export class ProductApi {
       // params,
     });
     console.log('order - data : ', data);
+    return data;
+  };
+
+  patchOrder = async (req: OrderParamPatchType): Promise<OrderDTOType> => {
+    console.log('patchOrderStatus req : ', req);
+    const { data } = await this.axios({
+      method: 'PATCH',
+      url: `/v1/order/${req.orderId}/`, //order id(uuid)
+      data: req.data,
+    });
     return data;
   };
 

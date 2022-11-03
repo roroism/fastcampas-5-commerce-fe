@@ -27,7 +27,7 @@
 ### Backend
 
 <img src="https://img.shields.io/badge/Django-#092E20?style=for-the-badge&logo=Django&logoColor=white">
-<img src="https://img.shields.io/badge/Django REST Framework-색상?style=for-the-badge&logo=Django&logoColor=white">
+<img src="https://img.shields.io/badge/Django REST Framework-#092E20?style=for-the-badge&logo=Django&logoColor=white">
 <img src="https://img.shields.io/badge/PostgreSQL-#4169E1?style=for-the-badge&logo=PostgreSQL&logoColor=white">
 <img src="https://img.shields.io/badge/Amazon RDS-#527FFF?style=for-the-badge&logo=Amazon RDS&logoColor=white">
 <img src="https://img.shields.io/badge/Amazon S3-#569A31?style=for-the-badge&logo=Amazon S3&logoColor=white">

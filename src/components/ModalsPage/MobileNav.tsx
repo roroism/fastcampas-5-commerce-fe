@@ -57,7 +57,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 borderY="1px solid #F2F3F4"
                 w="full"
               >
-                <NextLink href="/">
+                <NextLink href="/" passHref>
                   <Link
                     p="16px"
                     _hover={{ cursor: 'pointer' }}
@@ -76,7 +76,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 borderY="1px solid #F2F3F4"
                 w="full"
               >
-                <NextLink href="/products">
+                <NextLink href="/products" passHref>
                   <Link
                     p="16px"
                     _hover={{ cursor: 'pointer' }}
@@ -95,7 +95,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 borderY="1px solid #F2F3F4"
                 w="full"
               >
-                <NextLink href="/mypage">
+                <NextLink href="/mypage" passHref>
                   <Link
                     p="16px"
                     _hover={{ cursor: 'pointer' }}

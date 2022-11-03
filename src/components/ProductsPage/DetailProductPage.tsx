@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { getStaticProps } from 'pages';
+
 import {
   Accordion,
   AccordionButton,
@@ -38,9 +40,12 @@ import ReviewItem, { Ireview } from './_fragments/ReviewItem';
 
 import priceFormat from 'hooks/priceFormat';
 
-interface DetailProductPageProps extends ChakraProps {}
+interface DetailProductPageProps extends ChakraProps {
+  res: any;
+}
 
-function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
+function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
+  console.log('props res : ', res);
   const { query } = useRouter();
   const { colorMode } = useColorMode();
   const detailInfoRef = useRef<HTMLDivElement>(null);
@@ -48,6 +53,9 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
   const reviewRef = useRef<HTMLDivElement>(null);
   const { data, isLoading } = useGetProductByIdQuery({
     variables: query.id as string,
+    options: {
+      initialData: res,
+    },
   });
   const [countRate, setCountRate] = useState<Array<number>>();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -441,7 +449,7 @@ function DetailProductPage({ ...basisProps }: DetailProductPageProps) {
                   <Select
                     fontWeight="700"
                     fontSize="0.75rem"
-                    w="86px"
+                    w="114px"
                     h="30px"
                     bg="gray.200"
                     borderRadius="5px"

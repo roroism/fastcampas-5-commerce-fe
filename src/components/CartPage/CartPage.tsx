@@ -42,7 +42,7 @@ import priceFormat from 'hooks/priceFormat';
 interface CartPageProps extends ChakraProps {}
 
 function CartPage({ ...basisProps }: CartPageProps) {
-  const [productIdList, setProductIdList] = useState<Array<string>>();
+  const [productIdList, setProductIdList] = useState<Array<string>>([]);
   const [shippingPrice, setShippingPrice] = useState<number>(0);
   const [checkedPrice, setCheckedPrice] = useState<number>(0);
   const [isCartitem, setIsCartitem] = useState<boolean>(true);
@@ -83,8 +83,8 @@ function CartPage({ ...basisProps }: CartPageProps) {
 
   const { query: productData } = useGetProductByIdQueries(
     {
-      // options: { enabled: !!productIdList },
       options: {
+        enabled: productIdList?.length > 0,
         onSuccess: (data) => {
           console.log('cart data : ', data);
         },
@@ -254,26 +254,37 @@ function CartPage({ ...basisProps }: CartPageProps) {
 
         <Box>
           <VisuallyHidden as="h3">장바구니 상품목록</VisuallyHidden>
-          <Box as="ul">
-            {cartData &&
-              cartData[0]?.cartitem.map((item) => {
-                const findedProduct = productData.find(
-                  (product: any) => product?.data?.id === item.productId,
-                );
-                // console.log('findedProduct : ', findedProduct);
-                return (
-                  <CartItem
-                    key={item.id}
-                    productData={findedProduct?.data}
-                    cartData={item}
-                    mutatingCount={mutatingCount}
-                    mutatingDelete={mutatingDelete}
-                    checkUseState={[checkItems as CartItemDTOType[], dispatch]}
-                    isLoadingProductData={findedProduct?.isLoading}
-                  />
-                );
-              })}
-          </Box>
+
+          {!productData.some((result: any) => result.isLoading) &&
+          !isLoadingCartData ? (
+            <Box as="ul">
+              {cartData &&
+                cartData[0]?.cartitem.map((item) => {
+                  const findedProduct = productData.find(
+                    (product: any) => product?.data?.id === item.productId,
+                  );
+                  // console.log('findedProduct : ', findedProduct);
+                  return (
+                    <>
+                      <CartItem
+                        key={item.id}
+                        productData={findedProduct?.data}
+                        cartData={item}
+                        mutatingCount={mutatingCount}
+                        mutatingDelete={mutatingDelete}
+                        checkUseState={[
+                          checkItems as CartItemDTOType[],
+                          dispatch,
+                        ]}
+                        isLoadingProductData={productData.some(
+                          (result: any) => result.isLoading,
+                        )}
+                      />
+                    </>
+                  );
+                })}
+            </Box>
+          ) : null}
         </Box>
       </Box>
 

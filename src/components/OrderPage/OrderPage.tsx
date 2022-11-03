@@ -48,15 +48,15 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
   // });
   // const { mutate: postOrderStatusMutate } = usePostOrderStatusMutation();
 
-  const { data: orderIdData } = useGetOrderQuery({
-    variables: userData?.id?.toString(),
-  });
-  console.log('orderIdData :: ', orderIdData);
+  // const { data: orderIdData } = useGetOrderQuery({
+  //   variables: userData?.id?.toString(),
+  // });
+  // console.log('orderIdData :: ', orderIdData);
   const { value: checkItems } = useAppStore((state) => state.ORDER);
   const { paymentList: paymentList } = useAppStore((state) => state.ORDER);
   const dispatch = useDispatch();
   console.log('checkItems ::: ', checkItems);
-  const [paymentItems, setPaymentItems] = useState([]);
+  // const [paymentItems, setPaymentItems] = useState([]);
   const { query: productData } = useGetProductByIdQueries(
     {
       options: {
@@ -76,16 +76,8 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     };
   }, []);
 
-  // console.log('productData :::::::::::::::: ', productData);
-  // console.log(
-  //   'checkItems.map((item) => item.productId.toString()), :::::::::: ',
-  //   checkItems.map((item) => item.productId.toString()),
-  // );
-
   const searchPostcode1 = usePostcode();
-
   const searchPostcode2 = usePostcode();
-  console.log('paymentList ::: ', paymentList);
 
   const onSubmit = handleSubmit((data) => {
     console.log('submit success ::: ', data);
@@ -94,6 +86,12 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     form.append('userId', data.userId);
     form.append('price', data.price);
     // form.append('paymentKey', '');
+    let shippingPrice = 0;
+    if (Number(data.price) < 30000) {
+      shippingPrice = 3000;
+    }
+    form.append('shippingPrice', shippingPrice.toString());
+    form.append('amount', (Number(data.price) + shippingPrice).toString());
     form.append('method', data.method);
     form.append('userName', data.userName);
     form.append('userPhone', data.userPhone.replace(/-/g, ''));
@@ -179,7 +177,6 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
       onSubmit={onSubmit}
       useOrderPostcode={searchPostcode1}
       useShippingPostcode={searchPostcode2}
-      useCheckItems={paymentItems}
       paymentList={paymentList}
     />
   );

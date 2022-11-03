@@ -79,15 +79,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
     query: { page: queryPage = 1 },
   } = useRouter();
   const { data: userData } = useGetMyInfoQuery();
-  // const [productIdList, setProductIdList] =
-  //   useState<{ productId: string; id: string }[]>();
-  // const [orderList, setOrderList] = useState<GetOrderStatusDTOType>();
-  const [isRendeing, setIsRendeing] = useState<boolean>(false);
   const [isNextApi, setIsNextApi] = useState<boolean>(false);
-  // const { data: orderList } = useGetOrderQuery({
-  //   // [0]
-  //   variables: userData?.id?.toString(),
-  // });
   console.log('query?.page : ', queryPage);
   const {
     data: orderStatusList,
@@ -107,11 +99,6 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
       // variables: '4',
       options: {
         enabled: !!queryPage && !!userData?.id?.toString(),
-        // onSuccess: (data) => {
-        //   console.log('onSuccess data :: ', data);
-        //   setOrderList(data.results);
-        //   // setProductIdList(data.results.map((item) => item.productId.toString()));
-        // },
         onSuccess: (data) => {
           // setOrderList(data);
           setIsNextApi(true);
@@ -122,9 +109,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
             id: item?.id?.toString(),
             orderId: item?.orderId,
           }));
-          // console.log('productIdArray : ', productIdArray);
-          // setProductIdList(productIdArray);
-          // console.log('select : ', data);
+
           const newresults = data.results.map((item, idx) => ({
             ...item,
             created: item?.created?.split('T')[0],
@@ -149,25 +134,12 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
           newData.results = newresults2;
           console.log('newData :: ', newData);
           return newData;
-
-          // const newData = { ...data };
-          // newData.results = newresults;
-          // console.log('newData :: ', newData);
-          // return newData;
         },
-        // getPreviousPageParam: (firstPage, allPages) => {
-        //   console.log('firstPage.cursor : ', firstPage.previous);
-        //   return firstPage.previous;
-        // },
-        // getNextPageParam: (lastPage, allPages) => {
-        //   console.log('lastPage.cursor : ', lastPage.next);
-        //   return lastPage.next;
-        // },
       },
     },
     queryPage as string | undefined,
   );
-  // console.log('orderList :: ', orderList);
+
   const { query: productData } = useGetProductByIdQueries3(
     {
       // options: { enabled: !!productIdList },
@@ -178,29 +150,6 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
         onSuccess: (data: any) => {
           console.log('productData :: ', data);
         },
-        // suspense: true,
-        // select: (data: any) => {
-        //   console.log('cart data : ', data);
-
-        //   const targetIndex = orderStatusList?.results.findIndex(
-        //     (item) => item.productId === data.id,
-        //   );
-        //   const oldOrder = orderStatusList?.results[targetIndex as number];
-        //   const newOrder = {
-        //     ...oldOrder,
-        //     name: data.name,
-        //     capacity: data.capacity,
-        //     price: data.price,
-        //     photo: data.photo,
-        //   };
-        //   console.log('newOrder :: ', newOrder);
-        //   return newOrder;
-        //   // setOrderList((prev) => [
-        //   //   ...prev.slice(0, targetIndex),
-        //   //   newOrder,
-        //   //   ...prev.slice(targetIndex + 1),
-        //   // ]);
-        // },
       },
       variables: '',
     },
@@ -211,11 +160,6 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
         id: item?.id?.toString(),
       };
     }),
-    // orderStatusList?.results?.map((item) => ({
-    //   productId: item?.productId?.toString(),
-    //   id: item?.id?.toString(),
-    // })),
-    // orderList?.map((item) => item?.productId?.toString()),
   );
 
   const { query: orderData } = useGetOrderByOrderIdQueries(
@@ -392,7 +336,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
         const product = productData.find(
           ({ data }: any) => data.id === item2.productId,
         );
-        const shippingPriceInfo: any = orderData.find(
+        const shippingInfo: any = orderData.find(
           ({ data }: any) => data.id === item2.orderId,
         );
 
@@ -402,7 +346,8 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
           capacity: product.data.capacity,
           price: product.data.price,
           photo: product.data.photo,
-          shippingPrice: shippingPriceInfo?.data?.shippingPrice,
+          shippingPrice: shippingInfo?.data?.shippingPrice,
+          shippingStatus: shippingInfo?.data?.shippingStatus,
         };
 
         return (
@@ -411,7 +356,7 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
               htmlTag={'div'}
               product={newInfo}
               // paymentStatus={shippingPriceInfo.status}
-              shippingStatus={item2.shippingStatus}
+              shippingStatus={shippingInfo?.data?.shippingStatus}
             />
           </Box>
         );

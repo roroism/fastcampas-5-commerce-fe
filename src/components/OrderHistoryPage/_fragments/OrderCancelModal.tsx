@@ -54,52 +54,59 @@ function OrderCancelModal({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-
-    if (product.id) {
-      // const form = new FormData();
-      // form.append('orderId', product.id?.toString());
-      // form.append('productId', product.productId.toString());
-      // form.append('shippingStatus', ShippingStatus.CANCELED);
-
+    console.log('product.orderId : ', product.orderId);
+    if (product.orderId) {
       productApi
-        .patchOrderStatus({
-          id: product.id.toString(),
+        .patchOrder({
+          orderId: product.orderId,
           data: { shippingStatus: ShippingStatus.CANCELED },
         })
-        .then((res) => {
-          console.log('res : ', res);
-          queryClient.setQueryData(
-            ORDER_STATUS_API_QUERY_KEY.GET(page),
-            (prevData: GetOrderStatusDTOType | undefined) => {
-              if (!prevData) return prevData;
-
-              console.log('prevData : ', prevData);
-              const targetIndex = prevData.results.findIndex(
-                (item) => item.id === res.id,
-              );
-              const oldResult = prevData.results[targetIndex];
-              const newResult = {
-                ...oldResult,
-                shippingStatus: res.shippingStatus,
-              };
-              const newResults = [
-                ...prevData.results.slice(0, targetIndex),
-                newResult,
-                ...prevData.results.slice(targetIndex + 1),
-              ];
-              console.log('newResults : ', newResults);
-              console.log('{ ...prevData, results: newResults } : ', {
-                ...prevData,
-                results: newResults,
-              });
-              return { ...prevData, results: newResults };
-            },
-          );
-
+        .then(() => {
           onClose();
           orderCancelSuccessOnOpen();
         });
     }
+
+    // if (product.id) {
+    // productApi
+    //     .patchOrderStatus({
+    //       id: product.id.toString(),
+    //       data: { shippingStatus: ShippingStatus.CANCELED },
+    //     })
+    //     .then((res) => {
+    //       console.log('res : ', res);
+    //       queryClient.setQueryData(
+    //         ORDER_STATUS_API_QUERY_KEY.GET(page),
+    //         (prevData: GetOrderStatusDTOType | undefined) => {
+    //           if (!prevData) return prevData;
+
+    //           console.log('prevData : ', prevData);
+    //           const targetIndex = prevData.results.findIndex(
+    //             (item) => item.id === res.id,
+    //           );
+    //           const oldResult = prevData.results[targetIndex];
+    //           const newResult = {
+    //             ...oldResult,
+    //             shippingStatus: res.shippingStatus,
+    //           };
+    //           const newResults = [
+    //             ...prevData.results.slice(0, targetIndex),
+    //             newResult,
+    //             ...prevData.results.slice(targetIndex + 1),
+    //           ];
+    //           console.log('newResults : ', newResults);
+    //           console.log('{ ...prevData, results: newResults } : ', {
+    //             ...prevData,
+    //             results: newResults,
+    //           });
+    //           return { ...prevData, results: newResults };
+    //         },
+    //       );
+
+    //       onClose();
+    //       orderCancelSuccessOnOpen();
+    //     });
+    // }
   };
   // const closeComplete = useCallback(() => {
   //   // router.replace('/mypage/history');
@@ -129,12 +136,15 @@ function OrderCancelModal({
               justifyContent="center"
             >
               <Box
+                as="p"
                 fontWeight="700"
                 textAlign="center"
                 alignItems="center"
                 mt="31px"
+                lineHeight="1.5em"
               >
                 주문취소 하시겠습니까?
+                {/* &#40;* 같이 주문한 다른 상품들도 취소됩니다. &#41; */}
               </Box>
             </ModalBody>
 

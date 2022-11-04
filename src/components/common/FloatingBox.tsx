@@ -9,9 +9,9 @@ const FloatingBox = ({ position, children }: FloatingBoxProps) => {
     <Box
       position="absolute"
       bottom={position === 'bottom' ? '30px' : 'none'}
-      top={position === 'top' ? '30px' : 'none'}
-      right="16px"
-      zIndex="999"
+      top={position === 'top' ? '15px' : 'none'}
+      right="55px"
+      zIndex="1000"
     >
       {children}
     </Box>

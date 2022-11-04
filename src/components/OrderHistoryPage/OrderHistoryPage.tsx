@@ -268,7 +268,10 @@ function OrderHistoryPage({ ...basisProps }: OrderHistoryPageProps) {
         <div key={i + 1}>
           <NextLink href={`/mypage/history/${i + 1}`} scroll={false} passHref>
             <Link>
-              <Text fontWeight={Number(queryPage) === i + 1 ? '700' : '400'}>
+              <Text
+                fontWeight={Number(queryPage) === i + 1 ? '700' : '400'}
+                color={Number(queryPage) === i + 1 ? 'black' : 'gray.400'}
+              >
                 {i + 1}
               </Text>
             </Link>

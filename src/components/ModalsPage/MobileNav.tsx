@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import {
@@ -22,8 +23,6 @@ import {
 
 import { LogoutModal } from '@components/Modals';
 
-import { LogoutIcon } from 'generated/icons/MyIcons';
-
 const TitleText = {
   fontWeight: 700,
   fontSize: '1.25rem',
@@ -37,7 +36,13 @@ const MenuText = {
 interface MobileNavProps extends DrawerProps {}
 
 function MobileNav(props: Omit<MobileNavProps, 'children'>) {
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (router.asPath === e.currentTarget.parentElement?.getAttribute('href'))
+      props.onClose();
+  };
 
   return (
     <>
@@ -59,7 +64,12 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
               >
                 <NextLink href="/" passHref>
                   <Link p="16px" display="block" w="full">
-                    <Button variant="unstyled" minWidth={0} {...MenuText}>
+                    <Button
+                      variant="unstyled"
+                      onClick={(e) => handleClick(e)}
+                      minWidth={0}
+                      {...MenuText}
+                    >
                       <Text as="h3">홈</Text>
                     </Button>
                   </Link>
@@ -73,7 +83,11 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
               >
                 <NextLink href="/products" passHref>
                   <Link p="16px" display="block" w="full">
-                    <Button variant="unstyled" {...MenuText}>
+                    <Button
+                      variant="unstyled"
+                      onClick={(e) => handleClick(e)}
+                      {...MenuText}
+                    >
                       <Text as="h3">상품보기</Text>
                     </Button>
                   </Link>
@@ -87,7 +101,11 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
               >
                 <NextLink href="/mypage" passHref>
                   <Link p="16px" display="block" w="full">
-                    <Button variant="unstyled" {...MenuText}>
+                    <Button
+                      variant="unstyled"
+                      onClick={(e) => handleClick(e)}
+                      {...MenuText}
+                    >
                       <Text as="h3">마이페이지</Text>
                     </Button>
                   </Link>

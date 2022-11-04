@@ -20,7 +20,10 @@ import {
 } from '@chakra-ui/react';
 
 import productApi from '@apis/reactquery/QueryApi';
-import { ORDER_STATUS_API_QUERY_KEY } from '@apis/reactquery/QueryApi.query';
+import {
+  ORDER_BY_ORDERID_API_QUERY_KEY,
+  ORDER_STATUS_API_QUERY_KEY,
+} from '@apis/reactquery/QueryApi.query';
 import {
   GetOrderStatusDTOType,
   ShippingStatus,
@@ -55,13 +58,32 @@ function OrderCancelModal({
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log('product.orderId : ', product.orderId);
+    // if (product.orderId) {
+    //   productApi
+    //     .patchOrder({
+    //       orderId: product.orderId,
+    //       data: { shippingStatus: ShippingStatus.CANCELED },
+    //     })
+    //     .then((res) => {
+    //       console.log('patchOrder res : ', res);
+    //       onClose();
+    //       orderCancelSuccessOnOpen();
+    //     });
+    // }
+
     if (product.orderId) {
       productApi
-        .patchOrder({
-          orderId: product.orderId,
+        .patchOrderStatus({
+          id: product.orderId,
           data: { shippingStatus: ShippingStatus.CANCELED },
         })
-        .then(() => {
+        .then((res) => {
+          console.log('patchOrderStatus res : ', res);
+          queryClient.setQueryData(
+            ORDER_BY_ORDERID_API_QUERY_KEY.GET(res.id),
+            res,
+          );
+
           onClose();
           orderCancelSuccessOnOpen();
         });

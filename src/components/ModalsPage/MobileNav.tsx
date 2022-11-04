@@ -39,9 +39,13 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (router.asPath === e.currentTarget.parentElement?.getAttribute('href'))
-      props.onClose();
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    console.log('router : ', router);
+    console.log(
+      'e.currentTarget.parentElement : ',
+      e.currentTarget.getAttribute('href'),
+    );
+    if (router.asPath === e.currentTarget.getAttribute('href')) props.onClose();
   };
 
   return (
@@ -49,7 +53,7 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
       <Drawer placement="left" {...props}>
         <DrawerOverlay />
         <DrawerContent borderRight="62px solid rgba(26, 26, 26, 0.2)">
-          <DrawerCloseButton />
+          <DrawerCloseButton top="28px" right="20px" />
           {/* <DrawerHeader></DrawerHeader> */}
           <DrawerBody>
             <Box {...TitleText} px="1rem" mt="80px">
@@ -63,15 +67,16 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 w="full"
               >
                 <NextLink href="/" passHref>
-                  <Link p="16px" display="block" w="full">
-                    <Button
-                      variant="unstyled"
-                      onClick={(e) => handleClick(e)}
-                      minWidth={0}
-                      {...MenuText}
-                    >
-                      <Text as="h3">홈</Text>
-                    </Button>
+                  <Link
+                    p="16px"
+                    py="18px"
+                    display="block"
+                    w="full"
+                    onClick={(e) => handleClick(e)}
+                  >
+                    <Text as="h3" {...MenuText}>
+                      홈
+                    </Text>
                   </Link>
                 </NextLink>
               </Flex>
@@ -82,14 +87,16 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 w="full"
               >
                 <NextLink href="/products" passHref>
-                  <Link p="16px" display="block" w="full">
-                    <Button
-                      variant="unstyled"
-                      onClick={(e) => handleClick(e)}
-                      {...MenuText}
-                    >
-                      <Text as="h3">상품보기</Text>
-                    </Button>
+                  <Link
+                    p="16px"
+                    py="18px"
+                    display="block"
+                    w="full"
+                    onClick={(e) => handleClick(e)}
+                  >
+                    <Text as="h3" {...MenuText}>
+                      상품보기
+                    </Text>
                   </Link>
                 </NextLink>
               </Flex>
@@ -100,14 +107,16 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 w="full"
               >
                 <NextLink href="/mypage" passHref>
-                  <Link p="16px" display="block" w="full">
-                    <Button
-                      variant="unstyled"
-                      onClick={(e) => handleClick(e)}
-                      {...MenuText}
-                    >
-                      <Text as="h3">마이페이지</Text>
-                    </Button>
+                  <Link
+                    p="16px"
+                    py="18px"
+                    display="block"
+                    w="full"
+                    onClick={(e) => handleClick(e)}
+                  >
+                    <Text as="h3" {...MenuText}>
+                      마이페이지
+                    </Text>
                   </Link>
                 </NextLink>
               </Flex>

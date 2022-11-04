@@ -25,7 +25,7 @@ function LogoutModal({ isOpen, onClose, ...props }: LogoutModalProps) {
 
   const handleLogoutClick = () => {
     deleteToken();
-    router.push('/login');
+    router.replace('/login');
   };
 
   return (

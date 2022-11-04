@@ -1,4 +1,5 @@
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -14,7 +15,7 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react';
 
-import instance from '@apis/_axios/instance';
+import instance, { setAuthHeader } from '@apis/_axios/instance';
 import productApi from '@apis/reactquery/QueryApi';
 import {
   useDeleteCartItemMutation,
@@ -32,6 +33,7 @@ import useAppStore from '@features/useAppStore';
 
 import { LAYOUT } from '@constants/layout';
 import { useQueryClient } from '@tanstack/react-query';
+import { getToken } from '@utils/localStorage/token';
 
 import CartItem from './_fragments/CartItem';
 
@@ -42,6 +44,7 @@ import priceFormat from 'hooks/priceFormat';
 interface CartPageProps extends ChakraProps {}
 
 function CartPage({ ...basisProps }: CartPageProps) {
+  const router = useRouter();
   const [productIdList, setProductIdList] = useState<Array<string>>([]);
   const [shippingPrice, setShippingPrice] = useState<number>(0);
   const [checkedPrice, setCheckedPrice] = useState<number>(0);
@@ -160,6 +163,12 @@ function CartPage({ ...basisProps }: CartPageProps) {
 
   console.log('userData : ', userData);
   console.log('cartData : ', cartData);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token?.access) router.replace('/login');
+    else setAuthHeader(token?.access);
+  }, [router]);
 
   useEffect(() => {
     let checkedPrice = 0;

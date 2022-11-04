@@ -81,7 +81,7 @@ export class ProductApi {
       url: `/v1/user/me/`,
       params,
     });
-    console.log('getMyInfo - data : ', data);
+    // console.log('getMyInfo - data : ', data);
     return data;
   };
 

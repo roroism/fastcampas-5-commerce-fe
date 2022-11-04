@@ -29,6 +29,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useGetProductByIdQuery } from '@apis/reactquery/QueryApi.query';
+import { ProductDetailDTOType } from '@apis/reactquery/QueryApi.type';
 
 import StarRating from '@components/common/StarRating/StarRating';
 
@@ -41,11 +42,11 @@ import ReviewItem, { Ireview } from './_fragments/ReviewItem';
 import priceFormat from 'hooks/priceFormat';
 
 interface DetailProductPageProps extends ChakraProps {
-  res: any;
+  res: ProductDetailDTOType;
 }
 
 function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
-  console.log('props res : ', res);
+  // console.log('props res : ', res);
   const { query } = useRouter();
   const { colorMode } = useColorMode();
   const detailInfoRef = useRef<HTMLDivElement>(null);
@@ -165,7 +166,7 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
           return;
       }
     });
-    console.log('countingRate : ', countingRate);
+    // console.log('countingRate : ', countingRate);
     setCountRate([
       countingRate[0],
       countingRate[1],
@@ -309,8 +310,8 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
             </Box>
             <Box>
               <Box
-                // position="sticky"
-                // top={LAYOUT.HEADER.HEIGHT}
+                position="sticky"
+                top={LAYOUT.HEADER.HEIGHT}
                 bg={colorMode === 'light' ? '#ffffff' : 'gray.700'}
               >
                 <Flex
@@ -400,7 +401,11 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
               <Accordion defaultIndex={[1]} allowMultiple pt="25px">
                 <AccordionItem>
                   <Box ref={orderInfoRef}>
-                    <AccordionButton py="15.5px" ref={orderInfoButtonRef}>
+                    <AccordionButton
+                      py="15.5px"
+                      ref={orderInfoButtonRef}
+                      aria-expanded
+                    >
                       <Box
                         as="h3"
                         // ref={orderInfoRef}

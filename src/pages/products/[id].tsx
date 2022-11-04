@@ -5,12 +5,13 @@ import axios from 'axios';
 
 import instance from '@apis/_axios/instance';
 import productApi from '@apis/reactquery/QueryApi';
+import { ProductDetailDTOType } from '@apis/reactquery/QueryApi.type';
 
 import DetailProductPage from '@components/ProductsPage/DetailProductPage';
 import HomeLayout from '@components/common/@Layout/HomeLayout';
 
 interface DetailProductProps {
-  res: any;
+  res: ProductDetailDTOType;
 }
 
 function DetailProduct({ res }: DetailProductProps) {
@@ -34,13 +35,11 @@ export type Params = {
 };
 
 export const getStaticPaths = async () => {
-  let paths: any = [];
+  let paths: Array<{ params: { id: string } }> = [];
 
   const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/product/?page_size=100`,
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/product/?page_size=50`,
   );
-
-  // console.log('res.data : ', res.data);
 
   paths = res?.data?.results?.map((item: any) => ({
     params: { id: item.id.toString() },
@@ -50,26 +49,6 @@ export const getStaticPaths = async () => {
     paths,
     fallback: false,
   };
-
-  // instance
-  //   .get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/product/?page_size=100`)
-  //   .then((res: any) => {
-  //     // console.log('res : ', res);
-  //     paths = res?.data?.results?.map((item: any) => ({
-  //       params: { id: item.id },
-  //     }));
-  //     return {
-  //       paths,
-  //       fallback: false,
-  //     };
-  //   });
-  // .finally(() => {
-  //   console.log('finally paths : ', paths);
-  //   return {
-  //     paths,
-  //     fallback: false,
-  //   };
-  // });
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }: Params) => {

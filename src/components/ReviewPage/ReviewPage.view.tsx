@@ -203,6 +203,7 @@ function ReviewPageView({
                           h="80px"
                           borderRadius="5px"
                           object-fit="cover"
+                          alt={`review image${idx}`}
                         ></Image>
                         <Button
                           variant="unstyled"
@@ -213,7 +214,10 @@ function ReviewPageView({
                           id={idx.toString()}
                           onClick={hendleDeleteImgOnClick}
                         >
-                          <Image src="/icons/svg/review/delete.svg"></Image>
+                          <Image
+                            src="/icons/svg/review/delete.svg"
+                            alt={`Delete review image${idx} button`}
+                          ></Image>
                         </Button>
                       </Box>
                     );

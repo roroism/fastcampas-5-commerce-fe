@@ -211,8 +211,10 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
                 <Box>
                   <Image
                     w="100%"
+                    h="100%"
                     src={data?.photo}
-                    // backgroundColor="yellow"
+                    alt={`${data?.name} 이미지`}
+                    background="center / cover no-repeat url('./images/product/bg.png')"
                   />
                 </Box>
               </Box>

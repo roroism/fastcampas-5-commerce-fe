@@ -101,27 +101,9 @@ const ReviewByTag = ({
                   src={item?.url}
                   w="80px"
                   h="80px"
-                  alt="review image"
+                  alt={`review image${idx}`}
                 />
               ))}
-            {/* <Image
-              src="images/review/review1.png"
-              w="80px"
-              h="80px"
-              alt="review image"
-            /> */}
-            {/* <Image
-              src="images/review/review2.png"
-              w="80px"
-              h="80px"
-              alt="review image"
-            />
-            <Image
-              src="images/review/review3.png"
-              w="80px"
-              h="80px"
-              alt="review image"
-            /> */}
           </HStack>
         </VStack>
       </Box>

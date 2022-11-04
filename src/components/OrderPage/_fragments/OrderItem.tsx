@@ -80,8 +80,10 @@ const OrderItem = ({
           >
             <Image
               w="100%"
-              src={product.photo}
-              alt={`${product.name} 이미지`}
+              h="100%"
+              src={product?.photo}
+              alt={`${product?.name} 이미지`}
+              background="center / cover no-repeat url('./images/product/bg.png')"
             />
           </Flex>
 
@@ -92,13 +94,13 @@ const OrderItem = ({
             justifyContent="center"
           >
             <Box as="strong" fontWeight="700">
-              {product.name}
+              {product?.name}
             </Box>
             <Box as="span" color="gray.700">
-              {product.name} | {product.capacity}ml
+              {product?.name} | {product?.capacity}ml
             </Box>
             <Box as="strong" color="primary.500" mt="3px">
-              {priceFormat(product.price)}원 / {product.count}개
+              {priceFormat(product?.price)}원 / {product?.count}개
             </Box>
           </Flex>
           {paymentStatus && (
@@ -150,16 +152,15 @@ const OrderItem = ({
                   : '기타사항'}
               </Text>
               <Text fontWeight="400" fontSize="0.75rem">
-                {console.log('product.shippingPrice : ', product.shippingPrice)}
-                {product.shippingPrice === 0
+                {product?.shippingPrice === 0
                   ? `무료배송`
-                  : `배송비 ${priceFormat(product.shippingPrice)}원`}
+                  : `배송비 ${priceFormat(product?.shippingPrice)}원`}
               </Text>
             </Flex>
           ) : null}
         </Flex>
       </Box>
-      {product.shippingStatus === ShippingStatus.PAID ? (
+      {product?.shippingStatus === ShippingStatus.PAID ? (
         <Flex justifyContent="right">
           <Button
             onClick={orderCancelOnOpen}
@@ -177,10 +178,10 @@ const OrderItem = ({
             주문취소
           </Button>
         </Flex>
-      ) : product.shippingStatus === ShippingStatus.DONE ? (
+      ) : product?.shippingStatus === ShippingStatus.DONE ? (
         <Flex justifyContent="right">
           <NextLink
-            href={`/review/?orderitemid=${product.id}&productid=${product.productId}&count=${product.count}&created=${product.created}`}
+            href={`/review/?orderitemid=${product?.id}&productid=${product?.productId}&count=${product?.count}&created=${product?.created}`}
             passHref
           >
             <Link>

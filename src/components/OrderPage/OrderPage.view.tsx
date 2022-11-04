@@ -358,7 +358,7 @@ function OrderPageView({
                   value={PaymentMethod.CARD}
                 >
                   <Flex ml="17px" gap="17px">
-                    <Image src="/icons/svg/order/pay.svg" />
+                    <Image src="/icons/svg/order/pay.svg" alt="신용카드결제" />
                     <Box fontSize="1rem">신용카드결제</Box>
                   </Flex>
                 </Checkbox>

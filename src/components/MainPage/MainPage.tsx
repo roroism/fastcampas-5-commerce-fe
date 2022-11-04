@@ -93,7 +93,7 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
   };
 
   return (
-    <Box as="main" {...basisProps}>
+    <Box {...basisProps}>
       <VisuallyHidden as="h2">main contents</VisuallyHidden>
       <Box
         bgImage="./images/main/bg_main.png"

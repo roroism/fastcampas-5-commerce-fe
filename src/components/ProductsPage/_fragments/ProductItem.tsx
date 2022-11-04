@@ -61,7 +61,7 @@ const ProductItem = ({ product }: ProductItemProps) => {
                 w="100%"
                 // src="./images/product/sampleImg.png"
                 src={product?.thumbnail}
-                // backgroundColor="yellow"
+                alt={product?.name}
               />
             </Link>
           </NextLink>

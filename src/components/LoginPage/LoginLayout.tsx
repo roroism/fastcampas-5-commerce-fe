@@ -9,7 +9,13 @@ interface LoginLayoutProps {
 
 const LoginLayout = ({ containerProps, content }: LoginLayoutProps) => {
   return (
-    <Container w={{ base: '375px' }} {...containerProps} px={0}>
+    <Container
+      w={{ base: '375px' }}
+      {...containerProps}
+      px={0}
+      position="relative"
+      zIndex="2000"
+    >
       {content}
     </Container>
   );

@@ -186,8 +186,10 @@ const CartItem = ({
               >
                 <Image
                   w="100%"
+                  h="100%"
                   src={productData?.photo}
                   alt={`${productData?.name} 이미지`}
+                  background="center / cover no-repeat url('./images/product/bg.png')"
                 ></Image>
               </Flex>
             </Skeleton>

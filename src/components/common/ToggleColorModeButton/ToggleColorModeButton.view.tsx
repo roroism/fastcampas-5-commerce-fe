@@ -25,6 +25,7 @@ export const ToggleColorModeButtonView = ({
           src={
             colorMode === 'light' ? '/icons/svg/moon.svg' : '/icons/svg/sun.svg'
           }
+          alt="toggle color mode button"
         />
       </Button>
     </FloatingBox>

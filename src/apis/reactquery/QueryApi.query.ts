@@ -97,28 +97,6 @@ export function useGetProductByIdQueries(
   const query: UseQueryResult<ProductDetailDTOType>[] = useQueries({
     queries: [...queryList],
   });
-
-  // const query: UseQueryResult[] = useQueries({
-  //   queries: [
-  //     {
-  //       queryKey: PRODUCT_API_QUERY_KEY.GET_BY_ID(params?.variables),
-  //       queryFn: () => productApi.getProductById(params?.variables),
-  //       staleTime: Infinity,
-  //     },
-  //   ],
-  // });
-
-  //   persons.map((person) => {
-  //     return {
-  //         queryKey: ['person', person.id],
-  //         queryFn: () => axios.get('http://localhost:8080/person', {
-  //             params: {
-  //                 id: person.id
-  //             }
-  //         })
-  //     }
-  // })
-
   return { query, queryKeyList };
 }
 
@@ -217,12 +195,12 @@ export function useGetOrderByOrderIdQueries(
 
   const queryList =
     productIdList?.map((orderId) => {
-      queryKeyList.push(ORDER_BY_ORDERID_API_QUERY_KEY.GET_INFINITE(orderId));
+      queryKeyList.push(ORDER_BY_ORDERID_API_QUERY_KEY.GET(orderId));
 
       return {
         enabled: params.options?.enabled,
         onSuccess: params.options?.onSuccess,
-        queryKey: ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(orderId),
+        queryKey: ORDER_BY_ORDERID_API_QUERY_KEY.GET(orderId),
         queryFn: () => productApi.getOrderByOrderId(orderId),
       };
     }) || [];
@@ -285,12 +263,12 @@ export function useGetProductByIdQueries2(
 
   const queryList =
     productIdList?.map((item) => {
-      queryKeyList.push(ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(item.id));
+      queryKeyList.push(PRODUCT_API_QUERY_KEY.GET_BY_ID(item.id));
 
       return {
         enabled: params.options?.enabled,
         onSuccess: params.options?.onSuccess,
-        queryKey: ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(item.id),
+        queryKey: PRODUCT_API_QUERY_KEY.GET_BY_ID(item.id),
         queryFn: () => productApi.getProductById(item.productId),
       };
     }) || [];
@@ -305,7 +283,7 @@ export function useGetProductByIdQueries2(
 
 export function useGetProductByIdQueries3(
   params: any,
-  productIdList: Array<{ productId: string; id: string }> | undefined,
+  productIdList: Array<{ productId: string; id: string }> | undefined, // id : orderitem id
   // productIdList?: Array<string> | undefined,
 ) {
   const queryKeyList: any[] = [];
@@ -313,13 +291,13 @@ export function useGetProductByIdQueries3(
 
   const queryList =
     productIdList?.map((item) => {
-      queryKeyList.push(ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(item.id));
+      queryKeyList.push(PRODUCT_API_QUERY_KEY.GET_BY_ID(item.productId));
 
       return {
         enabled: params.options?.enabled,
         select: params.options?.select,
         onSuccess: params.options?.onSuccess,
-        queryKey: ORDER_STATUS_API_QUERY_KEY.GET_BY_ID(item.id),
+        queryKey: PRODUCT_API_QUERY_KEY.GET_BY_ID(item.productId),
         queryFn: () => productApi.getProductById(item.productId),
       };
     }) || [];

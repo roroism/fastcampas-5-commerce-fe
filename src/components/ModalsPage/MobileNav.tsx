@@ -57,13 +57,8 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 borderY="1px solid #F2F3F4"
                 w="full"
               >
-                <NextLink href="/">
-                  <Link
-                    p="16px"
-                    _hover={{ cursor: 'pointer' }}
-                    display="block"
-                    w="full"
-                  >
+                <NextLink href="/" passHref>
+                  <Link p="16px" display="block" w="full">
                     <Button variant="unstyled" minWidth={0} {...MenuText}>
                       <Text as="h3">홈</Text>
                     </Button>
@@ -76,13 +71,8 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 borderY="1px solid #F2F3F4"
                 w="full"
               >
-                <NextLink href="/products">
-                  <Link
-                    p="16px"
-                    _hover={{ cursor: 'pointer' }}
-                    display="block"
-                    w="full"
-                  >
+                <NextLink href="/products" passHref>
+                  <Link p="16px" display="block" w="full">
                     <Button variant="unstyled" {...MenuText}>
                       <Text as="h3">상품보기</Text>
                     </Button>
@@ -95,13 +85,8 @@ function MobileNav(props: Omit<MobileNavProps, 'children'>) {
                 borderY="1px solid #F2F3F4"
                 w="full"
               >
-                <NextLink href="/mypage">
-                  <Link
-                    p="16px"
-                    _hover={{ cursor: 'pointer' }}
-                    display="block"
-                    w="full"
-                  >
+                <NextLink href="/mypage" passHref>
+                  <Link p="16px" display="block" w="full">
                     <Button variant="unstyled" {...MenuText}>
                       <Text as="h3">마이페이지</Text>
                     </Button>

@@ -281,7 +281,7 @@ export class ProductApi {
     console.log('patchOrderStatus req : ', req);
     const { data } = await this.axios({
       method: 'PATCH',
-      url: `/v1/order/status/${req.id}/`, //status id
+      url: `/v1/order/status/${req.id}/`, //status id (x) -> order id
       data: req.data,
       // headers: { 'Content-Type': 'multipart/form-data' },
     });

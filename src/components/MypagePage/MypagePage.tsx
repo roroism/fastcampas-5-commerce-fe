@@ -29,7 +29,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
   const query = useGetMyInfoQuery();
   const router = useRouter();
 
-  console.log('query : ', query);
+  // console.log('query : ', query);
 
   // const [user, setUser] = useState<UserType>();
 
@@ -37,8 +37,7 @@ function MypagePage({ ...basisProps }: MypagePageProps) {
     const token = getToken();
     if (!token?.access) router.replace('/login');
     else setAuthHeader(token?.access);
-    console.log('login validation');
-  }, []);
+  }, [router]);
 
   return (
     <>

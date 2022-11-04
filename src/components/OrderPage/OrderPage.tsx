@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -5,6 +6,7 @@ import { result } from 'lodash';
 
 import { ChakraProps } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
 import productApi from '@apis/reactquery/QueryApi';
 import {
   usePostOrderMutation,
@@ -22,6 +24,7 @@ import useAppStore from '@features/useAppStore';
 
 import { useQueryClient } from '@tanstack/react-query';
 import { loadTossPayments } from '@tosspayments/payment-sdk';
+import { getToken } from '@utils/localStorage/token';
 
 import customUseFormforOrder from './CustomUseFormForOrder';
 import OrderPageView from './OrderPage.view';
@@ -33,6 +36,7 @@ const clientKey = 'test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq';
 interface OrderPageProps extends ChakraProps {}
 
 function OrderPage({ ...basisProps }: OrderPageProps) {
+  const router = useRouter();
   // const [postOrderResult, setPostOrderResult] = useState<OrderDTOType>();
   const queryClient = useQueryClient();
   const formData = customUseFormforOrder();
@@ -69,6 +73,12 @@ function OrderPage({ ...basisProps }: OrderPageProps) {
     },
     checkItems.map((item) => item.productId.toString()),
   );
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token?.access) router.replace('/login');
+    else setAuthHeader(token?.access);
+  }, [router]);
 
   useEffect(() => {
     return () => {

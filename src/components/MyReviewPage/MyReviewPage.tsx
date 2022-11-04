@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -11,6 +12,7 @@ import {
   VisuallyHidden,
 } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
 import {
   useGetMyInfoQuery,
   useGetMyReviewQuery,
@@ -18,12 +20,15 @@ import {
 
 import ReviewItem from '@components/ProductsPage/_fragments/ReviewItem';
 
+import { getToken } from '@utils/localStorage/token';
+
 export const MY_REVIEW_PAGE_SIZE = 5;
 export const MY_REVIEW_PAGE_NUMBER_SIZE = 5;
 
 interface MyReviewPageProps extends ChakraProps {}
 
 function MyReviewPage({ ...basisProps }: MyReviewPageProps) {
+  const router = useRouter();
   const [page, setPage] = useState<number>(1);
   const { data: userData } = useGetMyInfoQuery();
   const { data: myReviewData, isLoading: myReviewIsLoading } =
@@ -33,6 +38,12 @@ function MyReviewPage({ ...basisProps }: MyReviewPageProps) {
     });
 
   console.log('myReviewData : ', myReviewData);
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token?.access) router.replace('/login');
+    else setAuthHeader(token?.access);
+  }, [router]);
 
   const pageNumberRendering = () => {
     const result = [];

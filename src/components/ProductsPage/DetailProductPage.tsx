@@ -147,7 +147,7 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
 
   useEffect(() => {
     const countingRate: Array<number> = Array(5).fill(0);
-    data?.reviewList.map((review) => {
+    data?.reviewList.forEach((review) => {
       switch (review.rate) {
         case 1:
           countingRate[0] += 1;
@@ -166,14 +166,8 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
           return;
       }
     });
-    // console.log('countingRate : ', countingRate);
-    setCountRate([
-      countingRate[0],
-      countingRate[1],
-      countingRate[2],
-      countingRate[3],
-      countingRate[4],
-    ]);
+
+    setCountRate(countingRate);
 
     setOrderedList(data?.reviewList || null);
   }, [data]);

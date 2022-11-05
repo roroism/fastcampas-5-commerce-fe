@@ -23,7 +23,7 @@ const ReviewChartBar = ({
       >
         <Box
           w="10px"
-          h={height}
+          h={`${height}px`}
           borderTopRadius="5px"
           bg="#FF710B"
           position="absolute"

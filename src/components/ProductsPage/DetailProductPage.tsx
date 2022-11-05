@@ -306,8 +306,8 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
             </Box>
             <Box>
               <Box
-                position="sticky"
-                top={LAYOUT.HEADER.HEIGHT}
+                // position="sticky"
+                // top={LAYOUT.HEADER.HEIGHT}
                 bg={colorMode === 'light' ? '#ffffff' : 'gray.700'}
               >
                 <Flex

@@ -66,7 +66,7 @@ const EditPageView = ({
     const token = getToken();
     if (!token?.access) router.replace('/login');
     else setAuthHeader(token?.access);
-  }, []);
+  }, [router]);
 
   console.log(watch());
 

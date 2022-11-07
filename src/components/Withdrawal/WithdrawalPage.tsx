@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import axios from 'axios';
 
@@ -10,7 +10,7 @@ import { useGetMyInfoQuery } from '@apis/reactquery/QueryApi.query';
 
 import WithdrawalModal from '@components/Modals/_fragments/WithdrawalModal';
 
-import { deleteToken, setToken } from '@utils/localStorage/token';
+import { deleteToken, getToken, setToken } from '@utils/localStorage/token';
 
 import customUseForm from './CustomWithdrawalUseForm';
 import WithdrawalPageView from './WithdrawalPage.view';
@@ -25,6 +25,12 @@ function WithdrawalPage({ ...basisProps }: WithdrawalPageProps) {
 
   const router = useRouter();
 
+  useEffect(() => {
+    const token = getToken();
+    if (!token?.access) router.replace('/login');
+    else setAuthHeader(token?.access);
+  }, [router]);
+
   const onSubmit = handleSubmit(async (data) => {
     console.log('onSubmit !!!!!!!!!!!!! : ', {
       id: data.id,
@@ -38,35 +44,6 @@ function WithdrawalPage({ ...basisProps }: WithdrawalPageProps) {
       form.append('additionalReason', data.reasonOthers);
     }
 
-    // const withdrawalResult = await instance({
-    //   method: 'DELETE',
-    //   url: `/v1/user/withdrawal/${data.id}`,
-    //   data: {
-    //     id: data.id,
-    //   },
-    //   // headers: {
-    //   //   'Content-Type': 'application/json',
-    //   // },
-    // })
-    //   .then((res) => {
-    //     console.log('회원탈퇴 성공 res : ', res.data);
-    //   })
-    //   .catch((err) => {
-    //     console.log('회원탈퇴 실패 err ; ', err);
-    //   });
-
-    // await instance({
-    //   method: 'POST',
-    //   url: `/v1/user/withdrawal/reason/`,
-    //   // data: {
-    //   //   reason: data.reason,
-    //   //   additionalReason: data.reasonOthers,
-    //   // },
-    //   data: form,
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // })
     await instance
       .post(`/v1/user/withdrawal/reason/`, form, {
         headers: {

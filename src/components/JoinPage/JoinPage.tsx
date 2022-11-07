@@ -40,8 +40,8 @@ function JoinPage({ ...basisProps }: JoinPageProps) {
     form.append('phone', data.phone.replace(/-/g, ''));
     form.append('name', data.name);
     form.append('nickname', data.nickname);
-    if (data.profile && data.profile.length > 0) {
-      form.append('profile', data.profile);
+    if (data.profile && data.profile !== '') {
+      form.append('profilePath', data.profile);
     }
     if (data.gender && data.gender.length > 0) {
       form.append('gender', data.gender as string);
@@ -60,71 +60,6 @@ function JoinPage({ ...basisProps }: JoinPageProps) {
           'Content-Type': 'multipart/form-data',
         },
       })
-
-      // const joinResult = await axios({
-      // const joinResult = instance({
-      //   method: 'POST',
-      //   url: `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/register/`,
-      //   data: {
-      //     socialToken: router.query.socialToken,
-      //     email: data.email,
-      //     phone: data.phone.replace(/-/g, ''),
-      //     name: data.name,
-      //     nickname: data.nickname,
-      //     profile: data.profile,
-      //     gender: data.gender,
-      //     age: Number(data.age),
-      //     // age: data.age,
-      //     marketingAdAgree: data.agreeMarketing,
-      //   },
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-      // })
-      // const joinResult = await axios
-      //   .post(
-      //     `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/user/register/`,
-      //     {
-      //       socialToken: router.query.socialToken,
-      //       email: data.email,
-      //       phone: data.phone.replace(/-/g, ''),
-      //       name: data.name,
-      //       nickname: data.nickname,
-      //       profile: data.profile,
-      //       gender: data.gender,
-      //       age: Number(data.age),
-      //       marketingAdAgree: data.agreeMarketing,
-      //     },
-      //     {
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //     },
-      //   )
-
-      // await instance
-      //   .post(
-      //     `/v1/user/register/`,
-      //     // {
-      //     //   socialToken: router.query.socialToken,
-      //     //   email: data.email,
-      //     //   phone: data.phone.replace(/-/g, ''),
-      //     //   name: data.name,
-      //     //   nickname: data.nickname,
-      //     //   profile: data.profile,
-      //     //   gender: data.gender,
-      //     //   age: Number(data.age),
-      //     //   marketingAdAgree: data.agreeMarketing,
-      //     // },
-      //     form,
-      //     {
-      //       headers: {
-      //         // 'Content-Type': 'application/json',
-      //         'Content-Type': 'multipart/form-data',
-      //       },
-      //     },
-      //   )
-
       .then((res) => {
         console.log('회원가입 성공! res : ', res.data);
         // console.log('회원가입 성공! upload : ', joinResult);

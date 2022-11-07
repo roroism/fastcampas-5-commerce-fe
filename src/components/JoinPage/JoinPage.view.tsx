@@ -47,9 +47,8 @@ const JoinPageView = ({
   onSubmit,
   ...basisProps
 }: JoinPageViewProp) => {
-  const [preview, setPreview] = useState<string>();
+  const [preview, setPreview] = useState<string>('');
   const avatarRef = useRef<HTMLInputElement>(null);
-  const [img, setImg] = useState(avatarRef.current?.files);
   const [toggle, setToggle] = useState<boolean>(false);
   const [isJoinButtonActive, setIsJoinButtonActive] = useState<boolean>(false);
   // const [presignedUrl, setPresignedUrl] = useState<string>('');
@@ -70,13 +69,16 @@ const JoinPageView = ({
       return;
     } else {
       // if (avatarRef.current?.files) {
-      setImg(avatarRef.current?.files);
+      // setImg(avatarRef.current?.files);
       const file = avatarRef.current?.files[0];
       setPreview(URL.createObjectURL(file));
 
-      console.log('avatarRef.current?.files', avatarRef.current?.files);
+      // console.log('avatarRef.current?.files', avatarRef.current?.files);
       console.log('avatarRef.current?.files[0]', avatarRef.current?.files[0]);
       console.log('URL.createObjectURL(file)', URL.createObjectURL(file));
+      // const form = new FormData();
+      // form.append('file', file);
+      let resPresignedUrl = '';
 
       instance
         .post(`/v1/presigned_url/`, {
@@ -84,12 +86,15 @@ const JoinPageView = ({
         })
         .then(async (res) => {
           console.log('presignedUrl : ', res.data.url);
-          setValue('profile', res.data.url);
+          resPresignedUrl = res.data.url;
+
+          // console.log('file.type : ', file.type);
           const upload = await axios
             .put(
               `${res.data.url}`,
               // { file: file },
               file,
+              // form,
               {
                 baseURL: '',
                 headers: {
@@ -98,8 +103,18 @@ const JoinPageView = ({
               },
             )
             .then((res) => {
-              console.log('success : s3 file upload res : ', res);
-              console.log('success : s3 file upload upload : ', upload);
+              console.log(
+                'success : s3 file upload resPresignedUrl : ',
+                resPresignedUrl,
+              );
+
+              // setValue('profile', resPresignedUrl.split('?')[0]); //잘못된 값
+              setValue(
+                'profile',
+                `media/${resPresignedUrl.split('?')[0].split('/').at(-1)}`,
+              );
+              // setValue('profile', file.name);
+              // setPreview(resPresignedUrl.split('?')[0]);
             })
             .catch((err) => {
               console.log('presignedUrl put error : ', err);
@@ -191,7 +206,6 @@ const JoinPageView = ({
           <Input
             display="none"
             type="file"
-            multiple
             accept="image/*"
             ref={avatarRef}
             onChange={handleAvatarOnChange}

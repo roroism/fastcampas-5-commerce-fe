@@ -52,9 +52,9 @@ const ReviewByTag = ({
           : ''
       }
       display="none"
-      opacity="0"
+      // opacity="0"
       animation={`${fadeIn} 1s forwards`}
-      transition="opacity 1s"
+      // transition="opacity 1s"
       css={{
         '&.active': { display: 'block' },
       }}

@@ -743,8 +743,8 @@ function MainPage({ mainReviews, ...basisProps }: MainPageProps) {
           alignSelf="flex-start"
           w="100%"
           overflowX="scroll"
-          opacity="0"
-          animation={`${fadeIn} 1s forwards`}
+          // opacity="0"
+          // animation={`${fadeIn} 1s forwards`}
         >
           {mainReviews
             // .filter((item) => item.tagId === tagId)
@@ -960,11 +960,11 @@ const MoreInfoSubText = {
   color: 'white',
 };
 
-const fadeIn = keyframes`
-from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-`;
+// const fadeIn = keyframes`
+// from {
+//         opacity: 0;
+//     }
+//     to {
+//         opacity: 1;
+//     }
+// `;

@@ -85,9 +85,13 @@ const EditPageView = ({
     if (myInfo?.profile) setPreview(myInfo?.profile);
     setValue(
       'profile',
-      `media/${
+      `media${
         myInfo?.profile?.substring(myInfo?.profile?.lastIndexOf('/')) || ''
       }`,
+    );
+    console.log(
+      'profile substring : ',
+      myInfo?.profile?.substring(myInfo?.profile?.lastIndexOf('/')) || '',
     );
     // setValue('profile', myInfo?.profile || '');
   }, [myInfo]);
@@ -128,7 +132,8 @@ const EditPageView = ({
           console.log('presignedUrl : ', res.data.url);
           resPresignedUrl = res.data.url;
 
-          // console.log('file.type : ', file.type);
+          console.log('file.type : ', file.type);
+          console.log('file: ', file);
           const upload = await axios
             .put(
               `${res.data.url}`,

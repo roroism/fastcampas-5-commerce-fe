@@ -40,9 +40,9 @@ export const FormSchema = yup.object().shape({
   // age: yup.object().shape({
   //   value: yup.string(),
   // }),
-  gender: yup.string(),
-  age: yup.number(),
-  address: yup.string(),
+  gender: yup.string().notRequired(),
+  age: yup.string().notRequired(),
+  address: yup.string().notRequired(),
 });
 
 const customEditUseForm = (options?: UseFormProps<FormEditDataType>) => {

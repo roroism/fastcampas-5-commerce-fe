@@ -84,47 +84,6 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
       },
     },
   });
-
-  // useEffect(() => {
-  //   if ('scrollRestoration' in window.history) {
-  //     window.history.scrollRestoration = 'auto';
-  //     let shouldScrollRestore: { x: number; y: number } | null;
-
-  //     Router.events.on('routeChangeStart', () => {
-  //       console.log(
-  //         'routeChangeStart cachedScrollPositions: ',
-  //         cachedScrollPositions,
-  //       );
-  //       cachedScrollPositions.push([window.scrollX, window.scrollY]);
-  //     });
-
-  //     Router.events.on('routeChangeComplete', () => {
-  //       console.log(
-  //         'routeChangeComplete shouldScrollRestore : ',
-  //         shouldScrollRestore,
-  //       );
-  //       if (shouldScrollRestore) {
-  //         const { x, y } = shouldScrollRestore;
-  //         window.scrollTo(x, y);
-  //         shouldScrollRestore = null;
-  //       }
-  //       window.history.scrollRestoration = 'auto';
-  //     });
-
-  //     Router.beforePopState(() => {
-  //       console.log('cachedScrollPositions : ', cachedScrollPositions);
-  //       if (cachedScrollPositions.length > 0) {
-  //         const [x, y]: [number, number] = cachedScrollPositions.pop() as [
-  //           number,
-  //           number,
-  //         ];
-  //         shouldScrollRestore = { x, y };
-  //       }
-  //       window.history.scrollRestoration = 'manual';
-  //       return true;
-  //     });
-  //   }
-  // }, []);
   console.log('infinity data : ', data);
   return (
     <Box {...basisProps} px="16px" pt="120px" pb="80px" ref={boxRef}>
@@ -163,8 +122,7 @@ function ProductsPage({ ...basisProps }: ProductsPageProps) {
           </Box>
         </Box>
       ) : null}
-      {/* <Button onClick={() => fetchNextPage()}>fetch</Button> */}
-      <div ref={ref} style={{ backgroundColor: 'red' }}></div>
+      <div ref={ref}></div>
     </Box>
   );
 }

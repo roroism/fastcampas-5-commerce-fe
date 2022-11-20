@@ -52,17 +52,12 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }: Params) => {
-  // console.log('params id', params?.id);
   if (!params?.id)
     return {
       props: {},
     };
 
   const res = await productApi.getProductById(params?.id);
-  // console.log('getStaticProps res : ', res);
-  // const res = await Axios.get(`/product/${encodeURI(params?.id)}/`).then(
-  //   (res) => res.data,
-  // );
 
   return {
     props: {

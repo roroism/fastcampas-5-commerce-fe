@@ -175,14 +175,6 @@ export type OrderByOrderIdDTOType = {
   created: Date;
 };
 
-// export type CartDTOType = [
-//   {
-//     cartitem: Array<Icartitem>;
-//     id: number;
-//     userId: number;
-//   },
-// ];
-
 export enum ShippingStatus {
   PAID = 'PAID', // 결제완료
   WAIT = 'WAIT', // 상품준비중
@@ -227,11 +219,6 @@ export type ProductInCartItemParamPutType = {
 };
 
 export type OrderByOrderIdParamGetType = {};
-
-// export type ProductInCartItemParamPatchType = {
-//   id: number;
-//   data: FormData;
-// };
 
 export type ExampleDTOType = {};
 export type ProductParamGetType = {};

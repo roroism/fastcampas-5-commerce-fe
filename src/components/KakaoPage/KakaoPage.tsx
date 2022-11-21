@@ -33,7 +33,6 @@ function KakaoPage({ ...basisProps }: KakaoPageProps) {
         state: state,
       })
       .then((res) => {
-        console.log('res : ', res);
         const socialLoginInfo: ISocialLogin = res.data;
 
         if (socialLoginInfo.isRegister) {

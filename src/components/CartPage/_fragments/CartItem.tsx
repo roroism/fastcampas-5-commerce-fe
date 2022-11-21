@@ -146,6 +146,7 @@ const CartItem = ({
       px="16px"
       py="20px"
       my="10px"
+      {...basisProps}
     >
       <VisuallyHidden as="h4">{productData?.name}</VisuallyHidden>
       <Flex w="100%" gap="10px">

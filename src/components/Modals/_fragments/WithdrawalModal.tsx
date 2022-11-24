@@ -55,19 +55,6 @@ function WithdrawalModal({ isOpen, onClose, ...props }: WithdrawalModalProps) {
           </ModalBody>
 
           <ModalFooter p={0} display="flex" gap="10px" justifyContent="center">
-            {/* <Button
-              onClick={onClose}
-              fontWeight="700"
-              py="17.8px"
-              w="155px"
-              h="auto"
-              borderRadius="25px"
-              backgroundColor="white"
-              color="primary.500"
-              border="1px solid"
-            >
-              취소
-            </Button> */}
             <NextLink href="/login" passHref>
               <Link>
                 <Button

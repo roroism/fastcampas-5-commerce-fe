@@ -67,7 +67,7 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
   const orderInfoButtonRef = useRef<HTMLButtonElement>(null);
 
   // console.log('router.query : ', query.id);
-  // console.log('data : ', data);
+  // console.log('product detail data : ', data);
   // console.log('countRate : ', countRate);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -353,7 +353,14 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
               >
                 <VisuallyHidden as="h3">상세정보</VisuallyHidden>
                 <Box
-                  dangerouslySetInnerHTML={{ __html: data?.detail || '' }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      data?.detail === undefined
+                        ? ''
+                        : data?.detail.search('img') !== -1
+                        ? data?.detail
+                        : '<p><img height="3051" src="https://incourse-commerce-prod-bucket.s3.ap-northeast-2.amazonaws.com/ckeditor/2022/10/05/image-20221005165807-1.png" width="375" /></p>',
+                  }}
                 ></Box>
               </Box>
 
@@ -364,7 +371,12 @@ function DetailProductPage({ res, ...basisProps }: DetailProductPageProps) {
                       <AccordionPanel px={0} pb="20px" pt={0} overflow="hidden">
                         <Box
                           dangerouslySetInnerHTML={{
-                            __html: data?.detail || '',
+                            __html:
+                              data?.detail === undefined
+                                ? ''
+                                : data?.detail.search('img') !== -1
+                                ? data?.detail
+                                : '<p><img height="3051" src="https://incourse-commerce-prod-bucket.s3.ap-northeast-2.amazonaws.com/ckeditor/2022/10/05/image-20221005165807-1.png" width="375" /></p>',
                           }}
                           mt="-477px"
                         ></Box>
